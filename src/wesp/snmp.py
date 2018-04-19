@@ -34,7 +34,7 @@ class Snmp():
     def get_by_mac_address(oid,mac_address):
         mac_int = Snmp.mac_hex_to_dec(mac_address, ':')
         # add connecting dot, if not existing
-        id = oid + mac_int if (oid[-1] == '.') else oid + '.' + mac_int;
+        id = oid + mac_int if (oid[-1] == '.') else oid + '.' + mac_int
         return Snmp.session.get(id)
 
     @staticmethod
