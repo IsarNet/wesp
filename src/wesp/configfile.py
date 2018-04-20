@@ -21,7 +21,7 @@ class ConfigSectionSchema(object):
 
 
 class ConfigFileProcessor(ConfigFileReader):
-    config_files = ["foo.ini", "../foo.cfg"]
+    config_files = ["foo.ini", "../wesp_config.cfg"]
     config_section_schemas = [
         ConfigSectionSchema.Foo,     # PRIMARY SCHEMA
         ConfigSectionSchema.Person,
