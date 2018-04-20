@@ -1,2 +1,4 @@
 easysnmp
 click
+click_configfile
+mysql-connector
