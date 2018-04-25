@@ -130,12 +130,12 @@ class OnlyRequiredIf(click.Option):
 
     def handle_parse_result(self, ctx, opts, args):
         we_are_present = self.name in opts
-        other_present = self.only_required_if_version in opts
 
-        print("Not", self.only_required_if_version)
-        print("cntx", ctx.obj['snmp_version'])
-
-        if (ctx.obj['snmp_version'] != self.only_required_if_version):
+        # Check if present version and require one are not the same
+        # If so change the required attribute of this option to False
+        # If this option is presented anyway raise an error, because
+        # it cannot be used with the given version
+        if ctx.obj['snmp_version'] != self.only_required_if_version:
 
             self.required = False
 

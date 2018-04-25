@@ -1,9 +1,9 @@
 import click
-import sys
 from wesp.oids import Oids
 from wesp.configfile import ConfigFileProcessor
 from wesp.click_overloaded import CustomGroup
 from wesp.click_overloaded import OnlyRequiredIf
+from wesp.helper import *
 from wesp.click_overloaded import raise_critical_error
 
 
@@ -13,8 +13,29 @@ def get_snmp_value (ctx, param, value):
     print("OID for Param: " + getattr(Oids, param.name))
     print(ctx.obj)
 
-def check_wlc_address(address):
-    pass
+# TODO Handle FQDN
+def check_wlc_address(ctx, param, value):
+    if check_ip_address(value):
+        print(value)
+    else:
+        print("Bad IP")
+
+    ctx.obj[param.name] = value
+
+# This function will validate the given Client Address
+# and add it to the Context
+def check_client_address(ctx, param, value):
+    # ensure that Client Address is either a valid IP or Mac Address
+    # If so add it to the Context Object for further use
+    # Otherwise raise an error
+    if check_ip_address(value) or check_mac_address(value):
+            ctx.obj[param.name] = value
+    else:
+        raise click.BadParameter(
+            "Bad Parameter: `%s` is not a valid Mac Address" % (
+                value,))
+
+
 
 
 def add_value_to_context(ctx, param, value):
@@ -40,10 +61,10 @@ def set_snmp_version(ctx, param, value):
 @click.group(chain=True, cls=CustomGroup, invoke_without_command=True)
 @click.option('--num', '-n', 'number', help='Number of greetings.', callback=get_snmp_value)
 #
-@click.option('--WLC', '-W', 'wlc_address', required=True, callback=add_value_to_context,
+@click.option('--WLC', '-W', 'wlc_address', required=True, callback=check_wlc_address,
               help = 'IP or FQDN address of WLC')
 #
-@click.option('--CLI', '-C', 'client_address', required=True, callback=add_value_to_context,
+@click.option('--CLI', '-C', 'client_address', required=True, callback=check_client_address,
               help='IP or MAC address of Client')
 #
 @click.option('--version', '-v', 'snmp_version', required=True, callback=set_snmp_version,
