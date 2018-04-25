@@ -4,14 +4,15 @@ from click_configfile import ConfigFileReader, Param, SectionSchema
 from click_configfile import matches_section
 import click
 
+
 class ConfigSectionSchema(object):
-    """Describes all config sections of this configuration file."""
 
     @matches_section("foo")
     class Foo(SectionSchema):
         name    = Param(type=str)
         flag    = Param(type=bool, default=True)
         numbers = Param(type=int, multiple=True)
+        count = Param(type=int)
         filenames = Param(type=click.Path(), multiple=True)
 
     @matches_section("person.*")   # Matches multiple sections
@@ -19,9 +20,13 @@ class ConfigSectionSchema(object):
         name      = Param(type=str)
         birthyear = Param(type=click.IntRange(1990, 2100))
 
-
+# TODO override init? Get pathes into this method
+# TODO get bool in to activate/deactivate config file
 class ConfigFileProcessor(ConfigFileReader):
-    config_files = ["foo.ini", "../wesp_config.cfg"]
+
+    def __init__(self):
+        pass
+
     config_section_schemas = [
         ConfigSectionSchema.Foo,     # PRIMARY SCHEMA
         ConfigSectionSchema.Person,

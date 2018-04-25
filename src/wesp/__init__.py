@@ -3,31 +3,8 @@ from wesp.snmp import Snmp
 from wesp.oids import Oids
 from wesp.configfile import *
 from wesp.database import Database
-import click
+from wesp.cli_parser import cli_parser
 
-
-@click.command()
-@click.option('--count', '-c', default=1, help='Number of greetings.')
-@click.option('--name', prompt='Your name',
-              help='The person to greet.')
-def hello(count, name):
-    """Simple program that greets NAME for a total of COUNT times."""
-    for x in range(count):
-        click.echo('Hello %s!' % name)
-
-# -- COMMAND:
-CONTEXT_SETTINGS = dict(default_map=ConfigFileProcessor.read_config())
-
-@click.command(context_settings=CONTEXT_SETTINGS)
-@click.option("-nu", "--number", "numbers", type=int, multiple=True)
-@click.pass_context
-def command_with_config(ctx, numbers):
-    # -- ACCESS ADDITIONAL DATA FROM CONFIG FILES: Using ctx.default_map
-    for person_data_key in ctx.default_map.keys():
-        print(person_data_key)
-
-    print (ctx.default_map['numbers'])
-    print (numbers)
 
 
 
@@ -56,7 +33,9 @@ if __name__ == '__main__':
         'WLC_Mac': 'aa:bb'
     }
 
-    Database.create_database_and_table_if_not_existing(config)
-    Database.insert_data_set(config,test_data)
+    # Database.create_database_and_table_if_not_existing(config)
+    # Database.insert_data_set(config,test_data)
 
+    cli_parser(obj={})
+    #database()
 
