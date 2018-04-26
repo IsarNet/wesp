@@ -22,6 +22,7 @@ def init_snmp_session(ctx):
                           community=ctx.obj['snmp_community'],
                           version=2)
 
+    # TODO Make v3 work
     # Create v3 Session
     # Default settings:
     # security_level = auth_with_privacy
@@ -38,8 +39,7 @@ def init_snmp_session(ctx):
                           version=3)
 
     # init Snmp with generated Session
-    # TODO Uncomment
-    # Snmp(session)
+    Snmp(session)
 
     # Check if the Client Mac Address was given
     # or only the Client IP,
@@ -51,7 +51,14 @@ def init_snmp_session(ctx):
 # This function will just add the given value
 # in the context object under the param's name
 def add_value_to_context(ctx, param, value):
+
+
+    print(param.name, value)
     ctx.obj[param.name] = value
+
+
+
+
 
 
 # This function will request and save an attribute based on the corresponding OID and Mac Address
@@ -125,12 +132,13 @@ def check_client_address(ctx, param, value):
 #
 # Address Options
 #
-@click.option('--WLC', '-W', 'wlc_address', required=True, callback=check_wlc_address,
+@click.option('--WLC', '-W', 'wlc_address', required=True, is_eager=True, callback=check_wlc_address,
               help='IP or FQDN address of WLC')
 #
-@click.option('--CLI', '-C', 'client_address', required=True, callback=check_client_address,
+@click.option('--CLI', '-C', 'client_address', required=True, is_eager=True, callback=check_client_address,
               help='IP or MAC address of Client')
 #
+# TODO is eager ensures parsing before everything else
 # SNMP Options
 #
 @click.option('--version', '-v', 'snmp_version', required=True, callback=add_value_to_context,
@@ -138,19 +146,19 @@ def check_client_address(ctx, param, value):
               help='SNMP version, can either be 2c or 3')
 #
 @click.option('--community', '-c', 'snmp_community', required=True, callback=add_value_to_context,
-              cls=OnlyRequiredIf, only_required_if_version="2c",
+              cls=OnlyRequiredIf, is_eager=True, only_required_if_version="2c",
               help='SNMP v2c community of WLC')
 #
 @click.option('--user', '-u', 'snmp_user', required=True, callback=add_value_to_context,
-              cls=OnlyRequiredIf, only_required_if_version="3",
+              cls=OnlyRequiredIf, is_eager=True, only_required_if_version="3",
               help='SNMP v3 user of WLC')
 #
 @click.option('--pass', '-p', 'snmp_password', required=True, callback=add_value_to_context,
-              cls=OnlyRequiredIf, only_required_if_version="3",
+              cls=OnlyRequiredIf, is_eager=True, only_required_if_version="3",
               help='SNMP v3 password/paraphrase of WLC')
 #
 @click.option('--encryption', '-e', 'snmp_encryption', required=True, callback=add_value_to_context,
-              cls=OnlyRequiredIf, only_required_if_version="3",
+              cls=OnlyRequiredIf, is_eager=True, only_required_if_version="3",
               help='SNMP v3 encryption key of WLC')
 #
 # optional Options
@@ -226,7 +234,7 @@ def load_config(ctx, file_path):
     if no path is given the default path will be used
 
     """
-
+    print("Load Config")
     # add path to Config File Processor
     ConfigFileProcessor.config_files = [file_path]
 

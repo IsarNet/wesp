@@ -14,9 +14,10 @@ HELP_PARAMETERS=['-h', '--help']
 # TODO Change Example usage
 def raise_critical_error(self, ctx, error):
     add_usage = "\nExample Usage: __init.py__ WLC_ADDRESS CLIENT_ADDRESS [OPTIONS] COMMAND1 [ARGS]...[COMMAND2 [ARGS]...]..."
-    click.echo(self.get_usage(ctx) + add_usage, None, True, True)
-    click.echo(error, None, True, True)
-    sys.exit(0)
+    #click.echo(self.get_usage(ctx) + add_usage, None, True, True)
+    #click.echo(error, None, True, True)
+    #sys.exit(0)
+
 
 # enable CLI command of form WLC_ADDRESS CLIENT_ADDRESS [OPTIONS] COMMAND
 # click requires to be the OPTIONS be up front
@@ -34,6 +35,7 @@ def separate_options(self, ctx, args):
 
     # check if first parameter is a known option
     return required_options, optional_options
+
 
 # this function will read and check the flag of the command
 # load_config. It will inform about an missing file path or

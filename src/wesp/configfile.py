@@ -7,38 +7,39 @@ import click
 
 class ConfigSectionSchema(object):
 
-    @matches_section("foo")
-    class Foo(SectionSchema):
-        name    = Param(type=str)
-        flag    = Param(type=bool, default=True)
-        numbers = Param(type=int, multiple=True)
-        count = Param(type=int)
-        filenames = Param(type=click.Path(), multiple=True)
+    # Parse data for section General
+    @matches_section("GENERAL")
+    class General(SectionSchema):
+        wlc_address = Param(type=str)
+        client_address = Param(type=str)
+
+    # parse data for section SNMP
+    @matches_section("SNMP")
+    class SNMP(SectionSchema):
+        snmp_version = Param(type=click.Choice(['2c', '3']), default="2c")
+        snmp_community = Param(type=str)
+        snmp_user = Param(type=str)
+        snmp_password = Param(type=str)
+        snmp_encryption = Param(type=str)
 
     @matches_section("person.*")   # Matches multiple sections
     class Person(SectionSchema):
         name      = Param(type=str)
         birthyear = Param(type=click.IntRange(1990, 2100))
 
-# TODO override init? Get pathes into this method
-# TODO get bool in to activate/deactivate config file
+
+# This overloads the class ConfigFileProcessor to make the fields
+# config_section_schemas and config_files available.
+# config_files will be filled with a path with the
+# command load_config in cli_parser
 class ConfigFileProcessor(ConfigFileReader):
 
     def __init__(self):
         pass
 
     config_section_schemas = [
-        ConfigSectionSchema.Foo,     # PRIMARY SCHEMA
-        ConfigSectionSchema.Person,
+        ConfigSectionSchema.General,     # PRIMARY SCHEMA
+        ConfigSectionSchema.SNMP,
     ]
 
-    # -- SIMPLIFIED STORAGE-SCHEMA:
-    #   section:person.*        -> storage:person.*
-    #   section:person.alice    -> storage:person.alice
-    #   section:person.bob      -> storage:person.bob
-
-    # -- ALTERNATIVES: Override ConfigFileReader methods:
-    #  * process_config_section(config_section, storage)
-    #  * get_storage_name_for(section_name)
-    #  * get_storage_for(section_name, storage
-    # )
+    config_files = []

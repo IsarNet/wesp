@@ -9,7 +9,9 @@ class Snmp():
     def __init__(self, session, *args, **kwargs ):
         if not isinstance(session, Session):
             raise TypeError("Session must be of type easysnmp.Session. Unknown error at init of SNMP session")
-        Snmp.session = session
+       # TODO Uncomment
+       # Snmp.session = session
+        Snmp.session = ""
         print ("SNMP Session created", session.hostname, session.version, session.community)
 
 
