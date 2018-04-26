@@ -1,5 +1,6 @@
 from easysnmp import Session
-
+from wesp.oids import Oids
+from wesp.helper import *
 
 class Snmp():
 
@@ -7,20 +8,19 @@ class Snmp():
 
     def __init__(self, session, *args, **kwargs ):
         if not isinstance(session, Session):
-            raise TypeError("session must be of type easysnmp.Session")
+            raise TypeError("Session must be of type easysnmp.Session. Unknown error at init of SNMP session")
         Snmp.session = session
-        print "created"
+        print ("SNMP Session created", session.hostname, session.version, session.community)
 
-    @staticmethod
-    def mac_hex_to_dec(mac_address, seperator):
-        mac_array = mac_address.split(seperator)
-        for x in range(0, 6):
-            mac_array[x] = str(int(mac_array[x], 16))
-        return mac_array[0] + "." + mac_array[1] + "." + mac_array[2] + "." + mac_array[3] + "." + mac_array[4] + "." + mac_array[5]
+
 
     @staticmethod
     def get_session():
         return Snmp.session
+
+    @staticmethod
+    def is_ready():
+        return Snmp.session is not None
 
     @staticmethod
     def walk(oid):
@@ -28,14 +28,29 @@ class Snmp():
 
     @staticmethod
     def get(oid):
-        return Snmp.session.get(oid)
+        return Snmp.session.get(oid).value
 
     @staticmethod
-    def get_by_mac_address(oid,mac_address):
-        mac_int = Snmp.mac_hex_to_dec(mac_address, ':')
-        # add connecting dot, if not existing
-        id = oid + mac_int if (oid[-1] == '.') else oid + '.' + mac_int
-        return Snmp.session.get(id)
+    def get_mac_from_ip(ip):
+        all_items = Snmp.session.walk(Oids.client_ip_address)
+
+        for item in all_items:
+
+            # If IPs match extract mac address and return
+            if compare_ips(ip, item.value):
+                return extract_mac_from_oid(item.oid)
+
+        # return None, if nothing was found
+        return None
+
+    @staticmethod
+    def get_by_mac_address(oid, mac_address):
+        # convert mac from hex to dec
+        mac_int = mac_hex_to_dec(mac_address, ':')
+        # add connecting dot, if not existing between end of oid and mac address
+        oid = oid + mac_int if (oid[-1] == '.') else oid + '.' + mac_int
+        return Snmp.session.get(oid).value
+
 
     @staticmethod
     def print_walk(oid):

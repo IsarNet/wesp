@@ -60,10 +60,13 @@ def read_config_file_flag(self, ctx, args, idx):
     ctx.default_map = ConfigFileProcessor.read_config()
 
 
-# TODO Ensure that required paras come before none required ones
-
-
-
+# This class overloads click.Group
+# It will ensure that the config file is loaded before any other parameter is evaluated
+# In addition it will check, that the options are in the right order, because the
+# required options (wlc_address, client_address, snmp_version) etc. need to be before
+# any other optional options (-i, --ping etc.) to ensure that they are parsed before the rest.
+# Otherwise the necessary data for the snmp session is not available at the time of the parsing of
+# the optional options
 class CustomGroup(click.Group):
 
     def parse_args(self, ctx, args):
@@ -111,6 +114,7 @@ class CustomGroup(click.Group):
 
         # run original or adapted argument list to parser
         super(CustomGroup, self).parse_args(ctx, args)
+
 
 # This class overloads click.Options
 # It enables the use of the only_required_if_version attribute
