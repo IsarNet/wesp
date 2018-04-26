@@ -11,6 +11,8 @@ from easysnmp import Session
 # This dict will hold the requested information about the client
 CLIENT_DATA = {}
 
+CONTEXT_SETTINGS = dict(default_map=ConfigFileProcessor.read_config())
+
 
 # This function will init the SNMP Session with the data from the CLI
 def init_snmp_session(ctx):
@@ -53,7 +55,8 @@ def init_snmp_session(ctx):
 def add_value_to_context(ctx, param, value):
 
 
-    print(param.name, value)
+   # print(param.name, value, ctx.default_map)
+
     ctx.obj[param.name] = value
 
 
@@ -125,7 +128,7 @@ def check_client_address(ctx, param, value):
 #
 # Click Options
 #
-@click.group(chain=True, cls=CustomGroup, invoke_without_command=True)
+@click.group(chain=True, cls=CustomGroup, invoke_without_command=True, context_settings=CONTEXT_SETTINGS)
 #
 @click.pass_context
 
@@ -141,7 +144,7 @@ def check_client_address(ctx, param, value):
 # TODO is eager ensures parsing before everything else
 # SNMP Options
 #
-@click.option('--version', '-v', 'snmp_version', required=True, callback=add_value_to_context,
+@click.option('--version', '-v', 'snmp_version', required=False, callback=add_value_to_context,
               type=click.Choice(['2c', '3']), is_eager=True, default="2c",
               help='SNMP version, can either be 2c or 3')
 #
@@ -224,6 +227,7 @@ def read_db_name(ctx, name):
 # TODO add real Default Path
 # TODO Add real Help Text
 
+
 @cli_parser.command()
 @click.option('-f','--file', 'file_path', default="../../wesp_config.cfg", type=click.Path(exists=True), help="Optional Path to Config File")
 @click.pass_context
@@ -238,8 +242,11 @@ def load_config(ctx, file_path):
     # add path to Config File Processor
     ConfigFileProcessor.config_files = [file_path]
 
+    print(ctx.default_map)
+
 
 # This function will run after all parameters have been parsed
 @cli_parser.resultcallback()
 def process_result(result, **kwargs):
     click.echo('All parameters parsed')
+    print(CLIENT_DATA)

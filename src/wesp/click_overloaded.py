@@ -1,40 +1,10 @@
 import click
 import sys
 from wesp.configfile import ConfigFileProcessor
+from wesp.helper import decompress_nested_dict
 
 # -- GLOBAL SETTINGS:
 HELP_PARAMETERS=['-h', '--help']
-
-# will raise and critical error on std out in the following style
-# Repeat correct USAGE
-# Error message
-# Then exit script early
-
-# TODO add Comments and change Programm name
-# TODO Change Example usage
-def raise_critical_error(self, ctx, error):
-    add_usage = "\nExample Usage: __init.py__ WLC_ADDRESS CLIENT_ADDRESS [OPTIONS] COMMAND1 [ARGS]...[COMMAND2 [ARGS]...]..."
-    #click.echo(self.get_usage(ctx) + add_usage, None, True, True)
-    #click.echo(error, None, True, True)
-    #sys.exit(0)
-
-
-# enable CLI command of form WLC_ADDRESS CLIENT_ADDRESS [OPTIONS] COMMAND
-# click requires to be the OPTIONS be up front
-# this function will check if the first parameter is an option or not
-def separate_options(self, ctx, args):
-
-    # get all params and save them into all_params
-    required_options = []
-    optional_options = []
-    for param in self.get_params(ctx):
-        if (param.required):
-            required_options.extend(param.opts)
-        else:
-            optional_options.extend(param.opts)
-
-    # check if first parameter is a known option
-    return required_options, optional_options
 
 
 # this function will read and check the flag of the command
@@ -49,7 +19,8 @@ def read_config_file_flag(self, ctx, args, idx):
         # Existence requires at least index + 2 arguments
         if len(args) <= idx + 2:
             # TODO Change Usage Output
-            raise_critical_error(self.commands['load_config'], ctx, "Missing argument for -f/--file")
+            raise click.BadParameter(
+                "Bad Parameter: Missing argument for -f/--file")
 
         # Invoke load_config with given file
         ctx.invoke(self.get_command(ctx, "load_config"), file_path=args[idx + 2])
@@ -58,9 +29,8 @@ def read_config_file_flag(self, ctx, args, idx):
     else:
         ctx.invoke(self.get_command(ctx, "load_config"))
 
-    # load config file
-    ctx.default_map = ConfigFileProcessor.read_config()
-
+    # load config file and ensure that default map consists of a non nested dict
+    ctx.default_map = decompress_nested_dict(ConfigFileProcessor.read_config())
 
 # This class overloads click.Group
 # It will ensure that the config file is loaded before any other parameter is evaluated
@@ -75,8 +45,6 @@ class CustomGroup(click.Group):
 
         help_flag_set = False
         config_command_index = None
-        required_options, optional_options = separate_options(self, ctx, args)
-        optional_option_found = None
 
         # Iterate over args
         for idx, arg in enumerate(args):
@@ -92,16 +60,6 @@ class CustomGroup(click.Group):
             # Then load config, has to be done before call to super
             if arg == "load_config":
                 config_command_index = idx
-
-            # If optional parameter has been found, no required parameter can follow
-            if optional_option_found is not None and arg in required_options:
-                raise_critical_error(self, ctx, "Found optional option " + str(optional_option_found) +
-                                     " before required Option " + str(arg) + "!")
-
-            # Search for index of first optional parameter
-            # Check if arg is a optional parameter
-            if arg in optional_options:
-                optional_option_found = arg
 
         # Ensure help flag has priority
         if not help_flag_set:

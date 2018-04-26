@@ -1,11 +1,10 @@
 # MARKER-EXAMPLE:
 # -- FILE: example_command_with_configfile.py (ALL PARTS: simplified)
-from click_configfile import ConfigFileReader, Param, SectionSchema
-from click_configfile import matches_section
+from click_configfile import ConfigFileReader, Param, SectionSchema, matches_section
 import click
 
-
 class ConfigSectionSchema(object):
+    """Describes all config sections of this configuration file."""
 
     # Parse data for section General
     @matches_section("GENERAL")
@@ -22,24 +21,35 @@ class ConfigSectionSchema(object):
         snmp_password = Param(type=str)
         snmp_encryption = Param(type=str)
 
-    @matches_section("person.*")   # Matches multiple sections
-    class Person(SectionSchema):
-        name      = Param(type=str)
-        birthyear = Param(type=click.IntRange(1990, 2100))
+    # parse data for section Options (non default options)
+    @matches_section("OPTIONS")
+    class Options(SectionSchema):
+        interval = Param(type=click.IntRange(1, 300))
+        retries = Param(type=bool)
+        channel = Param(type=bool)
+
+    # parse data for section DEFAULT_OFF (default options)
+    @matches_section("DEFAULT_OFF")
+    class Default(SectionSchema):
+        rssi = Param(type=bool)
+        channel = Param(type=bool)
 
 
-# This overloads the class ConfigFileProcessor to make the fields
-# config_section_schemas and config_files available.
-# config_files will be filled with a path with the
-# command load_config in cli_parser
 class ConfigFileProcessor(ConfigFileReader):
-
-    def __init__(self):
-        pass
-
     config_section_schemas = [
-        ConfigSectionSchema.General,     # PRIMARY SCHEMA
+        ConfigSectionSchema.General, # PRIMARY SCHEMA
         ConfigSectionSchema.SNMP,
+        ConfigSectionSchema.Options,
+        ConfigSectionSchema.Default
     ]
 
-    config_files = []
+
+    # -- SIMPLIFIED STORAGE-SCHEMA:
+    #   section:person.*        -> storage:person.*
+    #   section:person.alice    -> storage:person.alice
+    #   section:person.bob      -> storage:person.bob
+
+    # -- ALTERNATIVES: Override ConfigFileReader methods:
+    #  * process_config_section(config_section, storage)
+    #  * get_storage_name_for(section_name)
+    #  * get_storage_for(section_name, storage)

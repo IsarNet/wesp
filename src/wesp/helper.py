@@ -53,3 +53,23 @@ def extract_mac_from_oid(oid):
     # split at dot and return the last six items, which are the mac address in decimal
     oid_array = oid.split('.')[-6:]
     return mac_dec_to_hex(oid_array)
+
+
+# This function will decompress all sub dict in the given nested dict
+# and return only single non nested dict
+def decompress_nested_dict(nested_dict):
+
+    normal_dict = {}
+
+    for key, value in nested_dict.items():
+
+        # if item is a dict, add it
+        if isinstance(value, dict):
+            # add sub dict
+            normal_dict.update(value)
+        else:
+            # add value
+            normal_dict[key] = value
+
+    # return non nested dict
+    return normal_dict
