@@ -1,73 +1,22 @@
 import click
-from wesp.oids import Oids
+from wesp.definitions import *
 from wesp.click_overloaded import *
 from wesp.helper import *
 from wesp.database import Database
 from wesp.snmp import Snmp
 from easysnmp import Session, EasySNMPConnectionError
 
-
+# TODO Check Error Messages at wrong config file input, e.g. v2 instead of 2c
 # TODO populate
 # TODO leave empty to ensure user inputted order is outputed.
 # This dict will hold the requested information about the client
 CLIENT_DATA = {}
 
-CONTEXT_SETTINGS = dict(default_map=ConfigFileProcessor.read_config())
-
-
-# This function will init the SNMP Session with the data from the CLI
-def init_snmp_session(ctx):
-    session = None
-
-    # Create v2c Session
-    if ctx.obj['snmp_version'] == "2c":
-        session = Session(hostname=ctx.obj['wlc_address'],
-                          community=ctx.obj['snmp_community'],
-                          version=2)
-
-    # TODO Make v3 work
-    # Create v3 Session
-    # Default settings:
-    # security_level = auth_with_privacy
-    # auth_protocol = SHA
-    # privacy_protocol = AES
-    if ctx.obj['snmp_version'] == "3":
-        try:
-            session = Session(hostname=ctx.obj['wlc_address'],
-                              security_level='auth_with_privacy',
-                              security_username=ctx.obj['snmp_user'],
-                              privacy_password=ctx.obj['snmp_password'],
-                              privacy_protocol='AES',
-                              auth_password=ctx.obj['snmp_encryption'],
-                              auth_protocol='SHA',
-                              version=3)
-        except EasySNMPConnectionError, e:
-            raise click.UsageError(
-                "SNMP Connection Error: `%s`" % (
-                    e.message))
-
-    # init Snmp with generated Session
-    Snmp(session)
-
-    # Check if the Client Mac Address was given
-    # or only the Client IP,
-    # because Mac address is mandatory to find Cisco attributes
-    if 'client_mac' not in ctx.obj:
-        ctx.obj['client_mac'] = Snmp.get_mac_from_ip(ctx.obj['client_ip'])
-
 
 # This function will just add the given value
 # in the context object under the param's name
 def add_value_to_context(ctx, param, value):
-
-
-   # print(param.name, value, ctx.default_map)
-
     ctx.obj[param.name] = value
-
-
-
-
 
 
 # This function will request and save an attribute based on the corresponding OID and Mac Address
@@ -77,11 +26,10 @@ def get_snmp_value (ctx, param, flag_set):
     if flag_set:
         # ensure SNMP Class is ready and initialized
         if not Snmp.is_ready():
-            init_snmp_session(ctx)
+            Snmp(ctx)
 
-        # TODO Uncomment
         # load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary
-        #CLIENT_DATA[param.name] = Snmp.get(getattr(Oids, param.name))
+        CLIENT_DATA[param.name] = Snmp.get(getattr(AllParameter, param.name).oid)
         print(param.name)
 
 
@@ -92,11 +40,10 @@ def get_snmp_value_with_mac (ctx, param, flag_set):
     if flag_set:
         # ensure SNMP Class is ready and initialized
         if not Snmp.is_ready():
-            init_snmp_session(ctx)
+            Snmp(ctx)
 
-        # TODO Uncomment
         # load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary
-        #CLIENT_DATA[param.name] = Snmp.get_by_mac_address(getattr(Oids, param.name), ctx.obj['client_mac'])
+        CLIENT_DATA[param.name] = Snmp.get_by_mac_address(getattr(AllParameter, param.name).oid, ctx.obj['client_mac'])
         print('with mac', param.name)
 
 
@@ -134,7 +81,7 @@ def check_client_address(ctx, param, value):
 #
 # Click Options
 #
-@click.group(chain=True, cls=CustomGroup, invoke_without_command=True, context_settings=CONTEXT_SETTINGS)
+@click.group(chain=True, cls=CustomGroup, invoke_without_command=True)
 #
 @click.pass_context
 

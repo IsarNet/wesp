@@ -1,6 +1,7 @@
 from IPy import IP
 import re
 import types
+from easysnmp import Session
 
 def check_ip_address(address):
 
@@ -85,3 +86,9 @@ def generate_db_conf_from_context (ctx):
         'port': ctx.obj['db_port'],
         'database': ctx.obj['db_name'],
     }
+
+def print_session_info(session):
+    print ("    SNMP Session Infos")
+    for attr in dir(session):
+        if not attr.startswith('__') and not callable(getattr(session,attr)):
+            print("    " + str(attr) + ": " + str(getattr(session, attr)))

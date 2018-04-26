@@ -1,8 +1,3 @@
-from easysnmp import Session
-from wesp.snmp import Snmp
-from wesp.oids import Oids
-from wesp.configfile import *
-from wesp.database import Database
 from wesp.cli_parser import cli_parser
 
 
