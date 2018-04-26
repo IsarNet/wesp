@@ -73,3 +73,15 @@ def decompress_nested_dict(nested_dict):
 
     # return non nested dict
     return normal_dict
+
+
+# This function will create the config dict for the database
+# from the context object
+def generate_db_conf_from_context (ctx):
+    return {
+        'user': ctx.obj['db_user'],
+        'password': ctx.obj['db_pass'],
+        'host': ctx.obj['db_address'],
+        'port': ctx.obj['db_port'],
+        'database': ctx.obj['db_name'],
+    }

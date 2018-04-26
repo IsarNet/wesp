@@ -2,8 +2,9 @@ import click
 from wesp.oids import Oids
 from wesp.click_overloaded import *
 from wesp.helper import *
+from wesp.database import Database
 from wesp.snmp import Snmp
-from easysnmp import Session
+from easysnmp import Session, EasySNMPConnectionError
 
 
 # TODO populate
@@ -31,14 +32,19 @@ def init_snmp_session(ctx):
     # auth_protocol = SHA
     # privacy_protocol = AES
     if ctx.obj['snmp_version'] == "3":
-        session = Session(hostname=ctx.obj['wlc_address'],
-                          security_level='auth_with_privacy',
-                          security_username=ctx.obj['snmp_user'],
-                          privacy_password=ctx.obj['snmp_password'],
-                          privacy_protocol='AES',
-                          auth_password=ctx.obj['snmp_encryption'],
-                          auth_protocol='SHA',
-                          version=3)
+        try:
+            session = Session(hostname=ctx.obj['wlc_address'],
+                              security_level='auth_with_privacy',
+                              security_username=ctx.obj['snmp_user'],
+                              privacy_password=ctx.obj['snmp_password'],
+                              privacy_protocol='AES',
+                              auth_password=ctx.obj['snmp_encryption'],
+                              auth_protocol='SHA',
+                              version=3)
+        except EasySNMPConnectionError, e:
+            raise click.UsageError(
+                "SNMP Connection Error: `%s`" % (
+                    e.message))
 
     # init Snmp with generated Session
     Snmp(session)
@@ -197,37 +203,54 @@ def cli_parser(ctx, wlc_address, client_address,
     print "CLI Parser Main"
 
 
-
-
+#
+# Database Command
+#
 @cli_parser.command()
+#
+@click.option("-n", "--name", "db_name", type=str, callback=add_value_to_context,
+              default="WESP",
+              help="Name of DB. Default: WESP")
+#
+@click.option("-t", "--table", "db_table", type=str, callback=add_value_to_context,
+              default="data",
+              help="Table to print in. Default: data")
+#
+@click.option("-a", "--address", "db_address", type=str, callback=add_value_to_context,
+              default="127.0.0.1",
+              help="IP address of database server. Default: 127.0.0.1 (localhost)")
+#
+@click.option("-po", "--port", "db_port", type=int, callback=add_value_to_context,
+              default=3306,
+              help="Port of database server. Default: 3306")
+#
+@click.option("-u", "--user", "db_user", callback=add_value_to_context,
+              type=str,
+              help="User of database server. ")
+#
+@click.option("-pa", "--password", "db_pass", callback=add_value_to_context,
+              type=str,
+              help="Password of database server.")
+#
+@click.option("-s", "--silent", "silent", callback=add_value_to_context,
+              is_flag=True, default=False,
+              help="Will only output data to the database")
+
 @click.pass_context
-def sync(ctx):
-    click.echo('Sync run')
+def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, silent):
 
+    print ("Database run")
 
-@cli_parser.command()
-@click.option('--count', '-c', default=1, help='Number of greetings.')
-@click.option('--name', prompt='Your name',
-              help='The person to greet.')
-def hello(count, name):
-    """Simple program that greets NAME for a total of COUNT times."""
-    for x in range(count):
-        click.echo('Hello %s!' % name)
+    Database.init_database(ctx.obj['db_table'], ctx.obj['db_name'], generate_db_conf_from_context(ctx))
 
 
 
-
-@cli_parser.command()
-@click.option("-d", "--db_name", "name", type=str, default="WESP", help="Name of DB")
-@click.pass_context
-def read_db_name(ctx, name):
-
-    print (name)
 
 # TODO add real Default Path
 # TODO Add real Help Text
-
-
+#
+# Config File Command Definition
+#
 @cli_parser.command()
 @click.option('-f','--file', 'file_path', default="../../wesp_config.cfg", type=click.Path(exists=True), help="Optional Path to Config File")
 @click.pass_context

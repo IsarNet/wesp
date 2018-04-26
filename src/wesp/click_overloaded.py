@@ -1,10 +1,9 @@
 import click
-import sys
 from wesp.configfile import ConfigFileProcessor
 from wesp.helper import decompress_nested_dict
 
 # -- GLOBAL SETTINGS:
-HELP_PARAMETERS=['-h', '--help']
+HELP_PARAMETERS = ['-h', '--help']
 
 
 # this function will read and check the flag of the command
@@ -31,6 +30,7 @@ def read_config_file_flag(self, ctx, args, idx):
 
     # load config file and ensure that default map consists of a non nested dict
     ctx.default_map = decompress_nested_dict(ConfigFileProcessor.read_config())
+
 
 # This class overloads click.Group
 # It will ensure that the config file is loaded before any other parameter is evaluated
