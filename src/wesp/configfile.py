@@ -32,7 +32,6 @@ class ConfigSectionSchema(object):
     @matches_section("DEFAULT_OFF")
     class Default(SectionSchema):
         rssi = Param(type=bool)
-        channel = Param(type=bool)
 
 
 class ConfigFileProcessor(ConfigFileReader):
@@ -43,13 +42,22 @@ class ConfigFileProcessor(ConfigFileReader):
         ConfigSectionSchema.Default
     ]
 
+    # This function overrides the process_config_section function
+    # of the ConfigFileReader
+    # It inverts all boolean values of the section DEFAULT_OFF
+    @classmethod
+    def process_config_section(cls, config_section, storage):
 
-    # -- SIMPLIFIED STORAGE-SCHEMA:
-    #   section:person.*        -> storage:person.*
-    #   section:person.alice    -> storage:person.alice
-    #   section:person.bob      -> storage:person.bob
+        # parse config section
+        super(ConfigFileProcessor, cls).process_config_section(config_section,storage)
 
-    # -- ALTERNATIVES: Override ConfigFileReader methods:
-    #  * process_config_section(config_section, storage)
-    #  * get_storage_name_for(section_name)
-    #  * get_storage_for(section_name, storage)
+        # if section is DEFAULT_OFF, then find corresponding dict in storage
+        # and invert all values
+        if config_section.name == "DEFAULT_OFF":
+
+            for key, value in storage['DEFAULT_OFF'].items():
+
+                if value:
+                    storage['DEFAULT_OFF'][key] = False
+                else:
+                    storage['DEFAULT_OFF'][key] = True
