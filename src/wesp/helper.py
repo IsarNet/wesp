@@ -131,8 +131,12 @@ def generate_cli_output(client_data):
 
     output = ""
 
+    # For all values in client_data which are not none, add their human readable name
+    # and their values to the string and return it
     for key, value in client_data.items():
-        output += str(getattr(AllParameter, key).name) + ": " + str(value) + ", "
+
+        if value is not None:
+            output += str(getattr(AllParameter, key).name) + ": " + str(value) + ", "
 
     return output
 

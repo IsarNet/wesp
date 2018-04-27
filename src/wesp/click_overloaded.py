@@ -7,6 +7,7 @@ HELP_PARAMETERS = ['-h', '--help']
 # will be read from option snmp_version
 VERSION_FLAG = ""
 
+
 # this function will read and check the flag of the command
 # load_config. It will inform about an missing file path or
 # load the given or default config file.
@@ -31,8 +32,6 @@ def read_config_file_flag(self, ctx, args, idx):
 
     # load config file and ensure that default map consists of a non nested dict
     ctx.default_map = decompress_nested_dict(ConfigFileProcessor.read_config())
-
-
 
 
 # This class overloads click.Group
@@ -66,7 +65,7 @@ class CustomGroup(click.Group):
             # check if version flag was set and if it is one
             # the first position, if not it has to be moved to the
             # first
-            if arg in VERSION_FLAG\
+            if arg in VERSION_FLAG \
                     and idx != 0:
                 version_flag_index = idx
 
@@ -82,7 +81,7 @@ class CustomGroup(click.Group):
             # Ensure that the version flag is the first parameter
             # If it was not set, set the context to the default value
             if version_flag_index is not None:
-                version_flag = args[version_flag_index:version_flag_index+2]
+                version_flag = args[version_flag_index:version_flag_index + 2]
                 args = version_flag + args
 
             else:
@@ -113,9 +112,9 @@ class OnlyRequiredIf(click.Option):
         self.only_required_if_version = kwargs.pop('only_required_if_version')
         assert self.only_required_if_version, "'only_required_if_version' parameter required"
         kwargs['help'] = (kwargs.get('help', '') +
-            ' NOTE: This argument is mutually exclusive with %s' %
-            self.only_required_if_version
-        ).strip()
+                          ' NOTE: This argument is mutually exclusive with %s' %
+                          self.only_required_if_version
+                          ).strip()
         super(OnlyRequiredIf, self).__init__(*args, **kwargs)
 
     def handle_parse_result(self, ctx, opts, args):
@@ -143,7 +142,6 @@ class OnlyRequiredIf(click.Option):
 class CommandAllowConfigFile(click.Command):
 
     def parse_args(self, ctx, args):
-
         # check if CustomGroup found load_config command
         # if so read it into this command's default map
 

@@ -19,6 +19,7 @@ class Database:
     table_name = ""
     db_name = ""
     global_config = None
+    ready = False
 
     def __init__(self):
         pass
@@ -49,6 +50,8 @@ class Database:
         Database.global_config = config
 
         Database.create_database_and_table_if_not_existing(config)
+
+        Database.ready = True
 
     # Will check the existence of the database and the Table with the names specified in the init_database function.
     # If they do not exist they will be created
@@ -89,6 +92,8 @@ class Database:
             if cnx:
                 cnx.close()
 
+    # will inserted the given data into the database based on the config
+    # and statement form the init function
     @staticmethod
     def insert_data_set(data_set):
 
@@ -118,3 +123,10 @@ class Database:
                 cur.close()
             if cnx:
                 cnx.close()
+
+    # if database has been initialized return True,
+    # Otherwise False
+    @staticmethod
+    def is_ready():
+        return Database.ready
+

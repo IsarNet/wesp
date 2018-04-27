@@ -1,4 +1,5 @@
 import click
+import time
 import collections
 from wesp.click_overloaded import *
 from wesp.helper import *
@@ -8,8 +9,8 @@ from wesp.snmp import Snmp
 # TODO Check Error Messages at wrong config file input, e.g. v2 instead of 2c
 # TODO populate
 
-# Order at which the Data is outputted, make sure to always add an empty string to each tuple!
-order = [('channel', ""), ('retries', ""), ('snr_off', ""),('rssi_off', "")]
+# Order at which the Data is outputted, make sure to always add a None to each tuple!
+order = [('channel', None), ('retries', None), ('snr_off', None),('rssi_off', None)]
 
 # This dict will hold the requested information about the client
 # If you want the entries to be sorted, like they are inputted or worked on
@@ -53,7 +54,7 @@ def get_snmp_value_with_mac(ctx, param, flag_set):
         CLIENT_DATA[param.name] = Snmp.get_by_mac_address(getattr(AllParameter, param.name).oid, ctx.obj['client_mac'])
 
         # TODO Remove
-        print('with mac', param.name)
+        # print('with mac', param.name)
 
 
 # TODO Handle FQDN and Error
@@ -241,7 +242,52 @@ def load_config(ctx, file_path):
 
 
 # This function will run after all parameters have been parsed
+# It will make the CLI Output and the depending on the settings the
+# Insert to the DB
+# It also repeats the process until the user kills the programm
 @cli_parser.resultcallback()
 def process_result(result, **kwargs):
     click.echo('All parameters parsed')
-    print(generate_cli_output(CLIENT_DATA))
+
+    # get reference of context
+    ctx = click.get_current_context()
+
+    # if not silent print results to cli
+    if not ctx.obj['silent']:
+        print(generate_cli_output(CLIENT_DATA))
+
+    # if print_to_db command was set, insert data
+    if Database.is_ready():
+        Database.insert_data_set(CLIENT_DATA)
+
+    while True:
+        # sleep for interval seconds
+        time.sleep(ctx.obj['interval'])
+
+        # fetch newest info from wlc
+        update_client_data(ctx)
+
+        # if not silent print to output again
+        if not ctx.obj['silent']:
+            print(generate_cli_output(CLIENT_DATA))
+
+        # if print_to_db command was set, insert data again
+        if Database.is_ready():
+            Database.insert_data_set(CLIENT_DATA)
+
+
+def update_client_data(ctx):
+
+    # for each option stored in CLIENT_DATA search for corresponding
+    # option object and runs in callback function again. This will update the
+    # value
+    for key, value in CLIENT_DATA.items():
+
+        if value is not None:
+            option = get_option_with_name(ctx.command, ctx, key)
+
+            # run callback function for this option again
+            option.callback(ctx, option, True)
+
+
+
