@@ -1,5 +1,5 @@
 import click
-from wesp.definitions import *
+import collections
 from wesp.click_overloaded import *
 from wesp.helper import *
 from wesp.database import Database
@@ -7,9 +7,14 @@ from wesp.snmp import Snmp
 
 # TODO Check Error Messages at wrong config file input, e.g. v2 instead of 2c
 # TODO populate
-# TODO leave empty to ensure user inputted order is outputed.
+
+# Order at which the Data is outputted, make sure to always add an empty string to each tuple!
+order = [('channel', ""), ('retries', ""), ('snr_off', ""),('rssi_off', "")]
+
 # This dict will hold the requested information about the client
-CLIENT_DATA = {}
+# If you want the entries to be sorted, like they are inputted or worked on
+# (Default values will be last) then just remove the order argument from this statement:
+CLIENT_DATA = collections.OrderedDict(order)
 
 
 # This function will just add the given value
@@ -20,8 +25,7 @@ def add_value_to_context(ctx, param, value):
 
 
 # This function will request and save an attribute based on the corresponding OID and Mac Address
-def get_snmp_value (ctx, param, flag_set):
-
+def get_snmp_value(ctx, param, flag_set):
     # ensure flag is set
     if flag_set:
         # ensure SNMP Class is ready and initialized
@@ -31,12 +35,13 @@ def get_snmp_value (ctx, param, flag_set):
 
         # load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary
         CLIENT_DATA[param.name] = Snmp.get(getattr(AllParameter, param.name).oid)
-        print(param.name)
+
+        # TODO Remove
+        # print(param.name)
 
 
 # This function will request and save an attribute based on the corresponding OID and Mac Address
-def get_snmp_value_with_mac (ctx, param, flag_set):
-
+def get_snmp_value_with_mac(ctx, param, flag_set):
     # ensure flag is set
     if flag_set:
         # ensure SNMP Class is ready and initialized
@@ -46,6 +51,8 @@ def get_snmp_value_with_mac (ctx, param, flag_set):
 
         # load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary
         CLIENT_DATA[param.name] = Snmp.get_by_mac_address(getattr(AllParameter, param.name).oid, ctx.obj['client_mac'])
+
+        # TODO Remove
         print('with mac', param.name)
 
 
@@ -77,8 +84,8 @@ def check_client_address(ctx, param, value):
         # Otherwise raise an error
         else:
             raise click.BadParameter(
-            "Bad Parameter: `%s` is not a valid Hex Mac Address" % (
-                value,))
+                "Bad Parameter: `%s` is not a valid Hex Mac Address" % (
+                    value,))
 
 
 #
@@ -87,7 +94,6 @@ def check_client_address(ctx, param, value):
 @click.group(chain=True, cls=CustomGroup, invoke_without_command=True)
 #
 @click.pass_context
-
 #
 # Address Options
 #
@@ -156,7 +162,8 @@ def cli_parser(ctx, wlc_address, client_address,
 
         WLC_..."""
 
-    print("MAIN", ctx.default_map)
+    # TODO Remove
+    # print("MAIN", ctx.default_map)
 
 
 #
@@ -196,9 +203,6 @@ def cli_parser(ctx, wlc_address, client_address,
 #
 #
 def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, silent):
-
-    print("DB", ctx.default_map)
-
     # Init Database with ctx
     # and a config which contains hostname, port etc.
     # and the create statement for the parameters listed in the definition file
@@ -209,10 +213,8 @@ def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, s
 
     Database.insert_data_set(CLIENT_DATA)
 
-    print ("DB", CLIENT_DATA)
-
-
-
+    # TODO Remove
+    # print ("DB", CLIENT_DATA)
 
 
 # TODO add real Default Path
@@ -221,24 +223,25 @@ def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, s
 # Config File Command Definition
 #
 @cli_parser.command()
-@click.option('-f','--file', 'file_path', default="../../wesp_config.cfg", type=click.Path(exists=True), help="Optional Path to Config File")
+@click.option('-f', '--file', 'file_path', default="../../wesp_config.cfg", type=click.Path(exists=True),
+              help="Optional Path to Config File")
 @click.pass_context
 def load_config(ctx, file_path):
-
     """Will load configfile. For more information see load_config --help.
 
     if no path is given the default path will be used
 
     """
-    print("Load Config")
+
+    # TODO Remove
+    # print("Load Config")
+
     # add path to Config File Processor
     ConfigFileProcessor.config_files = [file_path]
-
-    print(ctx.default_map)
 
 
 # This function will run after all parameters have been parsed
 @cli_parser.resultcallback()
 def process_result(result, **kwargs):
     click.echo('All parameters parsed')
-    print(CLIENT_DATA)
+    print(generate_cli_output(CLIENT_DATA))

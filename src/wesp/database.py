@@ -42,7 +42,8 @@ class Database:
         # add the human readable as well as their programm name into the insert statement
         Database.insertStatement = Database.insertStatement.replace('$$PARAMETER$$', parameter_insert)
 
-        print(Database.tableCreateStatement)
+        # TODO Remove
+        # print(Database.tableCreateStatement)
 
         # add the database config to the class
         Database.global_config = config

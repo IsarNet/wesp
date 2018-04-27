@@ -126,6 +126,16 @@ def replace_last_occurrence(str, old, new):
     return str[:k] + new + str[k + 1:]
 
 
+# will generate the CLI output based on the given client_data
+def generate_cli_output(client_data):
+
+    output = ""
+
+    for key, value in client_data.items():
+        output += str(getattr(AllParameter, key).name) + ": " + str(value) + ", "
+
+    return output
+
 #
 # Database related functions
 #
