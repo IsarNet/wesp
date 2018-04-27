@@ -48,6 +48,8 @@ class Snmp:
             ctx.obj['client_mac'] = Snmp.get_mac_from_ip(ctx.obj['client_ip'])
             print(ctx.obj['client_mac'])
 
+        # print_session_info(session)
+
     @staticmethod
     def get_session():
         return Snmp.session

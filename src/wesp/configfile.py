@@ -3,6 +3,7 @@
 from click_configfile import ConfigFileReader, Param, SectionSchema, matches_section
 import click
 
+
 class ConfigSectionSchema(object):
     """Describes all config sections of this configuration file."""
 
@@ -31,7 +32,19 @@ class ConfigSectionSchema(object):
     # parse data for section DEFAULT_OFF (default options)
     @matches_section("DEFAULT_OFF")
     class Default(SectionSchema):
-        rssi = Param(type=bool)
+        rssi_off = Param(type=bool)
+        snr_off = Param(type=bool)
+
+    # parse data for section DEFAULT_OFF (default options)
+    @matches_section("DATABASE")
+    class Database(SectionSchema):
+        db_name = Param(type=str)
+        db_table = Param(type=str)
+        db_address = Param(type=str)
+        db_port = Param(type=str)
+        db_user = Param(type=str)
+        db_pass = Param(type=str)
+        silent = Param(type=bool)
 
 
 class ConfigFileProcessor(ConfigFileReader):
@@ -39,7 +52,8 @@ class ConfigFileProcessor(ConfigFileReader):
         ConfigSectionSchema.General, # PRIMARY SCHEMA
         ConfigSectionSchema.SNMP,
         ConfigSectionSchema.Options,
-        ConfigSectionSchema.Default
+        ConfigSectionSchema.Default,
+        ConfigSectionSchema.Database
     ]
 
     # This function overrides the process_config_section function

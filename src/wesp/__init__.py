@@ -1,5 +1,5 @@
 from wesp.cli_parser import cli_parser
-
+from wesp.helper import *
 
 
 
@@ -27,6 +27,8 @@ if __name__ == '__main__':
         'WLC_IPv4': '1234',
         'WLC_Mac': 'aa:bb'
     }
+
+    print(mac_dec_to_hex('100.216.20.111.248.208'))
 
     # Database.create_database_and_table_if_not_existing(config)
     # Database.insert_data_set(config,test_data)

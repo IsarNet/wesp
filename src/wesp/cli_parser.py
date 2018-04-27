@@ -4,7 +4,6 @@ from wesp.click_overloaded import *
 from wesp.helper import *
 from wesp.database import Database
 from wesp.snmp import Snmp
-from easysnmp import Session, EasySNMPConnectionError
 
 # TODO Check Error Messages at wrong config file input, e.g. v2 instead of 2c
 # TODO populate
@@ -16,6 +15,7 @@ CLIENT_DATA = {}
 # This function will just add the given value
 # in the context object under the param's name
 def add_value_to_context(ctx, param, value):
+    # print (param.name, value)
     ctx.obj[param.name] = value
 
 
@@ -26,6 +26,7 @@ def get_snmp_value (ctx, param, flag_set):
     if flag_set:
         # ensure SNMP Class is ready and initialized
         if not Snmp.is_ready():
+            pass
             Snmp(ctx)
 
         # load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary
@@ -40,6 +41,7 @@ def get_snmp_value_with_mac (ctx, param, flag_set):
     if flag_set:
         # ensure SNMP Class is ready and initialized
         if not Snmp.is_ready():
+            pass
             Snmp(ctx)
 
         # load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary
@@ -51,12 +53,13 @@ def get_snmp_value_with_mac (ctx, param, flag_set):
 # This function will check if the WLC Address is a valid IP or FQDN
 # If so it will set to the context, otherwise it will raise an error
 def check_wlc_address(ctx, param, value):
-    if check_ip_address(value):
-        print(value)
-    else:
-        print("Bad IP")
+    ip = check_ip_address(value)
 
-    ctx.obj[param.name] = value
+    # If not IP is should be a FQDN
+    if ip is None:
+        ctx.obj[param.name] = value
+    else:
+        ctx.obj[param.name] = ip
 
 
 # This function will validate the given Client Address
@@ -65,8 +68,8 @@ def check_client_address(ctx, param, value):
     # ensure that Client Address is either a valid IP or Mac Address
     # If so add it to the Context Object for further use
 
-    if check_ip_address(value):
-        ctx.obj['client_ip'] = value
+    if check_ip_address(value) is not None:
+        ctx.obj['client_ip'] = check_ip_address(value)
     else:
         if check_mac_address(value):
             ctx.obj['client_mac'] = value
@@ -133,27 +136,35 @@ def check_client_address(ctx, param, value):
 #
 # Default Options off
 #
-@click.option('--rssi_off', '-ro', 'rssi', required=False, callback=get_snmp_value,
+@click.option('--rssi_off', '-ro', 'rssi_off', required=False, callback=get_snmp_value_with_mac,
               is_flag=True, default=True, flag_value=False,
               help='Will deactivate the Output of the RSSI (Received Signal Strength Indication) of the WLC')
+#
+@click.option('--snr_off', '-so', 'snr_off', required=False, callback=get_snmp_value_with_mac,
+              is_flag=True, default=True, flag_value=False,
+              help='Will deactivate the Output of the SNR (Signal to Noise Ratio) of the WLC')
 #
 # Function Definition
 #
 def cli_parser(ctx, wlc_address, client_address,
                snmp_version, snmp_community, snmp_user, snmp_password, snmp_encryption,
-               interval, channel, retries, rssi):
+               interval, channel, retries,
+               rssi_off, snr_off):
     """
-    Additional USAGE: WLC_AD CLI OPTIONS
+    Example USAGE: WLC_AD CLI OPTIONS
     This tool ist awesome:
 
         WLC_..."""
-    print "CLI Parser Main"
+
+    print("MAIN", ctx.default_map)
 
 
 #
 # Database Command
 #
-@cli_parser.command()
+@cli_parser.command(cls=CommandAllowConfigFile)
+#
+@click.pass_context
 #
 @click.option("-n", "--name", "db_name", type=str, callback=add_value_to_context,
               default="WESP",
@@ -182,13 +193,24 @@ def cli_parser(ctx, wlc_address, client_address,
 @click.option("-s", "--silent", "silent", callback=add_value_to_context,
               is_flag=True, default=False,
               help="Will only output data to the database")
-
-@click.pass_context
+#
+#
 def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, silent):
 
-    print ("Database run")
+    print("DB", ctx.default_map)
 
-    Database.init_database(ctx.obj['db_table'], ctx.obj['db_name'], generate_db_conf_from_context(ctx))
+    # Init Database with ctx
+    # and a config which contains hostname, port etc.
+    # and the create statement for the parameters listed in the definition file
+    Database.init_database(ctx,
+                           generate_db_conf_from_context(ctx),
+                           generate_parameter_create_statement(),
+                           generate_parameter_insert_statement(CLIENT_DATA))
+
+    Database.insert_data_set(CLIENT_DATA)
+
+    print ("DB", CLIENT_DATA)
+
 
 
 
