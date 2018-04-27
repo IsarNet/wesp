@@ -2,13 +2,12 @@ from setuptools import setup
 
 setup(
     name='wesp',
-    version='',
+    version='1.0',
     packages=['wesp'],
-    url='',
-    license='',
-    author='marcel',
-    author_email='',
-    description='',
+    url='https://github.com/IsarNet/wesp',
+    license='GNU GPLv3',
+    author='Marcel Rummens und Maximilian Tichter',
+    description='TODO',
     install_requires=[
         'easysnmp',
         'click',
