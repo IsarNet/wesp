@@ -1,6 +1,5 @@
-import click
-import time
 import collections
+from multiping import *
 from wesp.click_overloaded import *
 from wesp.helper import *
 from wesp.database import Database
@@ -89,6 +88,55 @@ def check_client_address(ctx, param, value):
                     value,))
 
 
+def get_ap_name(ctx, param, flag_set):
+    """
+    This function requests the Name of the associated AP of the Client.
+    Therefore it will first request the MAC address of the AP from the cldcClientTable
+    and then using the address find its name in the clDLApBootTable
+    :param ctx: Context of ...
+    :param param:
+    :param flag_set: True if flag is set, otherwise false
+    """
+    # ensure flag is set
+    if flag_set:
+        # ensure SNMP Class is ready and initialized
+        if not Snmp.is_ready():
+            pass
+            Snmp(ctx)
+
+    # get mac address of associated AP
+    ap_mac = Snmp.get_by_mac_address(getattr(AllParameter, 'ap_mac_address').oid, ctx.obj['client_mac'])
+
+    # remove quotation marks
+    ap_mac = ap_mac.replace('"', '')
+
+    # Retrieve name of AP using Mac Address form above using custom separator ' '
+    CLIENT_DATA[param.name] = Snmp.get_by_mac_address(getattr(AllParameter, param.name).oid, ap_mac, ' ')
+
+
+def get_ping(ctx, param, flag_set):
+    # ensure flag is set
+    if flag_set:
+        # ensure SNMP Class is ready and initialized
+        if not Snmp.is_ready():
+            pass
+            Snmp(ctx)
+
+    # wrap address in list
+    address_list = [ctx.obj['client_ip']]
+
+    # Ping the addresses up to 4 times (initial ping + 3 retries), over the
+    # course of 2 seconds. This means that for those addresses that do not
+    # respond another ping will be sent every 0.5 seconds.
+    responses, no_responses = multi_ping(address_list, timeout=2, retry=3)
+
+    if len(no_responses) > 0:
+        CLIENT_DATA[param.name] = "No response"
+    else:
+        # Result will be in milliseconds and correct to 5 decimal places
+        CLIENT_DATA[param.name] = round(responses[ctx.obj['client_ip']] * 1000, 5)
+
+
 #
 # Click Options
 #
@@ -141,6 +189,23 @@ def check_client_address(ctx, param, value):
               is_flag=True,
               help='Number of Retries by Client')
 #
+@click.option('--ap_name', '-ap', 'ap_name', required=False, callback=get_ap_name,
+              is_flag=True,
+              help='Name of Access Point the client is associated with')
+#
+@click.option('--rx_packages', '-re', 'rx_packages', required=False, callback=get_snmp_value_with_mac,
+              is_flag=True,
+              help='Number of client received packages')
+#
+@click.option('--tx_packages', '-re', 'tx_packages', required=False, callback=get_snmp_value_with_mac,
+              is_flag=True,
+              help='Number of client transmitted packages')
+#
+@click.option('--ping', '-pi', 'ping', required=False, callback=get_ping,
+              is_flag=True,
+              help='ICMP Ping to client from this device in ms')
+
+#
 # Default Options off
 #
 @click.option('--rssi_off', '-ro', 'rssi_off', required=False, callback=get_snmp_value_with_mac,
@@ -151,12 +216,17 @@ def check_client_address(ctx, param, value):
               is_flag=True, default=True, flag_value=False,
               help='Will deactivate the Output of the SNR (Signal to Noise Ratio) of the WLC')
 #
+@click.option('--data_rate_off', '-do', 'data_rate_off', required=False, callback=get_snmp_value_with_mac,
+              is_flag=True, default=True, flag_value=False,
+              help='Will deactivate the Output of the Client Data Rate')
+
+#
 # Function Definition
 #
 def cli_parser(ctx, wlc_address, client_address,
                snmp_version, snmp_community, snmp_user, snmp_password, snmp_encryption,
-               interval, channel, retries,
-               rssi_off, snr_off):
+               interval, channel, retries, ap_name, rx_packages, tx_packages, ping,
+               rssi_off, snr_off, data_rate_off):
     """
     Example USAGE: WLC_AD CLI OPTIONS
     This tool ist awesome:
@@ -253,7 +323,7 @@ def process_result(result, **kwargs):
     ctx = click.get_current_context()
 
     # if not silent print results to cli
-    if not ctx.obj['silent']:
+    if 'silent' not in ctx.obj or not ctx.obj['silent']:
         print(generate_cli_output(CLIENT_DATA))
 
     # if print_to_db command was set, insert data
@@ -268,7 +338,7 @@ def process_result(result, **kwargs):
         update_client_data(ctx)
 
         # if not silent print to output again
-        if not ctx.obj['silent']:
+        if 'silent' not in ctx.obj or not ctx.obj['silent']:
             print(generate_cli_output(CLIENT_DATA))
 
         # if print_to_db command was set, insert data again

@@ -3,7 +3,10 @@
 
 # Basic Parameter with fundamental information about it
 class Parameter:
-    # human readable name, which will be used for the CLI output and the row name in the DB
+    """
+    Para aweseome
+    """
+    """human readable name, which will be used for the CLI output and the row name in the DB"""
     name = ""
     # OID at which parameter can be found, in case this parameter needs the mac address to work
     # don't enter it here. The mac address will be added in the parser, based on which callback
@@ -29,9 +32,12 @@ class Parameter:
 # of the click option specified in the cli_parser. Note Lower and Uppercase
 
 class AllParameter():
+    """
+    Aweseome description.
+    """
+
     def __init__(self):
         pass
-
 
     #
     # Internal usage only
@@ -39,6 +45,10 @@ class AllParameter():
     client_ip_address = Parameter("Client IP Address",
                                   "1.3.6.1.4.1.9.9.599.1.3.1.1.10",
                                   None)
+    ap_mac_address = Parameter("AP Mac Address",
+                               "1.3.6.1.4.1.9.9.599.1.3.1.1.39",
+                               None)
+
     #
     # Callable optional Parameters
     #
@@ -49,20 +59,45 @@ class AllParameter():
     retries = Parameter("Retries",
                         "1.3.6.1.4.1.9.9.599.1.4.1.1.1",
                         'int(11)')
+    # use with mac address of AP not Client
+    ap_name = Parameter("AP Name",
+                        "1.3.6.1.4.1.9.9.513.4.1.1.1.1.1",
+                        'varchar(255)')
+    #
+    rx_packages = Parameter("RX Packages",
+                            "1.3.6.1.4.1.9.9.599.1.4.1.1.27",
+                            'int(11)')
+    #
+    tx_packages = Parameter("TX Packages",
+                            "1.3.6.1.4.1.9.9.599.1.4.1.1.25",
+                            'int(11)')
+    #
+    ping = Parameter("Ping (ms)",
+                            None,
+                            'double')
+
     #
     # Default Parameters
     #
     rssi_off = Parameter("RSSI",
-                     "1.3.6.1.4.1.14179.2.1.6.1.1",
-                     'double')
+                         "1.3.6.1.4.1.14179.2.1.6.1.1",
+                         'double')
     #
     snr_off = Parameter("SNR",
-                     "1.3.6.1.4.1.14179.2.1.6.1.26",
-                     'double')
-
+                        "1.3.6.1.4.1.14179.2.1.6.1.26",
+                        'double')
+    #
+    data_rate_off = Parameter("Client Data Rate",
+                              "1.3.6.1.4.1.9.9.599.1.3.1.1.18",
+                              'double')
 
     @staticmethod
     def get_all_parameter():
+        """
+
+        :rtype: list
+        :return: a list of all parameters, which are defined in this class
+        """
         list_of_all_parameter = []
 
         # loop through all fields of class AllParameter
@@ -73,4 +108,3 @@ class AllParameter():
                 list_of_all_parameter.append(getattr(AllParameter, field))
 
         return list_of_all_parameter
-

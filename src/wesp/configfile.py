@@ -28,12 +28,17 @@ class ConfigSectionSchema(object):
         interval = Param(type=click.IntRange(1, 300))
         retries = Param(type=bool)
         channel = Param(type=bool)
+        ap_name = Param(type=bool)
+        rx_packages = Param(type=bool)
+        tx_packages = Param(type=bool)
+        ping = Param(type=bool)
 
     # parse data for section DEFAULT_OFF (default options)
     @matches_section("DEFAULT_OFF")
     class Default(SectionSchema):
         rssi_off = Param(type=bool)
         snr_off = Param(type=bool)
+        data_rate_off = Param(type=bool)
 
     # parse data for section DEFAULT_OFF (default options)
     @matches_section("DATABASE")
