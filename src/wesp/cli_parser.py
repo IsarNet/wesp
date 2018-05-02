@@ -11,21 +11,36 @@ from wesp.snmp import Snmp
 # Order at which the Data is outputted, make sure to always add a None to each tuple!
 order = [('channel', None), ('retries', None), ('snr_off', None),('rssi_off', None)]
 
-# This dict will hold the requested information about the client
-# If you want the entries to be sorted, like they are inputted or worked on
-# (Default values will be last) then just remove the order argument from this statement:
+
+"""
+This dict will hold the requested information about the client
+If you want the entries to be sorted, like they are inputted or worked on
+(Default values will be last) then just remove the order argument from this statement:
+"""
 CLIENT_DATA = collections.OrderedDict(order)
 
 
-# This function will just add the given value
-# in the context object under the param's name
 def add_value_to_context(ctx, param, value):
-    # print (param.name, value)
+    """
+    This function will just add the given value in the context object under the param's name
+
+    :param ctx:
+    :param param:
+    :param value:
+    :return: Nothing, value will be stored in context object
+    """
     ctx.obj[param.name] = value
 
 
-# This function will request and save an attribute based on the corresponding OID and Mac Address
 def get_snmp_value(ctx, param, flag_set):
+    """
+    This function will request and save an attribute based on the corresponding OID and Mac Address
+
+    :param ctx:
+    :param param:
+    :param flag_set:
+    :return: Nothing, value will be stored in context object
+    """
     # ensure flag is set
     if flag_set:
         # ensure SNMP Class is ready and initialized
@@ -40,8 +55,15 @@ def get_snmp_value(ctx, param, flag_set):
         # print(param.name)
 
 
-# This function will request and save an attribute based on the corresponding OID and Mac Address
 def get_snmp_value_with_mac(ctx, param, flag_set):
+    """
+    This function will request and save an attribute based on the corresponding OID and Mac Address
+
+    :param ctx:
+    :param param:
+    :param flag_set:
+    :return: Nothing, value will be stored in context object
+    """
     # ensure flag is set
     if flag_set:
         # ensure SNMP Class is ready and initialized
@@ -57,9 +79,15 @@ def get_snmp_value_with_mac(ctx, param, flag_set):
 
 
 # TODO Handle FQDN and Error
-# This function will check if the WLC Address is a valid IP or FQDN
-# If so it will set to the context, otherwise it will raise an error
 def check_wlc_address(ctx, param, value):
+    """
+    This function will check if the WLC Address is a valid IP or FQDN
+    If so it will set to the context, otherwise it will raise an error
+
+    :param ctx:
+    :param param:
+    :param value:
+    """
     ip = check_ip_address(value)
 
     # If not IP is should be a FQDN
@@ -69,12 +97,17 @@ def check_wlc_address(ctx, param, value):
         ctx.obj[param.name] = ip
 
 
-# This function will validate the given Client Address
-# and add it to the Context
 def check_client_address(ctx, param, value):
+    """
+    This function will validate the given Client Address and add it to the Context
+
+    :param ctx:
+    :param param:
+    :param value:
+    :return: Nothing, value will be stored in context object
+    """
     # ensure that Client Address is either a valid IP or Mac Address
     # If so add it to the Context Object for further use
-
     if check_ip_address(value) is not None:
         ctx.obj['client_ip'] = check_ip_address(value)
     else:
@@ -92,7 +125,7 @@ def get_ap_name(ctx, param, flag_set):
     """
     This function requests the Name of the associated AP of the Client.
     Therefore it will first request the MAC address of the AP from the cldcClientTable
-    and then using the address find its name in the clDLApBootTable
+    and then using the address to find its name in the clDLApBootTable
     :param ctx: Context of ...
     :param param:
     :param flag_set: True if flag is set, otherwise false
@@ -114,7 +147,15 @@ def get_ap_name(ctx, param, flag_set):
     CLIENT_DATA[param.name] = Snmp.get_by_mac_address(getattr(AllParameter, param.name).oid, ap_mac, ' ')
 
 
+# TODO Resposne of Johannes
 def get_ping(ctx, param, flag_set):
+    """
+    This function will ping the client from the device, which runs this script.
+    :param ctx:
+    :param param:
+    :param flag_set:
+    :return: Nothing, value will be stored in context object
+    """
     # ensure flag is set
     if flag_set:
         # ensure SNMP Class is ready and initialized
@@ -137,6 +178,9 @@ def get_ping(ctx, param, flag_set):
         CLIENT_DATA[param.name] = round(responses[ctx.obj['client_ip']] * 1000, 5)
 
 
+"""________ MAIN COMMAND _____________"""
+
+
 #
 # Click Options
 #
@@ -157,29 +201,29 @@ def get_ping(ctx, param, flag_set):
 #
 @click.option('--version', '-v', 'snmp_version', required=False, callback=add_value_to_context,
               type=click.Choice(['2c', '3']), is_eager=True, default="2c",
-              help='SNMP version, can either be 2c or 3')
+              help='SNMP version. ', show_default=True)
 #
 @click.option('--community', '-c', 'snmp_community', required=True, callback=add_value_to_context,
               cls=OnlyRequiredIf, is_eager=True, only_required_if_version="2c",
-              help='SNMP v2c community of WLC')
+              help='SNMP v2c community of WLC. ', show_default=True)
 #
 @click.option('--user', '-u', 'snmp_user', required=True, callback=add_value_to_context,
               cls=OnlyRequiredIf, is_eager=True, only_required_if_version="3",
-              help='SNMP v3 user of WLC')
+              help='SNMP v3 user of WLC. ', show_default=True)
 #
 @click.option('--pass', '-p', 'snmp_password', required=True, callback=add_value_to_context,
               cls=OnlyRequiredIf, is_eager=True, only_required_if_version="3",
-              help='SNMP v3 password/paraphrase of WLC')
+              help='SNMP v3 password/paraphrase of WLC. ', show_default=True)
 #
 @click.option('--encryption', '-e', 'snmp_encryption', required=True, callback=add_value_to_context,
               cls=OnlyRequiredIf, is_eager=True, only_required_if_version="3",
-              help='SNMP v3 encryption key of WLC')
+              help='SNMP v3 encryption key of WLC. ', show_default=True)
 #
 # optional Options
 #
 @click.option('--interval', '-i', 'interval', required=False, callback=add_value_to_context,
-              default=10, type=click.IntRange(1, 300),
-              help='SNMP v3 User of WLC')
+              default=10, type=click.IntRange(1, 300), show_default=True,
+              help='Interval in seconds at which data is requested from the WLC. Range from 1-300 allowed. ')
 #
 @click.option('--channel', '-ch', 'channel', required=False, callback=get_snmp_value_with_mac,
               is_flag=True,
@@ -203,7 +247,7 @@ def get_ping(ctx, param, flag_set):
 #
 @click.option('--ping', '-pi', 'ping', required=False, callback=get_ping,
               is_flag=True,
-              help='ICMP Ping to client from this device in ms')
+              help='ICMP Ping to client from this device in ms. NOTE: root privileges required')
 
 #
 # Default Options off
@@ -237,6 +281,9 @@ def cli_parser(ctx, wlc_address, client_address,
     # print("MAIN", ctx.default_map)
 
 
+"""________ DATABASE COMMAND _____________"""
+
+
 #
 # Database Command
 #
@@ -245,35 +292,48 @@ def cli_parser(ctx, wlc_address, client_address,
 @click.pass_context
 #
 @click.option("-n", "--name", "db_name", type=str, callback=add_value_to_context,
-              default="WESP",
-              help="Name of DB. Default: WESP")
+              default="WESP", show_default=True,
+              help="Name of Database. It will be created, if it does not exist. ")
 #
 @click.option("-t", "--table", "db_table", type=str, callback=add_value_to_context,
-              default="data",
-              help="Table to print in. Default: data")
+              default="data", show_default=True,
+              help="Name of table to print in. It will be created, if it does not exist. ")
 #
 @click.option("-a", "--address", "db_address", type=str, callback=add_value_to_context,
-              default="127.0.0.1",
-              help="IP address of database server. Default: 127.0.0.1 (localhost)")
+              default="127.0.0.1", show_default=True,
+              help="IP address of database server. ")
 #
 @click.option("-po", "--port", "db_port", type=int, callback=add_value_to_context,
-              default=3306,
-              help="Port of database server. Default: 3306")
+              default=3306, show_default=True,
+              help="Port of database server. ")
 #
 @click.option("-u", "--user", "db_user", callback=add_value_to_context,
-              type=str,
+              type=str, default="root", show_default=True,
               help="User of database server. ")
 #
 @click.option("-pa", "--password", "db_pass", callback=add_value_to_context,
-              type=str,
+              type=str, default="", show_default=True,
               help="Password of database server.")
 #
 @click.option("-s", "--silent", "silent", callback=add_value_to_context,
               is_flag=True, default=False,
-              help="Will only output data to the database")
+              help="Will only output data to the database and nothing to the CLI")
 #
 #
 def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, silent):
+    """
+
+    :param ctx:
+    :param db_name:
+    :param db_table:
+    :param db_address:
+    :param db_port:
+    :param db_user:
+    :param db_pass:
+    :param silent:
+    :return:
+    """
+
     # Init Database with ctx
     # and a config which contains hostname, port etc.
     # and the create statement for the parameters listed in the definition file
@@ -286,6 +346,9 @@ def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, s
 
     # TODO Remove
     # print ("DB", CLIENT_DATA)
+
+
+"""________ CONFIGFILE COMMAND _____________"""
 
 
 # TODO add real Default Path
@@ -310,13 +373,20 @@ def load_config(ctx, file_path):
     # add path to Config File Processor
     ConfigFileProcessor.config_files = [file_path]
 
-
-# This function will run after all parameters have been parsed
-# It will make the CLI Output and the depending on the settings the
-# Insert to the DB
-# It also repeats the process until the user kills the programm
+# TODO Change Output Style to Johannes Requiremtns
 @cli_parser.resultcallback()
 def process_result(result, **kwargs):
+    """
+    This function will run after all parameters have been parsed.
+    It will make the CLI Output and depending on the settings the
+    Insert to the DB.
+    It also repeats the process until the user kills the program or
+    an end end condition is met
+
+    :param result:
+    :param kwargs:
+    :return: Nothing
+    """
     click.echo('All parameters parsed')
 
     # get reference of context

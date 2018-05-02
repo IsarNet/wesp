@@ -1,11 +1,10 @@
 import click
+import sys
 from wesp.configfile import ConfigFileProcessor
 from wesp.helper import decompress_nested_dict, get_option_with_name
 
 # -- GLOBAL SETTINGS:
 HELP_PARAMETERS = ['-h', '--help']
-# will be read from option snmp_version
-VERSION_FLAG = ""
 
 
 # this function will read and check the flag of the command
@@ -48,13 +47,18 @@ class CustomGroup(click.Group):
         help_flag_set = False
         version_flag_index = None
         config_command_index = None
+        command_found = None
 
         ctx.obj['load_conf'] = False
 
-        VERSION_FLAG = get_option_with_name(self, ctx, 'snmp_version').opts
+        version_flags = get_option_with_name(self, ctx, 'snmp_version').opts
+        command_list = self.list_commands(ctx)
 
         # Iterate over args
         for idx, arg in enumerate(args):
+
+            if arg in command_list:
+                command_found = arg;
 
             # check if help flag was set, if so exit loop
             # and let super function output help text
@@ -62,10 +66,10 @@ class CustomGroup(click.Group):
                 help_flag_set = True
                 break
 
-            # check if version flag was set and if it is one
-            # the first position, if not it has to be moved to the
+            # check if version flag was set and if it is on
+            # the first position. If not it has to be moved to the
             # first
-            if arg in VERSION_FLAG \
+            if arg in version_flags \
                     and idx != 0:
                 version_flag_index = idx
 
@@ -76,7 +80,21 @@ class CustomGroup(click.Group):
                 config_command_index = idx
 
         # Ensure help flag has priority
-        if not help_flag_set:
+        # If flat is set, print help and do not call super
+        if help_flag_set:
+
+            if command_found is not None:
+                # print command specific help
+                click.echo(self.get_command(ctx, command_found).get_help(ctx))
+
+            else:
+                # print general help
+                click.echo(self.get_help(ctx))
+
+            # end program
+            sys.exit(0)
+
+        else:
 
             # Ensure that the version flag is the first parameter
             # If it was not set, set the context to the default value
@@ -94,25 +112,28 @@ class CustomGroup(click.Group):
                 # set context var to true, so sub command will load the conf as well
                 ctx.obj['load_conf'] = True
 
-        # add -h as help option in addition to --help
-        ctx.help_option_names = HELP_PARAMETERS
+            # add -h as help option in addition to --help
+            ctx.help_option_names = HELP_PARAMETERS
 
-        # run original or adapted argument list to parser
-        super(CustomGroup, self).parse_args(ctx, args)
+            # run original or adapted argument list to parser
+            super(CustomGroup, self).parse_args(ctx, args)
 
 
-# This class overloads click.Options
-# It enables the use of the only_required_if_version attribute
-# This will ensure that that the option with this attribute is only
-# required if the given version is presented.
-# If version and option does not match (e.g. version 3 and a community string)
-# an error is raised.
 class OnlyRequiredIf(click.Option):
+    """
+    This class overloads click.Options
+    It enables the use of the only_required_if_version attribute
+    This will ensure that that the option with this attribute is only
+    required if the given version is presented.
+    If version and option does not match (e.g. version 3 and a community string)
+    an error is raised.
+    """
+
     def __init__(self, *args, **kwargs):
         self.only_required_if_version = kwargs.pop('only_required_if_version')
         assert self.only_required_if_version, "'only_required_if_version' parameter required"
         kwargs['help'] = (kwargs.get('help', '') +
-                          ' NOTE: This argument is mutually exclusive with %s' %
+                          ' NOTE: This argument is mutually exclusive with snmp version %s' %
                           self.only_required_if_version
                           ).strip()
         super(OnlyRequiredIf, self).__init__(*args, **kwargs)
