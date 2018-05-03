@@ -1,11 +1,13 @@
 """
 This module contains overloads of click classes to allow custom reactions.
-The class CustomGroup overloads the class click.Group to allow custom parsing and rearranging of the options
+The class :class:`.CustomGroup` overloads the class :class:`.click.core.Group` to allow custom parsing and
+rearranging of the options.
 
-The class OnlyRequiredIf overloads the class click.Option to allow an option to be required if a certain
-snmp version has been set
+The class :class:`.OnlyRequiredIf` overloads the class :class:`.click.core.Option` to allow an option to be
+required if a certain snmp version has been set.
 
-The class CommandAllowConfigFile overloads the class click.Command to allow a command to access the configfile
+The class :class:`.CommandAllowConfigFile` overloads the class :class:`.click.core.Command` to allow a
+command to access the configfile.
 """
 
 import click
@@ -15,7 +17,6 @@ from wesp.helper import decompress_nested_dict, get_option_with_name
 
 # -- GLOBAL SETTINGS:
 HELP_PARAMETERS = ['-h', '--help']
-"""Flags of Help parameter"""
 
 
 def read_config_file_flag(self, ctx, args, idx):
@@ -57,7 +58,7 @@ def read_config_file_flag(self, ctx, args, idx):
 
 class CustomGroup(click.Group):
     """
-    This class overloads click.Group
+    This class overloads :class:`.Group`
     It will ensure that the config file is loaded before any other parameter is evaluated and
     the required options do not suppress the help option.
     In addition the version parameter is moved to the front of the args list to enable the class
@@ -67,7 +68,7 @@ class CustomGroup(click.Group):
 
     def parse_args(self, ctx, args):
         """
-        Overloads the function parse_args of click.Group, which runs before the parsing of
+        Overloads the function parse_args of :class:`.Group`, which runs before the parsing of
         the parameter of the super class
 
         :param ctx: current Context object
@@ -156,7 +157,7 @@ class CustomGroup(click.Group):
 
 class OnlyRequiredIf(click.Option):
     """
-    This class overloads click.Options
+    This class overloads :class:`.Option`
     It enables the use of the only_required_if_version attribute
     This will ensure that that the option with this attribute is only
     required if the given version is presented.
@@ -166,7 +167,7 @@ class OnlyRequiredIf(click.Option):
 
     def __init__(self, *args, **kwargs):
         """
-        This function overloads the init function of click.Option and set specific help texts and
+        This function overloads the init function of :class:`.Option` and set specific help texts and
         warnings
         :param args:
         :param kwargs:
@@ -215,14 +216,14 @@ class OnlyRequiredIf(click.Option):
 
 class CommandAllowConfigFile(click.Command):
     """
-    Overrides the click.Command class to allow a command
+    Overloads the :class:`.Command` class to allow a command
     to read the config file
 
     """
 
     def parse_args(self, ctx, args):
         """
-        Overloads the function parse_args of click.Command, which runs before the parsing of
+        Overloads the function parse_args of :class:`.Command`, which runs before the parsing of
         the parameter of the super class.
 
         :param ctx: current Context

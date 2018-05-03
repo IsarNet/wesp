@@ -1,5 +1,10 @@
-from easysnmp import Session, EasySNMPConnectionError
-from wesp.definitions import *
+"""
+This module contains everything related to the SNMP protocol. Every communication with the WLC will run through
+the :class:`.Snmp` class. For more information see :class:`.Snmp`
+"""
+
+from easysnmp import Session, EasySNMPConnectionError, EasySNMPTimeoutError, \
+    EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError
 from wesp.helper import *
 import click
 
@@ -97,11 +102,19 @@ class Snmp:
         will walk the given OID
 
         :param oid: OID to walk
-        :rtype: list or None
+        :rtype: list of SNMPVariable or None
+        :raises: SNMP Timeout Error
         :return: a list of SNMPVariable objects containing the values that were retrieved via SNMP
 
         """
-        return Snmp.session.walk(oid)
+        try:
+            return Snmp.session.walk(oid)
+
+        except EasySNMPTimeoutError, e:
+
+            raise click.UsageError(
+                "SNMP Timeout Error: `%s`" % (
+                    e.message))
 
     @staticmethod
     def get(oid):
@@ -110,10 +123,31 @@ class Snmp:
 
         :param oid: OID to get from
         :rtype: SNMPVariable
+        :raises: click.UsageError
         :return: an SNMPVariable object containing the value that was retrieved
 
         """
-        return Snmp.session.get(oid).value
+        try:
+
+            response = Snmp.session.get(oid)
+            if validate_snmp_type(response, oid):
+                return response
+
+        except EasySNMPTimeoutError, e:
+
+            raise click.UsageError(
+                "SNMP Timeout Error: `%s`" % (
+                    e.message))
+
+        except EasySNMPNoSuchInstanceError, e:
+            raise click.UsageError(
+                "No such Instance at: `%s` (`%s`)" % (
+                    oid, e.message))
+
+        except EasySNMPNoSuchObjectError, e:
+            raise click.UsageError(
+                "No such Object at: `%s` (`%s`)" % (
+                    oid, e.message))
 
     @staticmethod
     def get_mac_from_ip(ip):
@@ -126,7 +160,7 @@ class Snmp:
 
         """
 
-        all_items = Snmp.session.walk(AllParameter.client_ip_address.oid)
+        all_items = Snmp.walk(AllParameter.client_ip.oid)
 
         for item in all_items:
 
@@ -134,8 +168,10 @@ class Snmp:
             if compare_ips(ip, item.value):
                 return extract_mac_from_oid(item.oid)
 
-        # return None, if nothing was found
-        return None
+        # raise Error, if nothing was found
+        raise click.UsageError(
+            "No MAC address found for `%s`. Is device connected?" % (
+                ip))
 
     @staticmethod
     def get_by_mac_address(oid, mac_address, separator=':'):
@@ -153,10 +189,11 @@ class Snmp:
         """
         # convert mac from hex to dec
         mac_int = mac_hex_to_dec(mac_address, separator)
+        # todo add catch for empty mac
         # add connecting dot, if not existing between end of oid and mac address
         oid = oid + mac_int if (oid[-1] == '.') else oid + '.' + mac_int
 
-        response = Snmp.session.get(oid)
+        response = Snmp.get(oid)
 
         # if type is octet string remove surrounding quotation marks
         if response.snmp_type == 'OCTETSTR':
@@ -174,7 +211,7 @@ class Snmp:
         :return: Nothing, result will be outputted directly to the CLI
 
         """
-        system_items = Snmp.session.walk(oid)
+        system_items = Snmp.walk(oid)
 
         # Each returned item can be used normally as its related type (str or int)
         # but also has several extended attributes with SNMP-specific information

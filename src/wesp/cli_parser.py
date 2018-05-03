@@ -1,3 +1,26 @@
+"""
+This module's main task is the parsing of the CLI parameters. This is done using the extension
+click (http://click.pocoo.org/5/). Click separates three different parameters: commands, options and arguments.
+
+This module is made up of one Group (:meth:`cli_parser`), which has two sub commands: :meth:`load_config`
+and :meth:`print_to_db`
+
+:meth:`cli_parser` contains all options to set up the main program (e.g. Client address and SNMP options),
+as well as optional parameters to turn on or off (e.g. RSSI, SNR, Ping).
+
+The command :meth:`load_config` triggers the loading of a config file for easier use. It has only one option
+to load a different file than the default one. Note the priority of input:\n
+1. CLI \n
+2. Configfile\n
+3. Default values\n
+This means that although you defined an option in the configfile you can overwrite it by setting a flag on the CLI.
+
+The command :meth:`print_to_db` triggers the output to the database. Through its options one is able to set
+the basic connection settings as well as database and table names. For detailed usage run `print_to_db -h`.
+Database and table are created, if they don't exist. The create statement is built automatically based on the
+parameters defined in the module :mod:`wesp.definitions`.
+
+"""
 import collections
 from multiping import *
 from wesp.click_overloaded import *
@@ -215,9 +238,14 @@ def get_ping(ctx, param, flag_set):
 #
 # optional Options
 #
-@click.option('--interval', '-i', 'interval', required=False, callback=add_value_to_context,
+@click.option('--interval', '-in', 'interval', required=False, callback=add_value_to_context,
               default=10, type=click.IntRange(1, 300), show_default=True,
               help='Interval in seconds at which data is requested from the WLC. Range from 1-300 allowed. ')
+#
+@click.option('--iterations', '-it', 'iterations', required=False, callback=add_value_to_context,
+              default=-1, type=int, show_default=False,
+              help='Iterations after which the this program should be ended. '
+                   'NOTE: Every value below 0 will cause infinite loop. [default: unlimited]  ')
 #
 @click.option('--channel', '-ch', 'channel', required=False, callback=get_snmp_value_with_mac,
               is_flag=True,
@@ -263,7 +291,7 @@ def get_ping(ctx, param, flag_set):
 #
 def cli_parser(ctx, wlc_address, client_address,
                snmp_version, snmp_community, snmp_user, snmp_password, snmp_encryption,
-               interval, channel, retries, ap_name, rx_packages, tx_packages, ping,
+               interval, iterations, channel, retries, ap_name, rx_packages, tx_packages, ping,
                rssi_off, snr_off, data_rate_off):
     """
     Example USAGE: WLC_AD CLI OPTIONS
@@ -386,7 +414,17 @@ def process_result(result, **kwargs):
     if Database.is_ready():
         Database.insert_data_set(CLIENT_DATA, ctx)
 
-    while True:
+    # decrease iteration by one
+    ctx.obj['iterations'] -= 1
+
+    # loop until iterations condition is met
+    # if iteration is on default value -1 this will never happen,
+    # since iteration will only get smaller and never hit 0
+    while ctx.obj['iterations'] != 0:
+
+        # decrease iteration by one
+        ctx.obj['iterations'] -= 1
+
         # sleep for interval seconds
         time.sleep(ctx.obj['interval'])
 
@@ -403,6 +441,13 @@ def process_result(result, **kwargs):
 
 
 def update_client_data(ctx):
+    """
+    This function will update the values by re-retrieving the values from the WLC
+
+    :param ctx: current Context
+    :return: Nothing, results are saved in Context
+
+    """
 
     # for each option stored in CLIENT_DATA search for corresponding
     # option object and runs in callback function again. This will update the

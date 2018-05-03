@@ -1,39 +1,50 @@
+"""
+This module contains everything which can be changed by a user. It holds the OIDs for the Parameters,
+as well as their name and database type. For more information see :class:`.Parameter`
+"""
+
 # TODO add tested version of WLC
 
 
-# Basic Parameter with fundamental information about it
 class Parameter:
     """
-    Para aweseome
+    Basic Parameter with fundamental information about it. More information below
     """
-    """human readable name, which will be used for the CLI output and the row name in the DB"""
+
     name = ""
-    # OID at which parameter can be found, in case this parameter needs the mac address to work
-    # don't enter it here. The mac address will be added in the parser, based on which callback
-    # is used for this parameter
+    """
+    human readable name, which will be used for the CLI output and the row name in the DB
+    """
+
     oid = ""
-    # DB Data Type which should be used for this parameter.
-    # For string use varchar(255) with the length of the string in the brackets
-    # For real numbers use int(11) with the length of the int in the brackets
-    #   For real non negative numbers use int(11) unsigned
-    # For rational numbers use double, no length needed. Be aware of the rounding problems in comparision
-    # e.g. https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues
+    """
+    OID at which parameter can be found, in case this parameter needs the mac address to work
+    don't enter it here. The mac address will be added in the parser, based on which callback
+    is used for this parameter
+    """
+
     db_data_type = ""
+    """
+    DB Data Type which should be used for this parameter.
+    For string use varchar(255) with the length of the string in the brackets
+    For real numbers use int(11) with the length of the int in the brackets
+    For real non negative numbers use int(11) unsigned
+    For rational numbers use double, no length needed. Be aware of the rounding problems in comparision
+    e.g. https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues
+    """
 
     def __init__(self, name, oid, db_data_type):
+        """init function will set the variables"""
         self.name = name
         self.oid = oid
         self.db_data_type = db_data_type
 
-
-# class which contains all Parameters, which can be requested by the user or
-# are necessary for the program
-# Ensure that the name of the attribute (e.g. channel) is the same as the name
-# of the click option specified in the cli_parser. Note Lower and Uppercase
-
 class AllParameter:
     """
-    Awesome description.
+    Class that contains all Parameters, which can be requested by the user or
+    are necessary for the program
+    Ensure that the name of the attribute (e.g. channel) is the same as the name
+    of the click option specified in the cli_parser. Note Lower and Uppercase
     """
 
     def __init__(self):
@@ -102,9 +113,11 @@ class AllParameter:
     @staticmethod
     def get_all_parameter():
         """
+        Returns all parameters listed in this class
 
         :rtype: list
         :return: a list of all parameters, which are defined in this class
+
         """
         list_of_all_parameter = []
 
@@ -113,6 +126,28 @@ class AllParameter:
         for field in vars(AllParameter):
 
             if isinstance(getattr(AllParameter, field), Parameter):
+
                 list_of_all_parameter.append(getattr(AllParameter, field))
 
         return list_of_all_parameter
+
+    @staticmethod
+    def get_parameter_by_oid(oid):
+        """
+        Returns the parameter with the given oid or nothing if no existing
+
+        :rtype: Parameter or None
+        :return: parameter with the given oid or None if no existing
+        """
+
+        # loop through all fields of class AllParameter
+        for field in vars(AllParameter):
+
+            if isinstance(getattr(AllParameter, field), Parameter):
+                candidate = getattr(AllParameter, field)
+
+                # OID matches, then return it
+                if candidate.oid in oid:
+                    return candidate
+
+        return None

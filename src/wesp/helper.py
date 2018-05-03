@@ -4,7 +4,9 @@ For further details look at the description of the corresponding functions.
 """
 
 from IPy import IP
+from easysnmp import EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError
 import re
+from click import UsageError
 import types
 from time import gmtime, strftime
 from wesp.definitions import AllParameter
@@ -17,7 +19,7 @@ from wesp.definitions import AllParameter
 def check_ip_address(address):
     """
     This functions ensure that the given address is a valid IP Address.
-    It will also complete address, e.g. 192.168.1 will become 192.168.1.0
+    It will also complete addresses, e.g. 192.168.1 will become 192.168.1.0
 
     :param address: IP address to compare
     :rtype: bool
@@ -59,6 +61,36 @@ def compare_ips(ip_a, ip_b):
     """
 
     return IP(ip_a) == IP(ip_b)
+
+
+def validate_snmp_type(response, oid):
+    """
+    This function will validate that the response from the WLC is valid.
+    If not it will raise an exception.
+
+    :param response: snmp variable
+    :raises: EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError
+    :return: True, if everything is fine
+    """
+
+    if response.snmp_type == "NOSUCHINSTANCE":
+
+        # Check if OID was the client_ip OID
+        if AllParameter.client_ip.oid in oid:
+            # raise with hint, if search was for IP
+            raise UsageError(
+                "No IP address found for given MAC address. Is device connected?")
+
+        else:
+            # raise Error with name of parameter, handling is done in calling function
+            raise EasySNMPNoSuchInstanceError(AllParameter.get_parameter_by_oid(oid).name)
+
+    if response.snmp_type == "NOSUCHOBJECT":
+        # raise Error with name of parameter, handling is done in calling function
+        raise EasySNMPNoSuchObjectError(AllParameter.get_parameter_by_oid(oid).name)
+
+    # Everything okay? return true
+    return True
 
 
 #
@@ -326,8 +358,6 @@ def generate_parameter_insert_statement(client_data):
 
     # for all entries in the given client_data set, which are represented in the class AllParameter
     for entry in client_data:
-
-        print(entry)
 
         if hasattr(AllParameter, entry):
             parameter = getattr(AllParameter, entry)
