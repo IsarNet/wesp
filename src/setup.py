@@ -6,7 +6,7 @@ setup(
     packages=['wesp'],
     url='https://github.com/IsarNet/wesp',
     license='GNU GPLv3',
-    author='Marcel Rummens und Maximilian Tichter',
+    author='Marcel Rummens and Maximilian Tichter',
     description='TODO',
     install_requires=[
         'easysnmp',

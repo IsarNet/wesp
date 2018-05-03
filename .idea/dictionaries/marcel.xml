@@ -3,6 +3,8 @@
     <words>
       <w>cisco</w>
       <w>fqdn</w>
+      <w>nosuchinstance</w>
+      <w>nosuchobject</w>
       <w>rssi</w>
       <w>snmp</w>
       <w>unknwon</w>

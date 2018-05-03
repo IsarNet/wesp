@@ -18,6 +18,9 @@ from wesp.helper import decompress_nested_dict, get_option_with_name
 # -- GLOBAL SETTINGS:
 HELP_PARAMETERS = ['-h', '--help']
 
+WELCOME_STRING = "Welcome to the wesp tool - Wireless Endpoint Statistics Program \n" \
+                 "For help run wesp -h"
+
 
 def read_config_file_flag(self, ctx, args, idx):
     """
@@ -89,6 +92,11 @@ class CustomGroup(click.Group):
         # retrieve version flags of version option and list of commands
         version_flags = get_option_with_name(self, ctx, 'snmp_version').opts
         command_list = self.list_commands(ctx)
+
+        # if no args has been given print welcome string
+        if len(args) == 0:
+            click.echo(WELCOME_STRING)
+            sys.exit(0)
 
         # Iterate over args
         for idx, arg in enumerate(args):
