@@ -108,6 +108,7 @@ def check_client_address(ctx, param, value):
     # If so add it to the Context Object for further use
     if check_ip_address(value) is not None:
         ctx.obj['client_ip'] = check_ip_address(value)
+
     else:
         if check_mac_address(value):
             ctx.obj['client_mac'] = value
@@ -335,11 +336,6 @@ def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, s
                            generate_parameter_create_statement(),
                            generate_parameter_insert_statement(CLIENT_DATA))
 
-    Database.insert_data_set(CLIENT_DATA)
-
-    # TODO Remove
-    # print ("DB", CLIENT_DATA)
-
 
 """________ CONFIGFILE COMMAND _____________"""
 
@@ -360,13 +356,10 @@ def load_config(ctx, file_path):
 
     """
 
-    # TODO Remove
-    # print("Load Config")
-
     # add path to Config File Processor
     ConfigFileProcessor.config_files = [file_path]
 
-# TODO Change Output Style to Johannes Requiremtns
+
 @cli_parser.resultcallback()
 def process_result(result, **kwargs):
     """
@@ -391,7 +384,7 @@ def process_result(result, **kwargs):
 
     # if print_to_db command was set, insert data
     if Database.is_ready():
-        Database.insert_data_set(CLIENT_DATA)
+        Database.insert_data_set(CLIENT_DATA, ctx)
 
     while True:
         # sleep for interval seconds
@@ -406,7 +399,7 @@ def process_result(result, **kwargs):
 
         # if print_to_db command was set, insert data again
         if Database.is_ready():
-            Database.insert_data_set(CLIENT_DATA)
+            Database.insert_data_set(CLIENT_DATA, ctx)
 
 
 def update_client_data(ctx):

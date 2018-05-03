@@ -43,6 +43,7 @@ class Database:
         # add the human readable as well as their programm name into the insert statement
         Database.insertStatement = Database.insertStatement.replace('$$PARAMETER$$', parameter_insert)
 
+        print(Database.insertStatement)
         # TODO Remove
         # print(Database.tableCreateStatement)
 
@@ -95,7 +96,12 @@ class Database:
     # will inserted the given data into the database based on the config
     # and statement form the init function
     @staticmethod
-    def insert_data_set(data_set):
+    def insert_data_set(data_set, ctx):
+
+        # Temporary add client_ip and client_mac (which should not be represented in client_data
+        # to prevent output to CLI)
+        data_set = data_set.copy()
+        data_set.update({'client_ip': ctx.obj['client_ip'], 'client_mac': ctx.obj['client_mac']})
 
         cnx = cur = None
         try:

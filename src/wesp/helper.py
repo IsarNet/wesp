@@ -319,8 +319,15 @@ def generate_parameter_insert_statement(client_data):
     parameter_names = ""
     parameter_values = ""
 
+    # Temporary add client_ip and client_mac (which should not be represented in client_data
+    # to prevent output to CLI)
+    client_data = client_data.copy()
+    client_data.update({'client_ip': None, 'client_mac': None})
+
     # for all entries in the given client_data set, which are represented in the class AllParameter
     for entry in client_data:
+
+        print(entry)
 
         if hasattr(AllParameter, entry):
             parameter = getattr(AllParameter, entry)
@@ -329,7 +336,7 @@ def generate_parameter_insert_statement(client_data):
             parameter_names += "`" + str(parameter.name) + "`, "
 
             # Add the name of the value of that parameter to the list parameter_values.
-            #  The "%()s" allows the later replacment with the actual value
+            #  The "%()s" allows the later replacement with the actual value
             parameter_values += "%(" + str(entry) + ")s, "
 
     # Remove the last ',' to prevent error

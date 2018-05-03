@@ -31,20 +31,28 @@ class Parameter:
 # Ensure that the name of the attribute (e.g. channel) is the same as the name
 # of the click option specified in the cli_parser. Note Lower and Uppercase
 
-class AllParameter():
+class AllParameter:
     """
-    Aweseome description.
+    Awesome description.
     """
 
     def __init__(self):
+        """
+        init is not needed. All fields are static
+        """
         pass
 
     #
     # Internal usage only
     #
-    client_ip_address = Parameter("Client IP Address",
+    client_ip = Parameter("Client IP Address",
                                   "1.3.6.1.4.1.9.9.599.1.3.1.1.10",
-                                  None)
+                                  'varchar(15)')
+    #
+    client_mac = Parameter("Client Mac Address",
+                                   None,
+                                   'varchar(17)')
+    #
     ap_mac_address = Parameter("AP Mac Address",
                                "1.3.6.1.4.1.9.9.599.1.3.1.1.39",
                                None)
@@ -73,8 +81,8 @@ class AllParameter():
                             'int(11)')
     #
     ping = Parameter("Ping (ms)",
-                            None,
-                            'double')
+                     None,
+                     'double')
 
     #
     # Default Parameters

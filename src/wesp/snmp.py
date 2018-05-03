@@ -64,18 +64,15 @@ class Snmp:
         # because Mac address is mandatory to find Cisco attributes
         if 'client_mac' not in ctx.obj:
             ctx.obj['client_mac'] = Snmp.get_mac_from_ip(ctx.obj['client_ip'])
-            # TODO Remove
-            print(ctx.obj['client_mac'])
 
         # Check if the Client IP Address was given
         # or only the Client Mac,
         # because IP address is mandatory to ping
         if 'client_ip' not in ctx.obj:
-            ctx.obj['client_ip'] = Snmp.get_by_mac_address(AllParameter.client_ip_address.oid, ctx.obj['client_mac'])
-            # TODO Remove
-            print(ctx.obj['client_ip'])
+            ctx.obj['client_ip'] = Snmp.get_by_mac_address(AllParameter.client_ip.oid, ctx.obj['client_mac'])
 
-        #print_session_info(session)
+        # TODO Remove
+        # print_session_info(session)
 
     @staticmethod
     def get_session():
