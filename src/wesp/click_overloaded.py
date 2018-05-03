@@ -1,3 +1,13 @@
+"""
+This module contains overloads of click classes to allow custom reactions.
+The class CustomGroup overloads the class click.Group to allow custom parsing and rearranging of the options
+
+The class OnlyRequiredIf overloads the class click.Option to allow an option to be required if a certain
+snmp version has been set
+
+The class CommandAllowConfigFile overloads the class click.Command to allow a command to access the configfile
+"""
+
 import click
 import sys
 from wesp.configfile import ConfigFileProcessor
@@ -5,12 +15,24 @@ from wesp.helper import decompress_nested_dict, get_option_with_name
 
 # -- GLOBAL SETTINGS:
 HELP_PARAMETERS = ['-h', '--help']
+"""Flags of Help parameter"""
 
 
-# this function will read and check the flag of the command
-# load_config. It will inform about an missing file path or
-# load the given or default config file.
 def read_config_file_flag(self, ctx, args, idx):
+    """
+    This function will read and check the flag of the command
+    load_config. It will inform about an missing file path or
+    load the given or default config file.
+
+    :param self: Reference to CustomGroup
+    :param ctx: Reference to current Context
+    :param args: list of given args
+    :param idx: index at which the load_config command has been found
+    :raise: BadParameter if argument for -f option is missing
+    :return: Nothing, result will be saved in default map of context
+
+    """
+
     # Check if file flag is set, if so load given file
     # Existence of file flag requires at least index +1 arguments
     if len(args) > idx + 1 and args[idx + 1] in ['-f', '--file']:
@@ -33,24 +55,37 @@ def read_config_file_flag(self, ctx, args, idx):
     ctx.default_map = decompress_nested_dict(ConfigFileProcessor.read_config())
 
 
-# This class overloads click.Group
-# It will ensure that the config file is loaded before any other parameter is evaluated
-# In addition it will check, that the options are in the right order, because the
-# required options (wlc_address, client_address, snmp_version) etc. need to be before
-# any other optional options (-i, --ping etc.) to ensure that they are parsed before the rest.
-# Otherwise the necessary data for the snmp session is not available at the time of the parsing of
-# the optional options
 class CustomGroup(click.Group):
+    """
+    This class overloads click.Group
+    It will ensure that the config file is loaded before any other parameter is evaluated and
+    the required options do not suppress the help option.
+    In addition the version parameter is moved to the front of the args list to enable the class
+    OnlyRequiredIf to set an option (e.g. community) only to required if an version is set (e.g. 2c)
+
+    """
 
     def parse_args(self, ctx, args):
+        """
+        Overloads the function parse_args of click.Group, which runs before the parsing of
+        the parameter of the super class
 
+        :param ctx: current Context object
+        :param args: list of given parameters
+        :return: result of super function
+
+        """
+
+        # define help vars
         help_flag_set = False
         version_flag_index = None
         config_command_index = None
         command_found = None
 
+        # per default no config is loaded
         ctx.obj['load_conf'] = False
 
+        # retrieve version flags of version option and list of commands
         version_flags = get_option_with_name(self, ctx, 'snmp_version').opts
         command_list = self.list_commands(ctx)
 
@@ -116,7 +151,7 @@ class CustomGroup(click.Group):
             ctx.help_option_names = HELP_PARAMETERS
 
             # run original or adapted argument list to parser
-            super(CustomGroup, self).parse_args(ctx, args)
+            return super(CustomGroup, self).parse_args(ctx, args)
 
 
 class OnlyRequiredIf(click.Option):
@@ -130,6 +165,14 @@ class OnlyRequiredIf(click.Option):
     """
 
     def __init__(self, *args, **kwargs):
+        """
+        This function overloads the init function of click.Option and set specific help texts and
+        warnings
+        :param args:
+        :param kwargs:
+
+        """
+
         self.only_required_if_version = kwargs.pop('only_required_if_version')
         assert self.only_required_if_version, "'only_required_if_version' parameter required"
         kwargs['help'] = (kwargs.get('help', '') +
@@ -139,7 +182,18 @@ class OnlyRequiredIf(click.Option):
         super(OnlyRequiredIf, self).__init__(*args, **kwargs)
 
     def handle_parse_result(self, ctx, opts, args):
-        we_are_present = self.name in opts
+        """
+        Overloads the function parse_args of click.Option, which runs after the super class has parsed the arguments
+        and handles the reaction to it.
+
+        :param ctx: current Context
+        :param opts: options given by user
+        :param args: arguments given by user
+        :return: result of super function
+
+        """
+
+        option_present = self.name in opts
 
         # Check if present version and require one are not the same
         # If so change the required attribute of this option to False
@@ -149,7 +203,8 @@ class OnlyRequiredIf(click.Option):
 
             self.required = False
 
-            if we_are_present:
+            # if option is present, although the option is not needed raise error
+            if option_present:
                 raise click.UsageError(
                     "Illegal usage: `%s` is mutually exclusive with snmp version `%s`" % (
                         self.name, self.only_required_if_version))
@@ -158,11 +213,24 @@ class OnlyRequiredIf(click.Option):
             ctx, opts, args)
 
 
-# Overrides the click.Command class to allow a command
-# to read the config file
 class CommandAllowConfigFile(click.Command):
+    """
+    Overrides the click.Command class to allow a command
+    to read the config file
+
+    """
 
     def parse_args(self, ctx, args):
+        """
+        Overloads the function parse_args of click.Command, which runs before the parsing of
+        the parameter of the super class.
+
+        :param ctx: current Context
+        :param args: arguments given by user
+        :return: result of super function
+
+        """
+
         # check if CustomGroup found load_config command
         # if so read it into this command's default map
 
@@ -174,4 +242,4 @@ class CommandAllowConfigFile(click.Command):
         ctx.help_option_names = HELP_PARAMETERS
 
         # run original or adapted argument list to parser
-        super(CommandAllowConfigFile, self).parse_args(ctx, args)
+        return super(CommandAllowConfigFile, self).parse_args(ctx, args)

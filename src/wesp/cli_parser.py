@@ -45,7 +45,6 @@ def get_snmp_value(ctx, param, flag_set):
     if flag_set:
         # ensure SNMP Class is ready and initialized
         if not Snmp.is_ready():
-            pass
             Snmp(ctx)
 
         # load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary
@@ -68,7 +67,6 @@ def get_snmp_value_with_mac(ctx, param, flag_set):
     if flag_set:
         # ensure SNMP Class is ready and initialized
         if not Snmp.is_ready():
-            pass
             Snmp(ctx)
 
         # load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary
@@ -134,20 +132,15 @@ def get_ap_name(ctx, param, flag_set):
     if flag_set:
         # ensure SNMP Class is ready and initialized
         if not Snmp.is_ready():
-            pass
             Snmp(ctx)
 
-    # get mac address of associated AP
-    ap_mac = Snmp.get_by_mac_address(getattr(AllParameter, 'ap_mac_address').oid, ctx.obj['client_mac'])
+        # get mac address of associated AP
+        ap_mac = Snmp.get_by_mac_address(getattr(AllParameter, 'ap_mac_address').oid, ctx.obj['client_mac'])
 
-    # remove quotation marks
-    ap_mac = ap_mac.replace('"', '')
-
-    # Retrieve name of AP using Mac Address form above using custom separator ' '
-    CLIENT_DATA[param.name] = Snmp.get_by_mac_address(getattr(AllParameter, param.name).oid, ap_mac, ' ')
+        # Retrieve name of AP using Mac Address form above using custom separator ' '
+        CLIENT_DATA[param.name] = Snmp.get_by_mac_address(getattr(AllParameter, param.name).oid, ap_mac, ' ')
 
 
-# TODO Resposne of Johannes
 def get_ping(ctx, param, flag_set):
     """
     This function will ping the client from the device, which runs this script.
@@ -160,22 +153,22 @@ def get_ping(ctx, param, flag_set):
     if flag_set:
         # ensure SNMP Class is ready and initialized
         if not Snmp.is_ready():
-            pass
             Snmp(ctx)
 
-    # wrap address in list
-    address_list = [ctx.obj['client_ip']]
+        # wrap address in list
+        address_list = [ctx.obj['client_ip']]
 
-    # Ping the addresses up to 4 times (initial ping + 3 retries), over the
-    # course of 2 seconds. This means that for those addresses that do not
-    # respond another ping will be sent every 0.5 seconds.
-    responses, no_responses = multi_ping(address_list, timeout=2, retry=3)
+        # Ping the addresses up to 4 times (initial ping + 3 retries), over the
+        # course of 2 seconds. This means that for those addresses that do not
+        # respond another ping will be sent every 0.5 seconds.
+        responses, no_responses = multi_ping(address_list, timeout=2, retry=3)
 
-    if len(no_responses) > 0:
-        CLIENT_DATA[param.name] = "No response"
-    else:
-        # Result will be in milliseconds and correct to 5 decimal places
-        CLIENT_DATA[param.name] = round(responses[ctx.obj['client_ip']] * 1000, 5)
+        # check if client responded
+        if len(no_responses) > 0:
+            CLIENT_DATA[param.name] = False
+        else:
+            # Result will be in milliseconds and correct to 5 decimal places
+            CLIENT_DATA[param.name] = round(responses[ctx.obj['client_ip']] * 1000, 5)
 
 
 """________ MAIN COMMAND _____________"""
@@ -392,9 +385,9 @@ def process_result(result, **kwargs):
     # get reference of context
     ctx = click.get_current_context()
 
-    # if not silent print results to cli
+    # if not silent print results to CLI
     if 'silent' not in ctx.obj or not ctx.obj['silent']:
-        print(generate_cli_output(CLIENT_DATA))
+        print(generate_cli_output(CLIENT_DATA, ctx))
 
     # if print_to_db command was set, insert data
     if Database.is_ready():
@@ -409,7 +402,7 @@ def process_result(result, **kwargs):
 
         # if not silent print to output again
         if 'silent' not in ctx.obj or not ctx.obj['silent']:
-            print(generate_cli_output(CLIENT_DATA))
+            print(generate_cli_output(CLIENT_DATA, ctx))
 
         # if print_to_db command was set, insert data again
         if Database.is_ready():
