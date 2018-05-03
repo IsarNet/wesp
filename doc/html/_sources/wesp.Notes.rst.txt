@@ -1,0 +1,7 @@
+wesp.Notes module
+=================
+
+.. automodule:: wesp.Notes
+    :members:
+    :undoc-members:
+    :show-inheritance:

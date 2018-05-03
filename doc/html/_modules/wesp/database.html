@@ -1,0 +1,346 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>wesp.database &mdash; wesp 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wesp
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../wesp.html">wesp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wesp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>wesp.database</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for wesp.database</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">mysql.connector</span>
+<span class="kn">from</span> <span class="nn">mysql.connector</span> <span class="k">import</span> <span class="n">errorcode</span>
+<span class="kn">import</span> <span class="nn">click</span>
+
+
+<div class="viewcode-block" id="Database"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database">[docs]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">:</span>
+
+    <span class="n">databaseCreateStatement</span> <span class="o">=</span> <span class="s2">&quot;CREATE DATABASE IF NOT EXISTS $$DATABASE$$;&quot;</span>
+
+    <span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS $$DATABASE$$.$$TABLE$$ (</span>
+<span class="s2">    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,</span>
+<span class="s2">      `Timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,</span>
+<span class="s2">      $$PARAMETER$$</span>
+<span class="s2">      PRIMARY KEY (`id`)</span>
+<span class="s2">    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;&quot;&quot;&quot;</span>
+
+    <span class="n">insertStatement</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;INSERT INTO $$TABLE$$ $$PARAMETER$$;&quot;&quot;&quot;</span><span class="p">;</span>
+
+    <span class="n">table_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">db_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">global_config</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ready</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># will initialize the database and complete the SQL Statements with the given names and sub-statements</span>
+<div class="viewcode-block" id="Database.init_database"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database.init_database">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">init_database</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">parameter_create</span><span class="p">,</span> <span class="n">parameter_insert</span><span class="p">):</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_table&#39;</span><span class="p">]</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_name&#39;</span><span class="p">]</span>
+
+        <span class="c1"># add given names to SQL statements</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">databaseCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">databaseCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$DATABASE$$&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$DATABASE$$&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span>
+
+        <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$TABLE$$&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$TABLE$$&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
+
+        <span class="c1"># add the parameters create statement into the tableCreateStatement</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$PARAMETER$$&#39;</span><span class="p">,</span> <span class="n">parameter_create</span><span class="p">)</span>
+
+        <span class="c1"># add the human readable as well as their programm name into the insert statement</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$PARAMETER$$&#39;</span><span class="p">,</span> <span class="n">parameter_insert</span><span class="p">)</span>
+
+        <span class="c1"># TODO Remove</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="p">)</span>
+
+        <span class="c1"># add the database config to the class</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">global_config</span> <span class="o">=</span> <span class="n">config</span>
+
+        <span class="n">Database</span><span class="o">.</span><span class="n">create_database_and_table_if_not_existing</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="n">Database</span><span class="o">.</span><span class="n">ready</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+    <span class="c1"># Will check the existence of the database and the Table with the names specified in the init_database function.</span>
+    <span class="c1"># If they do not exist they will be created</span>
+    <span class="c1"># Therefore a connection to the DB Information_Schema is performed.</span>
+<div class="viewcode-block" id="Database.create_database_and_table_if_not_existing"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database.create_database_and_table_if_not_existing">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_database_and_table_if_not_existing</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+
+        <span class="c1"># copy dict to prevent changes in original config</span>
+        <span class="n">config_information_schema</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="c1"># change to Information Schema DB in case WESP does not exist</span>
+        <span class="n">config_information_schema</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;INFORMATION_SCHEMA&quot;</span>
+
+        <span class="n">cnx</span> <span class="o">=</span> <span class="n">cur</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cnx</span> <span class="o">=</span> <span class="n">mysql</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">**</span><span class="n">config_information_schema</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">mysql</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errorcode</span><span class="o">.</span><span class="n">ER_ACCESS_DENIED_ERROR</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
+                    <span class="s2">&quot;MySQL Error: Something is wrong with your user name or password&#39;&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errorcode</span><span class="o">.</span><span class="n">ER_BAD_DB_ERROR</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
+                    <span class="s2">&quot;MySQL Error: Database INFORMATION_SCHEMA does not exist. Check your MySQL installation.&#39;&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
+                    <span class="s2">&quot;Unknown MySQL Error: `</span><span class="si">%s</span><span class="s2">`&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="n">err</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">cnx</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="c1"># Create database, if not existing</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">Database</span><span class="o">.</span><span class="n">databaseCreateStatement</span><span class="p">)</span>
+
+            <span class="c1"># Create table if not existing</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cur</span><span class="p">:</span>
+                <span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">cnx</span><span class="p">:</span>
+                <span class="n">cnx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+    <span class="c1"># will inserted the given data into the database based on the config</span>
+    <span class="c1"># and statement form the init function</span>
+<div class="viewcode-block" id="Database.insert_data_set"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database.insert_data_set">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">insert_data_set</span><span class="p">(</span><span class="n">data_set</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+
+        <span class="c1"># Temporary add client_ip and client_mac (which should not be represented in client_data</span>
+        <span class="c1"># to prevent output to CLI)</span>
+        <span class="n">data_set</span> <span class="o">=</span> <span class="n">data_set</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">data_set</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;client_ip&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_ip&#39;</span><span class="p">],</span> <span class="s1">&#39;client_mac&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_mac&#39;</span><span class="p">]})</span>
+
+        <span class="n">cnx</span> <span class="o">=</span> <span class="n">cur</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cnx</span> <span class="o">=</span> <span class="n">mysql</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">**</span><span class="n">Database</span><span class="o">.</span><span class="n">global_config</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">mysql</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errorcode</span><span class="o">.</span><span class="n">ER_ACCESS_DENIED_ERROR</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
+                    <span class="s2">&quot;MySQL Error: Something is wrong with your user name or password&#39;&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errorcode</span><span class="o">.</span><span class="n">ER_BAD_DB_ERROR</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
+                    <span class="s2">&quot;MySQL Error: Database&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;does not exist. Check your MySQL installation.&#39;&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
+                    <span class="s2">&quot;Unknown MySQL Error: `</span><span class="si">%s</span><span class="s2">`&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="n">err</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">cnx</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="c1"># Insert new data set</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span><span class="p">,</span> <span class="n">data_set</span><span class="p">)</span>
+
+            <span class="c1"># Commit data to the database</span>
+            <span class="n">cnx</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cur</span><span class="p">:</span>
+                <span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">cnx</span><span class="p">:</span>
+                <span class="n">cnx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+    <span class="c1"># if database has been initialized return True,</span>
+    <span class="c1"># Otherwise False</span>
+<div class="viewcode-block" id="Database.is_ready"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database.is_ready">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_ready</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">Database</span><span class="o">.</span><span class="n">ready</span></div></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Marcel Rummens and Maximilian Tichter.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

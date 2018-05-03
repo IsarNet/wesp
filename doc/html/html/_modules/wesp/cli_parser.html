@@ -1,0 +1,673 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>wesp.cli_parser &mdash; wesp 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wesp
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../wesp.html">wesp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wesp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>wesp.cli_parser</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for wesp.cli_parser</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module&#39;s main task is the parsing of the CLI parameters. This is done using the extension</span>
+<span class="sd">click (http://click.pocoo.org/5/). Click separates three different parameters: commands, options and arguments.</span>
+
+<span class="sd">This module is made up of one Group (:meth:`cli_parser`), which has two sub commands: :meth:`load_config`</span>
+<span class="sd">and :meth:`print_to_db`</span>
+
+<span class="sd">:meth:`cli_parser` contains all options to set up the main program (e.g. Client address and SNMP options),</span>
+<span class="sd">as well as optional parameters to turn on or off (e.g. RSSI, SNR, Ping).</span>
+
+<span class="sd">The command :meth:`load_config` triggers the loading of a config file for easier use. It has only one option</span>
+<span class="sd">to load a different file than the default one. Note the priority of input:\n</span>
+<span class="sd">1. CLI \n</span>
+<span class="sd">2. Configfile\n</span>
+<span class="sd">3. Default values\n</span>
+<span class="sd">This means that although you defined an option in the configfile you can overwrite it by setting a flag on the CLI.</span>
+
+<span class="sd">The command :meth:`print_to_db` triggers the output to the database. Through its options one is able to set</span>
+<span class="sd">the basic connection settings as well as database and table names. For detailed usage run `print_to_db -h`.</span>
+<span class="sd">Database and table are created, if they don&#39;t exist. The create statement is built automatically based on the</span>
+<span class="sd">parameters defined in the module :mod:`wesp.definitions`.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">from</span> <span class="nn">multiping</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">wesp.click_overloaded</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">wesp.helper</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">wesp.database</span> <span class="k">import</span> <span class="n">Database</span>
+<span class="kn">from</span> <span class="nn">wesp.snmp</span> <span class="k">import</span> <span class="n">Snmp</span>
+
+<span class="c1"># TODO Check Error Messages at wrong config file input, e.g. v2 instead of 2c</span>
+<span class="c1"># TODO populate</span>
+
+<span class="c1"># Order at which the Data is outputted, make sure to always add a None to each tuple!</span>
+<span class="n">order</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;retries&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;snr_off&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),(</span><span class="s1">&#39;rssi_off&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This dict will hold the requested information about the client</span>
+<span class="sd">If you want the entries to be sorted, like they are inputted or worked on</span>
+<span class="sd">(Default values will be last) then just remove the order argument from this statement:</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">CLIENT_DATA</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="add_value_to_context"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.add_value_to_context">[docs]</a><span class="k">def</span> <span class="nf">add_value_to_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function will just add the given value in the context object under the param&#39;s name</span>
+
+<span class="sd">    :param ctx:</span>
+<span class="sd">    :param param:</span>
+<span class="sd">    :param value:</span>
+<span class="sd">    :return: Nothing, value will be stored in context object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="get_snmp_value"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.get_snmp_value">[docs]</a><span class="k">def</span> <span class="nf">get_snmp_value</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">flag_set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function will request and save an attribute based on the corresponding OID and Mac Address</span>
+
+<span class="sd">    :param ctx:</span>
+<span class="sd">    :param param:</span>
+<span class="sd">    :param flag_set:</span>
+<span class="sd">    :return: Nothing, value will be stored in context object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ensure flag is set</span>
+    <span class="k">if</span> <span class="n">flag_set</span><span class="p">:</span>
+        <span class="c1"># ensure SNMP Class is ready and initialized</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="n">Snmp</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+        <span class="c1"># load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary</span>
+        <span class="n">CLIENT_DATA</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">AllParameter</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">oid</span><span class="p">)</span></div>
+
+        <span class="c1"># TODO Remove</span>
+        <span class="c1"># print(param.name)</span>
+
+
+<div class="viewcode-block" id="get_snmp_value_with_mac"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.get_snmp_value_with_mac">[docs]</a><span class="k">def</span> <span class="nf">get_snmp_value_with_mac</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">flag_set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function will request and save an attribute based on the corresponding OID and Mac Address</span>
+
+<span class="sd">    :param ctx:</span>
+<span class="sd">    :param param:</span>
+<span class="sd">    :param flag_set:</span>
+<span class="sd">    :return: Nothing, value will be stored in context object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ensure flag is set</span>
+    <span class="k">if</span> <span class="n">flag_set</span><span class="p">:</span>
+        <span class="c1"># ensure SNMP Class is ready and initialized</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="n">Snmp</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+        <span class="c1"># load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary</span>
+        <span class="n">CLIENT_DATA</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">get_by_mac_address</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">AllParameter</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">oid</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_mac&#39;</span><span class="p">])</span></div>
+
+        <span class="c1"># TODO Remove</span>
+        <span class="c1"># print(&#39;with mac&#39;, param.name)</span>
+
+
+<span class="c1"># TODO Handle FQDN and Error</span>
+<div class="viewcode-block" id="check_wlc_address"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.check_wlc_address">[docs]</a><span class="k">def</span> <span class="nf">check_wlc_address</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function will check if the WLC Address is a valid IP or FQDN</span>
+<span class="sd">    If so it will set to the context, otherwise it will raise an error</span>
+
+<span class="sd">    :param ctx:</span>
+<span class="sd">    :param param:</span>
+<span class="sd">    :param value:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="n">check_ip_address</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="c1"># If not IP is should be a FQDN</span>
+    <span class="k">if</span> <span class="n">ip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip</span></div>
+
+
+<div class="viewcode-block" id="check_client_address"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.check_client_address">[docs]</a><span class="k">def</span> <span class="nf">check_client_address</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function will validate the given Client Address and add it to the Context</span>
+
+<span class="sd">    :param ctx:</span>
+<span class="sd">    :param param:</span>
+<span class="sd">    :param value:</span>
+<span class="sd">    :return: Nothing, value will be stored in context object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ensure that Client Address is either a valid IP or Mac Address</span>
+    <span class="c1"># If so add it to the Context Object for further use</span>
+    <span class="k">if</span> <span class="n">check_ip_address</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_ip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_ip_address</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">check_mac_address</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_mac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="c1"># Otherwise raise an error</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">BadParameter</span><span class="p">(</span>
+                <span class="s2">&quot;Bad Parameter: `</span><span class="si">%s</span><span class="s2">` is not a valid Hex Mac Address&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">value</span><span class="p">,))</span></div>
+
+
+<div class="viewcode-block" id="get_ap_name"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.get_ap_name">[docs]</a><span class="k">def</span> <span class="nf">get_ap_name</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">flag_set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function requests the Name of the associated AP of the Client.</span>
+<span class="sd">    Therefore it will first request the MAC address of the AP from the cldcClientTable</span>
+<span class="sd">    and then using the address to find its name in the clDLApBootTable</span>
+<span class="sd">    :param ctx: Context of ...</span>
+<span class="sd">    :param param:</span>
+<span class="sd">    :param flag_set: True if flag is set, otherwise false</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ensure flag is set</span>
+    <span class="k">if</span> <span class="n">flag_set</span><span class="p">:</span>
+        <span class="c1"># ensure SNMP Class is ready and initialized</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="n">Snmp</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+        <span class="c1"># get mac address of associated AP</span>
+        <span class="n">ap_mac</span> <span class="o">=</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">get_by_mac_address</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">AllParameter</span><span class="p">,</span> <span class="s1">&#39;ap_mac_address&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">oid</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_mac&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Retrieve name of AP using Mac Address form above using custom separator &#39; &#39;</span>
+        <span class="n">CLIENT_DATA</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">get_by_mac_address</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">AllParameter</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">oid</span><span class="p">,</span> <span class="n">ap_mac</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_ping"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.get_ping">[docs]</a><span class="k">def</span> <span class="nf">get_ping</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">flag_set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function will ping the client from the device, which runs this script.</span>
+<span class="sd">    :param ctx:</span>
+<span class="sd">    :param param:</span>
+<span class="sd">    :param flag_set:</span>
+<span class="sd">    :return: Nothing, value will be stored in context object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ensure flag is set</span>
+    <span class="k">if</span> <span class="n">flag_set</span><span class="p">:</span>
+        <span class="c1"># ensure SNMP Class is ready and initialized</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="n">Snmp</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+        <span class="c1"># wrap address in list</span>
+        <span class="n">address_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_ip&#39;</span><span class="p">]]</span>
+
+        <span class="c1"># Ping the addresses up to 4 times (initial ping + 3 retries), over the</span>
+        <span class="c1"># course of 2 seconds. This means that for those addresses that do not</span>
+        <span class="c1"># respond another ping will be sent every 0.5 seconds.</span>
+        <span class="n">responses</span><span class="p">,</span> <span class="n">no_responses</span> <span class="o">=</span> <span class="n">multi_ping</span><span class="p">(</span><span class="n">address_list</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">retry</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="c1"># check if client responded</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">no_responses</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">CLIENT_DATA</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Result will be in milliseconds and correct to 5 decimal places</span>
+            <span class="n">CLIENT_DATA</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">responses</span><span class="p">[</span><span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_ip&#39;</span><span class="p">]]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span></div>
+
+
+<span class="sd">&quot;&quot;&quot;________ MAIN COMMAND _____________&quot;&quot;&quot;</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># Click Options</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">chain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CustomGroup</span><span class="p">,</span> <span class="n">invoke_without_command</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="c1">#</span>
+<span class="c1"># Address Options</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--WLC&#39;</span><span class="p">,</span> <span class="s1">&#39;-W&#39;</span><span class="p">,</span> <span class="s1">&#39;wlc_address&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_eager</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">check_wlc_address</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;IP or FQDN address of WLC&#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--CLI&#39;</span><span class="p">,</span> <span class="s1">&#39;-C&#39;</span><span class="p">,</span> <span class="s1">&#39;client_address&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_eager</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">check_client_address</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;IP or MAC address of Client&#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1"># TODO is eager ensures parsing before everything else</span>
+<span class="c1"># SNMP Options</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--version&#39;</span><span class="p">,</span> <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;snmp_version&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Choice</span><span class="p">([</span><span class="s1">&#39;2c&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">]),</span> <span class="n">is_eager</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;2c&quot;</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SNMP version. &#39;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--community&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;snmp_community&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="bp">cls</span><span class="o">=</span><span class="n">OnlyRequiredIf</span><span class="p">,</span> <span class="n">is_eager</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_required_if_version</span><span class="o">=</span><span class="s2">&quot;2c&quot;</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SNMP v2c community of WLC. &#39;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--user&#39;</span><span class="p">,</span> <span class="s1">&#39;-u&#39;</span><span class="p">,</span> <span class="s1">&#39;snmp_user&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="bp">cls</span><span class="o">=</span><span class="n">OnlyRequiredIf</span><span class="p">,</span> <span class="n">is_eager</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_required_if_version</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SNMP v3 user of WLC. &#39;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--pass&#39;</span><span class="p">,</span> <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;snmp_password&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="bp">cls</span><span class="o">=</span><span class="n">OnlyRequiredIf</span><span class="p">,</span> <span class="n">is_eager</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_required_if_version</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SNMP v3 password/paraphrase of WLC. &#39;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--encryption&#39;</span><span class="p">,</span> <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;snmp_encryption&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="bp">cls</span><span class="o">=</span><span class="n">OnlyRequiredIf</span><span class="p">,</span> <span class="n">is_eager</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_required_if_version</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SNMP v3 encryption key of WLC. &#39;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1"># optional Options</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--interval&#39;</span><span class="p">,</span> <span class="s1">&#39;-in&#39;</span><span class="p">,</span> <span class="s1">&#39;interval&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">IntRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Interval in seconds at which data is requested from the WLC. Range from 1-300 allowed. &#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--iterations&#39;</span><span class="p">,</span> <span class="s1">&#39;-it&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="n">default</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Iterations after which the this program should be ended. &#39;</span>
+                   <span class="s1">&#39;NOTE: Every value below 0 will cause infinite loop. [default: unlimited]  &#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--channel&#39;</span><span class="p">,</span> <span class="s1">&#39;-ch&#39;</span><span class="p">,</span> <span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Channel used by Client&#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--retries&#39;</span><span class="p">,</span> <span class="s1">&#39;-re&#39;</span><span class="p">,</span> <span class="s1">&#39;retries&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of Retries by Client&#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--ap_name&#39;</span><span class="p">,</span> <span class="s1">&#39;-ap&#39;</span><span class="p">,</span> <span class="s1">&#39;ap_name&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_ap_name</span><span class="p">,</span>
+              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of Access Point the client is associated with&#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--rx_packages&#39;</span><span class="p">,</span> <span class="s1">&#39;-re&#39;</span><span class="p">,</span> <span class="s1">&#39;rx_packages&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of client received packages&#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--tx_packages&#39;</span><span class="p">,</span> <span class="s1">&#39;-re&#39;</span><span class="p">,</span> <span class="s1">&#39;tx_packages&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of client transmitted packages&#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--ping&#39;</span><span class="p">,</span> <span class="s1">&#39;-pi&#39;</span><span class="p">,</span> <span class="s1">&#39;ping&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_ping</span><span class="p">,</span>
+              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;ICMP Ping to client from this device in ms. NOTE: root privileges required&#39;</span><span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Default Options off</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--rssi_off&#39;</span><span class="p">,</span> <span class="s1">&#39;-ro&#39;</span><span class="p">,</span> <span class="s1">&#39;rssi_off&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flag_value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Will deactivate the Output of the RSSI (Received Signal Strength Indication) of the WLC&#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--snr_off&#39;</span><span class="p">,</span> <span class="s1">&#39;-so&#39;</span><span class="p">,</span> <span class="s1">&#39;snr_off&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flag_value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Will deactivate the Output of the SNR (Signal to Noise Ratio) of the WLC&#39;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--data_rate_off&#39;</span><span class="p">,</span> <span class="s1">&#39;-do&#39;</span><span class="p">,</span> <span class="s1">&#39;data_rate_off&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flag_value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Will deactivate the Output of the Client Data Rate&#39;</span><span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Function Definition</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">cli_parser</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">wlc_address</span><span class="p">,</span> <span class="n">client_address</span><span class="p">,</span>
+               <span class="n">snmp_version</span><span class="p">,</span> <span class="n">snmp_community</span><span class="p">,</span> <span class="n">snmp_user</span><span class="p">,</span> <span class="n">snmp_password</span><span class="p">,</span> <span class="n">snmp_encryption</span><span class="p">,</span>
+               <span class="n">interval</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">retries</span><span class="p">,</span> <span class="n">ap_name</span><span class="p">,</span> <span class="n">rx_packages</span><span class="p">,</span> <span class="n">tx_packages</span><span class="p">,</span> <span class="n">ping</span><span class="p">,</span>
+               <span class="n">rssi_off</span><span class="p">,</span> <span class="n">snr_off</span><span class="p">,</span> <span class="n">data_rate_off</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Example USAGE: WLC_AD CLI OPTIONS</span>
+<span class="sd">    This tool ist awesome:</span>
+
+<span class="sd">        WLC_...&quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO Remove</span>
+    <span class="c1"># print(&quot;MAIN&quot;, ctx.default_map)</span>
+
+
+<span class="sd">&quot;&quot;&quot;________ DATABASE COMMAND _____________&quot;&quot;&quot;</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># Database Command</span>
+<span class="c1">#</span>
+<span class="nd">@cli_parser</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">CommandAllowConfigFile</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="s2">&quot;--name&quot;</span><span class="p">,</span> <span class="s2">&quot;db_name&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="n">default</span><span class="o">=</span><span class="s2">&quot;WESP&quot;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of Database. It will be created, if it does not exist. &quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--table&quot;</span><span class="p">,</span> <span class="s2">&quot;db_table&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="n">default</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of table to print in. It will be created, if it does not exist. &quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;-a&quot;</span><span class="p">,</span> <span class="s2">&quot;--address&quot;</span><span class="p">,</span> <span class="s2">&quot;db_address&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="n">default</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;IP address of database server. &quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;-po&quot;</span><span class="p">,</span> <span class="s2">&quot;--port&quot;</span><span class="p">,</span> <span class="s2">&quot;db_port&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="n">default</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Port of database server. &quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="s2">&quot;--user&quot;</span><span class="p">,</span> <span class="s2">&quot;db_user&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;User of database server. &quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;-pa&quot;</span><span class="p">,</span> <span class="s2">&quot;--password&quot;</span><span class="p">,</span> <span class="s2">&quot;db_pass&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Password of database server.&quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--silent&quot;</span><span class="p">,</span> <span class="s2">&quot;silent&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
+              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Will only output data to the database and nothing to the CLI&quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">print_to_db</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">db_name</span><span class="p">,</span> <span class="n">db_table</span><span class="p">,</span> <span class="n">db_address</span><span class="p">,</span> <span class="n">db_port</span><span class="p">,</span> <span class="n">db_user</span><span class="p">,</span> <span class="n">db_pass</span><span class="p">,</span> <span class="n">silent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param ctx:</span>
+<span class="sd">    :param db_name:</span>
+<span class="sd">    :param db_table:</span>
+<span class="sd">    :param db_address:</span>
+<span class="sd">    :param db_port:</span>
+<span class="sd">    :param db_user:</span>
+<span class="sd">    :param db_pass:</span>
+<span class="sd">    :param silent:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Init Database with ctx</span>
+    <span class="c1"># and a config which contains hostname, port etc.</span>
+    <span class="c1"># and the create statement for the parameters listed in the definition file</span>
+    <span class="n">Database</span><span class="o">.</span><span class="n">init_database</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span>
+                           <span class="n">generate_db_conf_from_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">),</span>
+                           <span class="n">generate_parameter_create_statement</span><span class="p">(),</span>
+                           <span class="n">generate_parameter_insert_statement</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">))</span>
+
+
+<span class="sd">&quot;&quot;&quot;________ CONFIGFILE COMMAND _____________&quot;&quot;&quot;</span>
+
+
+<span class="c1"># TODO add real Default Path</span>
+<span class="c1"># TODO Add real Help Text</span>
+<span class="c1">#</span>
+<span class="c1"># Config File Command Definition</span>
+<span class="c1">#</span>
+<span class="nd">@cli_parser</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--file&#39;</span><span class="p">,</span> <span class="s1">&#39;file_path&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;../../wesp_config.cfg&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Optional Path to Config File&quot;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Will load configfile. For more information see load_config --help.</span>
+
+<span class="sd">    if no path is given the default path will be used</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># add path to Config File Processor</span>
+    <span class="n">ConfigFileProcessor</span><span class="o">.</span><span class="n">config_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_path</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="process_result"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.process_result">[docs]</a><span class="nd">@cli_parser</span><span class="o">.</span><span class="n">resultcallback</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">process_result</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function will run after all parameters have been parsed.</span>
+<span class="sd">    It will make the CLI Output and depending on the settings the</span>
+<span class="sd">    Insert to the DB.</span>
+<span class="sd">    It also repeats the process until the user kills the program or</span>
+<span class="sd">    an end end condition is met</span>
+
+<span class="sd">    :param result:</span>
+<span class="sd">    :param kwargs:</span>
+<span class="sd">    :return: Nothing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;All parameters parsed&#39;</span><span class="p">)</span>
+
+    <span class="c1"># get reference of context</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">get_current_context</span><span class="p">()</span>
+
+    <span class="c1"># if not silent print results to CLI</span>
+    <span class="k">if</span> <span class="s1">&#39;silent&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;silent&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">generate_cli_output</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">))</span>
+
+    <span class="c1"># if print_to_db command was set, insert data</span>
+    <span class="k">if</span> <span class="n">Database</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">insert_data_set</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+
+    <span class="c1"># decrease iteration by one</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;iterations&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="c1"># loop until iterations condition is met</span>
+    <span class="c1"># if iteration is on default value -1 this will never happen,</span>
+    <span class="c1"># since iteration will only get smaller and never hit 0</span>
+    <span class="k">while</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;iterations&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="c1"># decrease iteration by one</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;iterations&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="c1"># sleep for interval seconds</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;interval&#39;</span><span class="p">])</span>
+
+        <span class="c1"># fetch newest info from wlc</span>
+        <span class="n">update_client_data</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+        <span class="c1"># if not silent print to output again</span>
+        <span class="k">if</span> <span class="s1">&#39;silent&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;silent&#39;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">generate_cli_output</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">))</span>
+
+        <span class="c1"># if print_to_db command was set, insert data again</span>
+        <span class="k">if</span> <span class="n">Database</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="n">Database</span><span class="o">.</span><span class="n">insert_data_set</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="update_client_data"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.update_client_data">[docs]</a><span class="k">def</span> <span class="nf">update_client_data</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function will update the values by re-retrieving the values from the WLC</span>
+
+<span class="sd">    :param ctx: current Context</span>
+<span class="sd">    :return: Nothing, results are saved in Context</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># for each option stored in CLIENT_DATA search for corresponding</span>
+    <span class="c1"># option object and runs in callback function again. This will update the</span>
+    <span class="c1"># value</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">CLIENT_DATA</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">option</span> <span class="o">=</span> <span class="n">get_option_with_name</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+            <span class="c1"># run callback function for this option again</span>
+            <span class="n">option</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Marcel Rummens and Maximilian Tichter.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

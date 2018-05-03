@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>wesp.configfile &mdash; wesp 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wesp
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../wesp.html">wesp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wesp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>wesp.configfile</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for wesp.configfile</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module is responsible for the configfile. It loads it and matches its content with the defined</span>
+<span class="sd">parameters in the module :mod:`wesp.cli_parser`.</span>
+<span class="sd">The schema of the configfile it described in the class :class:`.ConfigSectionSchema`, while the parsing</span>
+<span class="sd">is triggered and performed by :class:`.ConfigFileReader` and its overload :class:`.ConfigFileProcessor`</span>
+
+<span class="sd">This module uses the click extension click-configfile (https://github.com/click-contrib/click-configfile).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">click_configfile</span> <span class="k">import</span> <span class="n">ConfigFileReader</span><span class="p">,</span> <span class="n">Param</span><span class="p">,</span> <span class="n">SectionSchema</span><span class="p">,</span> <span class="n">matches_section</span>
+<span class="kn">import</span> <span class="nn">click</span>
+
+
+<div class="viewcode-block" id="ConfigSectionSchema"><a class="viewcode-back" href="../../wesp.configfile.html#wesp.configfile.ConfigSectionSchema">[docs]</a><span class="k">class</span> <span class="nc">ConfigSectionSchema</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This class contains a description of each configfile section.</span>
+<span class="sd">    Each section then contains the parameter which can be configured through the configfile.</span>
+
+<span class="sd">    To add a new section just create a new class and a `@matches_section` decorator to it.</span>
+<span class="sd">    Ensure that the Name of the section is written in capital letters and does not contains any brackets.</span>
+<span class="sd">    In the created class add the exact name of the parameter as defined in the :mod:`wesp.cli_parser` and set it to a Param.</span>
+<span class="sd">    More information about the Param Types can be found here: http://click.pocoo.org/5/parameters/#parameter-types</span>
+<span class="sd">    The last step is to add the Schema to the parsing list in the class ConfigFileProcessor below.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Parse data for section General</span>
+<div class="viewcode-block" id="ConfigSectionSchema.General"><a class="viewcode-back" href="../../wesp.configfile.html#wesp.configfile.ConfigSectionSchema.General">[docs]</a>    <span class="nd">@matches_section</span><span class="p">(</span><span class="s2">&quot;GENERAL&quot;</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">General</span><span class="p">(</span><span class="n">SectionSchema</span><span class="p">):</span>
+        <span class="n">wlc_address</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">client_address</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span></div>
+
+    <span class="c1"># parse data for section SNMP</span>
+<div class="viewcode-block" id="ConfigSectionSchema.SNMP"><a class="viewcode-back" href="../../wesp.configfile.html#wesp.configfile.ConfigSectionSchema.SNMP">[docs]</a>    <span class="nd">@matches_section</span><span class="p">(</span><span class="s2">&quot;SNMP&quot;</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">SNMP</span><span class="p">(</span><span class="n">SectionSchema</span><span class="p">):</span>
+        <span class="n">snmp_version</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Choice</span><span class="p">([</span><span class="s1">&#39;2c&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">]),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;2c&quot;</span><span class="p">)</span>
+        <span class="n">snmp_community</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">snmp_user</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">snmp_password</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">snmp_encryption</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span></div>
+
+    <span class="c1"># parse data for section Options (non default options)</span>
+<div class="viewcode-block" id="ConfigSectionSchema.Options"><a class="viewcode-back" href="../../wesp.configfile.html#wesp.configfile.ConfigSectionSchema.Options">[docs]</a>    <span class="nd">@matches_section</span><span class="p">(</span><span class="s2">&quot;OPTIONS&quot;</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">Options</span><span class="p">(</span><span class="n">SectionSchema</span><span class="p">):</span>
+        <span class="n">interval</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">IntRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">300</span><span class="p">))</span>
+        <span class="n">iterations</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">retries</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">ap_name</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">rx_packages</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">tx_packages</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">ping</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span></div>
+
+    <span class="c1"># parse data for section DEFAULT_OFF (default options)</span>
+<div class="viewcode-block" id="ConfigSectionSchema.Default"><a class="viewcode-back" href="../../wesp.configfile.html#wesp.configfile.ConfigSectionSchema.Default">[docs]</a>    <span class="nd">@matches_section</span><span class="p">(</span><span class="s2">&quot;DEFAULT_OFF&quot;</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">SectionSchema</span><span class="p">):</span>
+        <span class="n">rssi_off</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">snr_off</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">data_rate_off</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span></div>
+
+    <span class="c1"># parse data for section DEFAULT_OFF (default options)</span>
+<div class="viewcode-block" id="ConfigSectionSchema.Database"><a class="viewcode-back" href="../../wesp.configfile.html#wesp.configfile.ConfigSectionSchema.Database">[docs]</a>    <span class="nd">@matches_section</span><span class="p">(</span><span class="s2">&quot;DATABASE&quot;</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">Database</span><span class="p">(</span><span class="n">SectionSchema</span><span class="p">):</span>
+        <span class="n">db_name</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">db_table</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">db_address</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">db_port</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">db_user</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">db_pass</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">silent</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ConfigFileProcessor"><a class="viewcode-back" href="../../wesp.configfile.html#wesp.configfile.ConfigFileProcessor">[docs]</a><span class="k">class</span> <span class="nc">ConfigFileProcessor</span><span class="p">(</span><span class="n">ConfigFileReader</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class overloads the class :class:`.ConfigFileReader` from click-configfile.</span>
+<span class="sd">    It allows to set the schemas of the sections.</span>
+<span class="sd">    It also holds the path to the configfile (config_files) but this field is set</span>
+<span class="sd">    by the command :meth:`load_config` in :mod:`wesp.cli_parser`. This is triggered by :class:`.CustomGroup`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_section_schemas</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">ConfigSectionSchema</span><span class="o">.</span><span class="n">General</span><span class="p">,</span> <span class="c1"># PRIMARY SCHEMA</span>
+        <span class="n">ConfigSectionSchema</span><span class="o">.</span><span class="n">SNMP</span><span class="p">,</span>
+        <span class="n">ConfigSectionSchema</span><span class="o">.</span><span class="n">Options</span><span class="p">,</span>
+        <span class="n">ConfigSectionSchema</span><span class="o">.</span><span class="n">Default</span><span class="p">,</span>
+        <span class="n">ConfigSectionSchema</span><span class="o">.</span><span class="n">Database</span>
+    <span class="p">]</span>
+
+<div class="viewcode-block" id="ConfigFileProcessor.process_config_section"><a class="viewcode-back" href="../../wesp.configfile.html#wesp.configfile.ConfigFileProcessor.process_config_section">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">process_config_section</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_section</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function overrides the process_config_section function</span>
+<span class="sd">        of the :class:`.ConfigFileReader`.</span>
+<span class="sd">        It inverts all boolean values of the section DEFAULT_OFF to make all</span>
+<span class="sd">        parameters in this section to Off switches, since these describe the default behaviour.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># parse config section</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ConfigFileProcessor</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">process_config_section</span><span class="p">(</span><span class="n">config_section</span><span class="p">,</span><span class="n">storage</span><span class="p">)</span>
+
+        <span class="c1"># if section is DEFAULT_OFF, then find corresponding dict in storage</span>
+        <span class="c1"># and invert all values</span>
+        <span class="k">if</span> <span class="n">config_section</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DEFAULT_OFF&quot;</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">storage</span><span class="p">[</span><span class="s1">&#39;DEFAULT_OFF&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+                <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="n">storage</span><span class="p">[</span><span class="s1">&#39;DEFAULT_OFF&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">storage</span><span class="p">[</span><span class="s1">&#39;DEFAULT_OFF&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Marcel Rummens and Maximilian Tichter.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

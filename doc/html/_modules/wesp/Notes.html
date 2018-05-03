@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>wesp.Notes &mdash; wesp 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wesp
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../wesp.html">wesp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wesp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>wesp.Notes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for wesp.Notes</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../wesp.Notes.html#wesp.Notes.parse_args">[docs]</a><span></span><span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">help_flag_set</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">config_command_index</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">first_command_index</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">reorder_needed</span> <span class="o">=</span> <span class="n">check_position_of_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+    <span class="c1"># Iterate over args</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+        <span class="c1"># check if help flag was set, if so exit loop</span>
+        <span class="c1"># and let super function output help text</span>
+        <span class="k">if</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">HELP_PARAMETERS</span><span class="p">:</span>
+            <span class="n">help_flag_set</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+
+        <span class="c1"># check if load_config command is used</span>
+        <span class="c1"># if so check if -f or --file flag is set</span>
+        <span class="c1"># Then load config, has to be done before call to super</span>
+        <span class="k">if</span> <span class="n">arg</span> <span class="o">==</span> <span class="s2">&quot;load_config&quot;</span><span class="p">:</span>
+            <span class="n">config_command_index</span> <span class="o">=</span> <span class="n">idx</span>
+
+        <span class="c1"># Search for index of first command</span>
+        <span class="c1"># Check if arg is a command</span>
+        <span class="k">if</span> <span class="n">reorder_needed</span> <span class="ow">and</span> \
+                <span class="n">first_command_index</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> \
+                <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">:</span>
+            <span class="n">first_command_index</span> <span class="o">=</span> <span class="n">idx</span>
+
+    <span class="c1"># Ensure help flag has priority</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">help_flag_set</span><span class="p">:</span>
+
+        <span class="c1"># load the config file, if command was given</span>
+        <span class="c1"># has to happen before super call, otherwise values are not loaded</span>
+        <span class="k">if</span> <span class="n">config_command_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">read_config_file_flag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">config_command_index</span><span class="p">)</span>
+
+        <span class="c1"># if options are not up front, reorder parameter</span>
+        <span class="k">if</span> <span class="n">reorder_needed</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">reorder_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">first_command_index</span><span class="p">)</span>
+
+    <span class="c1"># add -h as help option in addition to --help</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">help_option_names</span> <span class="o">=</span> <span class="n">HELP_PARAMETERS</span>
+
+    <span class="c1"># run original or adapted argument list to parser</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">AdaptiveGroup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_usage"><a class="viewcode-back" href="../../wesp.Notes.html#wesp.Notes.get_usage">[docs]</a><span class="k">def</span> <span class="nf">get_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;USAGE&quot;</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">AdaptiveGroup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span></div>
+
+
+<span class="c1"># enable CLI command of form WLC_ADDRESS CLIENT_ADDRESS [OPTIONS] COMMAND</span>
+<span class="c1"># click requires to be the OPTIONS be up front</span>
+<span class="c1"># this function will reorder the parameter to be the Options up front</span>
+<span class="c1"># In addition it will check, if WLC or Client Address is missing</span>
+<div class="viewcode-block" id="reorder_options"><a class="viewcode-back" href="../../wesp.Notes.html#wesp.Notes.reorder_options">[docs]</a><span class="k">def</span> <span class="nf">reorder_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="c1"># get all params and save them into all_params</span>
+    <span class="n">all_options</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+        <span class="n">all_options</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">opts</span><span class="p">)</span>
+
+    <span class="c1"># First OPTION is at position 3, because 1 and 2 are WLC and Client Address</span>
+    <span class="c1"># If commands are given (ind != None) the options span until the first command</span>
+    <span class="c1"># If no commands are given the options span until the end of args</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="n">idx</span><span class="p">]</span> <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+
+    <span class="c1"># Remove Options from Argument List</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">args</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">]</span>
+
+    <span class="c1"># Check if required Arguments are given, if not raise Error</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">all_options</span> <span class="ow">or</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">:</span>
+        <span class="n">raise_critical_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="s2">&quot;Missing argument WLC_ADDRESS&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">all_options</span> <span class="ow">or</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">:</span>
+        <span class="n">raise_critical_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="s2">&quot;Missing argument CLIENT_ADDRESS&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Append Options in the beginning</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">options</span> <span class="o">+</span> <span class="n">args</span>
+
+    <span class="k">return</span> <span class="n">args</span>
+
+    <span class="k">def</span> <span class="nf">get_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;USAGE&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AdaptiveGroup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_usage</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Marcel Rummens und Maximilian Tichter.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>
