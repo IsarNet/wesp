@@ -14,12 +14,7 @@ import click
 import sys
 from wesp.configfile import ConfigFileProcessor
 from wesp.helper import decompress_nested_dict, get_option_with_name
-
-# -- GLOBAL SETTINGS:
-HELP_PARAMETERS = ['-h', '--help']
-
-WELCOME_STRING = "Welcome to the wesp tool - Wireless Endpoint Statistics Program \n" \
-                 "For help run wesp -h"
+from wesp.definitions import GlobalSettings
 
 
 def read_config_file_flag(self, ctx, args, idx):
@@ -69,6 +64,55 @@ class CustomGroup(click.Group):
 
     """
 
+    def format_usage(self, ctx, formatter):
+        """
+        Overloads the :meth:`format_usage` of class :class:`click.core.Group`.
+        This allows a custom usage string, which is defined in the :class:`.GlobalSettings`
+
+        :param ctx: current Context
+        :param formatter: Reference to class:`click.formatting.HelpFormatter`
+
+        """
+        formatter.write_usage(GlobalSettings.PROGRAM_NAME, GlobalSettings.USAGE)
+
+    def format_options(self, ctx, formatter):
+        """
+         Overloads the :meth:`format_options` of class :class:`click.core.Group`.
+         This allows to add a custom headline above the SNMP Options as well as
+         the Other non SNMP Options. This makes the help text more clearly
+
+        :param ctx: current Context
+        :param formatter: Reference to class:`click.formatting.HelpFormatter`
+
+        """
+
+        opts = []
+        snmp_found = False
+        other_options_found = False
+
+        for param in self.get_params(ctx):
+            rv = param.get_help_record(ctx)
+
+            if rv is not None:
+
+                # add blank line and headline to SNMP Options
+                if not snmp_found and 'snmp' in param.name:
+                    opts.append(['', ''])
+                    opts.append(['[SNMP OPTIONS]', ''])
+                    snmp_found = True
+
+                # add blank line and headline to Other Options
+                if snmp_found and not other_options_found and 'snmp' not in param.name:
+                    opts.append(['', ''])
+                    opts.append(['[OTHER OPTIONS]', ''])
+                    other_options_found = True
+
+                opts.append(rv)
+
+        if opts:
+            with formatter.section('Options'):
+                formatter.write_dl(opts)
+
     def parse_args(self, ctx, args):
         """
         Overloads the function parse_args of :class:`.Group`, which runs before the parsing of
@@ -95,7 +139,7 @@ class CustomGroup(click.Group):
 
         # if no args has been given print welcome string
         if len(args) == 0:
-            click.echo(WELCOME_STRING)
+            click.echo(GlobalSettings.WELCOME_STRING)
             sys.exit(0)
 
         # Iterate over args
@@ -106,7 +150,7 @@ class CustomGroup(click.Group):
 
             # check if help flag was set, if so exit loop
             # and let super function output help text
-            if arg in HELP_PARAMETERS:
+            if arg in GlobalSettings.HELP_PARAMETERS:
                 help_flag_set = True
                 break
 
@@ -229,6 +273,20 @@ class CommandAllowConfigFile(click.Command):
 
     """
 
+    def format_usage(self, ctx, formatter):
+        """
+        Overloads the :meth:`format_usage` of class :class:`click.core.Command`.
+        This allows a custom usage string, looks like this:
+
+        PROGRAM_NAME [...] Command_Name [OPTIONS]
+
+        :param ctx: current Context
+        :param formatter: Reference to class:`click.formatting.HelpFormatter`
+
+        """
+
+        formatter.write_usage(GlobalSettings.PROGRAM_NAME, '[...] ' + self.name + ' [OPTIONS]')
+
     def parse_args(self, ctx, args):
         """
         Overloads the function parse_args of :class:`.Command`, which runs before the parsing of
@@ -248,7 +306,7 @@ class CommandAllowConfigFile(click.Command):
             ctx.default_map = decompress_nested_dict(ConfigFileProcessor.read_config())
 
         # add -h as help option in addition to --help
-        ctx.help_option_names = HELP_PARAMETERS
+        ctx.help_option_names = GlobalSettings.HELP_PARAMETERS
 
         # run original or adapted argument list to parser
         return super(CommandAllowConfigFile, self).parse_args(ctx, args)

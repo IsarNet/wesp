@@ -1,14 +1,19 @@
 """
 This module contains everything which can be changed by a user. It holds the OIDs for the Parameters,
 as well as their name and database type. For more information see :class:`.Parameter`
+
+In addition the class :class:`GlobalSettings` defines basic options like the help flags, the usage text
+or the welcome string
 """
+
 
 # TODO add tested version of WLC
 
 
 class Parameter:
     """
-    Basic Parameter with fundamental information about it. More information below
+    Represents a basic Parameter with fundamental information about it.
+    More information on the fields can be found below
     """
 
     name = ""
@@ -39,6 +44,7 @@ class Parameter:
         self.oid = oid
         self.db_data_type = db_data_type
 
+
 class AllParameter:
     """
     Class that contains all Parameters, which can be requested by the user or
@@ -57,12 +63,12 @@ class AllParameter:
     # Internal usage only
     #
     client_ip = Parameter("Client IP Address",
-                                  "1.3.6.1.4.1.9.9.599.1.3.1.1.10",
-                                  'varchar(15)')
+                          "1.3.6.1.4.1.9.9.599.1.3.1.1.10",
+                          'varchar(15)')
     #
     client_mac = Parameter("Client Mac Address",
-                                   None,
-                                   'varchar(17)')
+                           None,
+                           'varchar(17)')
     #
     ap_mac_address = Parameter("AP Mac Address",
                                "1.3.6.1.4.1.9.9.599.1.3.1.1.39",
@@ -126,7 +132,6 @@ class AllParameter:
         for field in vars(AllParameter):
 
             if isinstance(getattr(AllParameter, field), Parameter):
-
                 list_of_all_parameter.append(getattr(AllParameter, field))
 
         return list_of_all_parameter
@@ -151,3 +156,46 @@ class AllParameter:
                     return candidate
 
         return None
+
+
+class GlobalSettings:
+    """
+    This class holds global settings, which are not viable for the program flow.
+    For Example one is able to change the Welcome text or the Usage String.
+    """
+    def __init__(self):
+        """
+        init is not needed. All fields are static
+        """
+        pass
+
+    HELP_PARAMETERS = ['-h', '--help']
+    """
+    Name of help flags, will be set in the :meth:`wesp.click_overloaded.CustomGroup.parse_args` 
+    or :meth:`wesp.click_overloaded.CommandAllowConfigFile.parse_args`
+    """
+
+    WELCOME_STRING = "Welcome to the wesp tool - Wireless Endpoint Statistics Program \n" \
+                     "For help run wesp -h"
+    """
+    String which greets the user, if no parameters are given.
+    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.parse_args` 
+    """
+
+    PROGRAM_NAME = "wesp"
+    """
+    Name of the program, which appears as part of the Usage String.
+    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.format_usage` 
+    """
+
+    USAGE = "-W wlc_ip|wlc_fqdn -C client_ip|client_mac  [SNMP OPTIONS] [OTHER OPTIONS] " \
+            "load_config [Options] print_to_db [Options]"
+    """
+    Usage String to help user understand the structure of the program. This string also
+    appears at every error message. 
+    
+    Additional help on the usage is defined in the help text of the :class:`wesp.click_overloaded.CustomGroup` 
+    
+    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.format_usage` 
+    
+    """

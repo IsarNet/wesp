@@ -294,7 +294,7 @@ def cli_parser(ctx, wlc_address, client_address,
                interval, iterations, channel, retries, ap_name, rx_packages, tx_packages, ping,
                rssi_off, snr_off, data_rate_off):
     """
-    Example USAGE: WLC_AD CLI OPTIONS
+    Example USAGE: wesp -W wlc_address -C client_address [SNMP Options] [Options]
     This tool ist awesome:
 
         WLC_..."""
@@ -373,7 +373,7 @@ def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, s
 #
 # Config File Command Definition
 #
-@cli_parser.command()
+@cli_parser.command(cls=CommandAllowConfigFile)
 @click.option('-f', '--file', 'file_path', default="../../wesp_config.cfg", type=click.Path(exists=True),
               help="Optional Path to Config File")
 @click.pass_context
