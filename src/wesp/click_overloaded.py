@@ -147,6 +147,9 @@ class CustomGroup(click.Group):
             click.echo(GlobalSettings.WELCOME_STRING)
             sys.exit(0)
 
+        # add -h as help option in addition to --help
+        ctx.help_option_names = GlobalSettings.HELP_PARAMETERS
+
         # Iterate over args
         for idx, arg in enumerate(args):
 
@@ -204,9 +207,6 @@ class CustomGroup(click.Group):
                 read_config_file_flag(self, ctx, args, config_command_index)
                 # set context var to true, so sub command will load the conf as well
                 ctx.obj['load_conf'] = True
-
-            # add -h as help option in addition to --help
-            ctx.help_option_names = GlobalSettings.HELP_PARAMETERS
 
             # run original or adapted argument list to parser
             return super(CustomGroup, self).parse_args(ctx, args)

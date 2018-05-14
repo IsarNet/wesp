@@ -327,10 +327,16 @@
         <span class="c1"># wrap address in list</span>
         <span class="n">address_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_ip&#39;</span><span class="p">]]</span>
 
-        <span class="c1"># Ping the addresses up to 4 times (initial ping + 3 retries), over the</span>
-        <span class="c1"># course of 2 seconds. This means that for those addresses that do not</span>
-        <span class="c1"># respond another ping will be sent every 0.5 seconds.</span>
-        <span class="n">responses</span><span class="p">,</span> <span class="n">no_responses</span> <span class="o">=</span> <span class="n">multi_ping</span><span class="p">(</span><span class="n">address_list</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">retry</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="c1"># try to ping, if not root raise error</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Ping the addresses up to 4 times (initial ping + 3 retries), over the</span>
+            <span class="c1"># course of 2 seconds. This means that for those addresses that do not</span>
+            <span class="c1"># respond another ping will be sent every 0.5 seconds.</span>
+            <span class="n">responses</span><span class="p">,</span> <span class="n">no_responses</span> <span class="o">=</span> <span class="n">multi_ping</span><span class="p">(</span><span class="n">address_list</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">retry</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">MultiPingError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
+                <span class="s2">&quot;Ping error: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">err</span><span class="p">)</span>
 
         <span class="c1"># check if client responded</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">no_responses</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -454,7 +460,12 @@
 <span class="c1">#</span>
 <span class="c1"># Database Command</span>
 <span class="c1">#</span>
-<span class="nd">@cli_parser</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">CommandAllowConfigFile</span><span class="p">)</span>
+<span class="nd">@cli_parser</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">CommandAllowConfigFile</span><span class="p">,</span>
+                    <span class="n">short_help</span><span class="o">=</span><span class="s2">&quot;Will output the results to a database. See print_to_db --help for more details.&quot;</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Will output the results to a database. Details on the options can be found below. </span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;Ensure that an existing MySQL database is running at the default or given address. &quot;</span>
+                         <span class="s2">&quot;The SQL installation is not part of this program! </span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;The Database and the table will be created if they do not exist.&quot;</span><span class="p">)</span>
 <span class="c1">#</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
 <span class="c1">#</span>
@@ -490,15 +501,23 @@
 <span class="k">def</span> <span class="nf">print_to_db</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">db_name</span><span class="p">,</span> <span class="n">db_table</span><span class="p">,</span> <span class="n">db_address</span><span class="p">,</span> <span class="n">db_port</span><span class="p">,</span> <span class="n">db_user</span><span class="p">,</span> <span class="n">db_pass</span><span class="p">,</span> <span class="n">silent</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="sd">    :param ctx:</span>
-<span class="sd">    :param db_name:</span>
-<span class="sd">    :param db_table:</span>
-<span class="sd">    :param db_address:</span>
-<span class="sd">    :param db_port:</span>
-<span class="sd">    :param db_user:</span>
-<span class="sd">    :param db_pass:</span>
-<span class="sd">    :param silent:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    This function represents the command print_to_db, it takes the options and uses them</span>
+<span class="sd">    to create a connection to the database. It also generates the Statements for the creation of</span>
+<span class="sd">    the table and for the insertion of data into this table.</span>
+
+<span class="sd">    Note that the click options have to be inside the arguments of this command, since they are expected by</span>
+<span class="sd">    click. The actual handling of them is done in the corresponding callback.</span>
+
+
+<span class="sd">    :param ctx: current Context</span>
+<span class="sd">    :param db_name: click option (is not be used)</span>
+<span class="sd">    :param db_table: click option (is not be used)</span>
+<span class="sd">    :param db_address: click option (is not be used)</span>
+<span class="sd">    :param db_port: click option (is not be used)</span>
+<span class="sd">    :param db_user: click option (is not be used)</span>
+<span class="sd">    :param db_pass: click option (is not be used)</span>
+<span class="sd">    :param silent: click option (is not be used)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Init Database with ctx</span>
@@ -519,14 +538,24 @@
 <span class="c1">#</span>
 <span class="c1"># Config File Command Definition</span>
 <span class="c1">#</span>
-<span class="nd">@cli_parser</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">CommandAllowConfigFile</span><span class="p">)</span>
+<span class="nd">@cli_parser</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">CommandAllowConfigFile</span><span class="p">,</span>
+                    <span class="n">short_help</span> <span class="o">=</span> <span class="s2">&quot;Will load configfile. For more information see load_config --help&quot;</span><span class="p">,</span>
+                    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Will load configfile. If no path is given the default path will be used, &quot;</span>
+                           <span class="s2">&quot;which can be found below.&quot;</span><span class="p">)</span>
+<span class="c1">#</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--file&#39;</span><span class="p">,</span> <span class="s1">&#39;file_path&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;../../wesp_config.cfg&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Optional Path to Config File&quot;</span><span class="p">)</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Optional Path to Config File&quot;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
 <span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Will load configfile. For more information see load_config --help.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Will set the path to the config inside the class :class:`.ConfigFileProcessor`. The actual loading is done</span>
+<span class="sd">    in the function :meth:`read_config_file_flag` in module :mod:`wesp.click_overloaded` over.</span>
 
-<span class="sd">    if no path is given the default path will be used</span>
+<span class="sd">    Note that the click options have to be inside the arguments of this command, since they are expected by</span>
+<span class="sd">    click.</span>
+
+<span class="sd">    :param ctx: current Context</span>
+<span class="sd">    :param file_path: click option (is not be used)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 

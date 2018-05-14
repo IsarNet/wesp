@@ -113,7 +113,16 @@ def check_wlc_address(ctx, param, value):
 
     # If not IP is should be a FQDN
     if ip is None:
-        ctx.obj[param.name] = value
+
+        # test if hostname can be resolved
+        try:
+            ip = socket.gethostbyname(value)
+            ctx.obj[param.name] = ip
+
+        # if not raise error
+        except socket.error as err:
+            raise click.UsageError(
+                "Host Resolve error: '%s'" % err)
     else:
         ctx.obj[param.name] = ip
 
@@ -189,9 +198,9 @@ def get_ping(ctx, param, flag_set):
             # respond another ping will be sent every 0.5 seconds.
             responses, no_responses = multi_ping(address_list, timeout=2, retry=3)
 
-        except MultiPingError:
+        except MultiPingError as err:
             raise click.UsageError(
-                "Usage error: Root privileges required for sending ICMP Ping")
+                "Ping error: '%s'" % err)
 
         # check if client responded
         if len(no_responses) > 0:
@@ -315,7 +324,12 @@ def cli_parser(ctx, wlc_address, client_address,
 #
 # Database Command
 #
-@cli_parser.command(cls=CommandAllowConfigFile)
+@cli_parser.command(cls=CommandAllowConfigFile,
+                    short_help="Will output the results to a database. See print_to_db --help for more details.",
+                    help="Will output the results to a database. Details on the options can be found below. \n\n"
+                         "Ensure that an existing MySQL database is running at the default or given address. "
+                         "The SQL installation is not part of this program! \n\n"
+                         "The Database and the table will be created if they do not exist.")
 #
 @click.pass_context
 #
@@ -351,15 +365,23 @@ def cli_parser(ctx, wlc_address, client_address,
 def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, silent):
     """
 
-    :param ctx:
-    :param db_name:
-    :param db_table:
-    :param db_address:
-    :param db_port:
-    :param db_user:
-    :param db_pass:
-    :param silent:
-    :return:
+    This function represents the command print_to_db, it takes the options and uses them
+    to create a connection to the database. It also generates the Statements for the creation of
+    the table and for the insertion of data into this table.
+
+    Note that the click options have to be inside the arguments of this command, since they are expected by
+    click. The actual handling of them is done in the corresponding callback.
+
+
+    :param ctx: current Context
+    :param db_name: click option (is not be used)
+    :param db_table: click option (is not be used)
+    :param db_address: click option (is not be used)
+    :param db_port: click option (is not be used)
+    :param db_user: click option (is not be used)
+    :param db_pass: click option (is not be used)
+    :param silent: click option (is not be used)
+
     """
 
     # Init Database with ctx
@@ -380,14 +402,24 @@ def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, s
 #
 # Config File Command Definition
 #
-@cli_parser.command(cls=CommandAllowConfigFile)
+@cli_parser.command(cls=CommandAllowConfigFile,
+                    short_help = "Will load configfile. For more information see load_config --help",
+                    help = "Will load configfile. If no path is given the default path will be used, "
+                           "which can be found below.")
+#
 @click.option('-f', '--file', 'file_path', default="../../wesp_config.cfg", type=click.Path(exists=True),
-              help="Optional Path to Config File")
+              help="Optional Path to Config File", show_default=True)
 @click.pass_context
 def load_config(ctx, file_path):
-    """Will load configfile. For more information see load_config --help.
+    """
+    Will set the path to the config inside the class :class:`.ConfigFileProcessor`. The actual loading is done
+    in the function :meth:`read_config_file_flag` in module :mod:`wesp.click_overloaded` over.
 
-    if no path is given the default path will be used
+    Note that the click options have to be inside the arguments of this command, since they are expected by
+    click.
+
+    :param ctx: current Context
+    :param file_path: click option (is not be used)
 
     """
 
