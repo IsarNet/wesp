@@ -151,9 +151,13 @@ class AllParameter:
             if isinstance(getattr(AllParameter, field), Parameter):
                 candidate = getattr(AllParameter, field)
 
-                # OID matches, then return it
-                if candidate.oid in oid:
-                    return candidate
+                # check parameter has a OID associated with it
+                if candidate.oid is not None:
+                    # OID matches, then return it
+                    if candidate.oid in oid:
+                        return candidate
+                else:
+                    return "No Parameter with OID found, maybe Ping or Mac Address?"
 
         return None
 

@@ -201,7 +201,7 @@ class CustomGroup(click.Group):
                 ctx.obj['load_conf'] = True
 
             # add -h as help option in addition to --help
-            ctx.help_option_names = HELP_PARAMETERS
+            ctx.help_option_names = GlobalSettings.HELP_PARAMETERS
 
             # run original or adapted argument list to parser
             return super(CustomGroup, self).parse_args(ctx, args)

@@ -9,6 +9,8 @@ This module uses the click extension click-configfile (https://github.com/click-
 
 from click_configfile import ConfigFileReader, Param, SectionSchema, matches_section
 import click
+import sys
+from click import BadParameter
 
 
 class ConfigSectionSchema(object):
@@ -74,9 +76,10 @@ class ConfigFileProcessor(ConfigFileReader):
     It allows to set the schemas of the sections.
     It also holds the path to the configfile (config_files) but this field is set
     by the command :meth:`load_config` in :mod:`wesp.cli_parser`. This is triggered by :class:`.CustomGroup`.
+
     """
     config_section_schemas = [
-        ConfigSectionSchema.General, # PRIMARY SCHEMA
+        ConfigSectionSchema.General,  # PRIMARY SCHEMA
         ConfigSectionSchema.SNMP,
         ConfigSectionSchema.Options,
         ConfigSectionSchema.Default,
@@ -93,8 +96,16 @@ class ConfigFileProcessor(ConfigFileReader):
 
         """
 
-        # parse config section
-        super(ConfigFileProcessor, cls).process_config_section(config_section,storage)
+        try:
+            # parse config section
+            super(ConfigFileProcessor, cls).process_config_section(config_section, storage)
+
+        # catch Bad Parameter exception to prevent error inside of click.
+        # Reformat error to enhance user experience
+        except BadParameter as ex:
+
+            raise click.UsageError(
+                "Usage error in configfile: `%s`" % ex)
 
         # if section is DEFAULT_OFF, then find corresponding dict in storage
         # and invert all values

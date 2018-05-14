@@ -358,7 +358,8 @@ def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, s
 
     # Init Database with ctx
     # and a config which contains hostname, port etc.
-    # and the create statement for the parameters listed in the definition file
+    # and the create statement for the parameters listed in the definition file,
+    # as well as the insert statement
     Database.init_database(ctx,
                            generate_db_conf_from_context(ctx),
                            generate_parameter_create_statement(),

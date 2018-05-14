@@ -178,6 +178,26 @@ command to access the configfile.</p>
 <p>Overloads the <code class="xref py py-class docutils literal notranslate"><span class="pre">Command</span></code> class to allow a command
 to read the config file</p>
 <dl class="method">
+<dt id="wesp.click_overloaded.CommandAllowConfigFile.format_usage">
+<code class="descname">format_usage</code><span class="sig-paren">(</span><em>ctx</em>, <em>formatter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/click_overloaded.html#CommandAllowConfigFile.format_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.click_overloaded.CommandAllowConfigFile.format_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloads the <a class="reference internal" href="#wesp.click_overloaded.CommandAllowConfigFile.format_usage" title="wesp.click_overloaded.CommandAllowConfigFile.format_usage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">format_usage()</span></code></a> of class <code class="xref py py-class docutils literal notranslate"><span class="pre">click.core.Command</span></code>.
+This allows a custom usage string, looks like this:</p>
+<p>PROGRAM_NAME […] Command_Name [OPTIONS]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> – current Context</li>
+<li><strong>formatter</strong> – Reference to class:<cite>click.formatting.HelpFormatter</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="wesp.click_overloaded.CommandAllowConfigFile.parse_args">
 <code class="descname">parse_args</code><span class="sig-paren">(</span><em>ctx</em>, <em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/click_overloaded.html#CommandAllowConfigFile.parse_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.click_overloaded.CommandAllowConfigFile.parse_args" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overloads the function parse_args of <code class="xref py py-class docutils literal notranslate"><span class="pre">Command</span></code>, which runs before the parsing of
@@ -210,6 +230,46 @@ It will ensure that the config file is loaded before any other parameter is eval
 the required options do not suppress the help option.
 In addition the version parameter is moved to the front of the args list to enable the class
 OnlyRequiredIf to set an option (e.g. community) only to required if an version is set (e.g. 2c)</p>
+<dl class="method">
+<dt id="wesp.click_overloaded.CustomGroup.format_options">
+<code class="descname">format_options</code><span class="sig-paren">(</span><em>ctx</em>, <em>formatter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/click_overloaded.html#CustomGroup.format_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.click_overloaded.CustomGroup.format_options" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Overloads the <a class="reference internal" href="#wesp.click_overloaded.CustomGroup.format_options" title="wesp.click_overloaded.CustomGroup.format_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">format_options()</span></code></a> of class <code class="xref py py-class docutils literal notranslate"><span class="pre">click.core.Group</span></code>.
+This allows to add a custom headline above the SNMP Options as well as
+the Other non SNMP Options. This makes the help text more clearly</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> – current Context</li>
+<li><strong>formatter</strong> – Reference to class:<cite>click.formatting.HelpFormatter</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wesp.click_overloaded.CustomGroup.format_usage">
+<code class="descname">format_usage</code><span class="sig-paren">(</span><em>ctx</em>, <em>formatter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/click_overloaded.html#CustomGroup.format_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.click_overloaded.CustomGroup.format_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloads the <a class="reference internal" href="#wesp.click_overloaded.CustomGroup.format_usage" title="wesp.click_overloaded.CustomGroup.format_usage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">format_usage()</span></code></a> of class <code class="xref py py-class docutils literal notranslate"><span class="pre">click.core.Group</span></code>.
+This allows a custom usage string, which is defined in the <a class="reference internal" href="wesp.definitions.html#wesp.definitions.GlobalSettings" title="wesp.definitions.GlobalSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">GlobalSettings</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> – current Context</li>
+<li><strong>formatter</strong> – Reference to class:<cite>click.formatting.HelpFormatter</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="wesp.click_overloaded.CustomGroup.parse_args">
 <code class="descname">parse_args</code><span class="sig-paren">(</span><em>ctx</em>, <em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/click_overloaded.html#CustomGroup.parse_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.click_overloaded.CustomGroup.parse_args" title="Permalink to this definition">¶</a></dt>
