@@ -182,10 +182,16 @@ def get_ping(ctx, param, flag_set):
         # wrap address in list
         address_list = [ctx.obj['client_ip']]
 
-        # Ping the addresses up to 4 times (initial ping + 3 retries), over the
-        # course of 2 seconds. This means that for those addresses that do not
-        # respond another ping will be sent every 0.5 seconds.
-        responses, no_responses = multi_ping(address_list, timeout=2, retry=3)
+        # try to ping, if not root raise error
+        try:
+            # Ping the addresses up to 4 times (initial ping + 3 retries), over the
+            # course of 2 seconds. This means that for those addresses that do not
+            # respond another ping will be sent every 0.5 seconds.
+            responses, no_responses = multi_ping(address_list, timeout=2, retry=3)
+
+        except MultiPingError:
+            raise click.UsageError(
+                "Usage error: Root privileges required for sending ICMP Ping")
 
         # check if client responded
         if len(no_responses) > 0:

@@ -44,7 +44,7 @@ class Database:
         Database.insertStatement = Database.insertStatement.replace('$$PARAMETER$$', parameter_insert)
 
         # TODO Remove
-        print(Database.tableCreateStatement)
+        print(Database.insertStatement)
 
         # add the database config to the class
         Database.global_config = config

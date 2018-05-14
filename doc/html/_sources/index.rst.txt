@@ -12,7 +12,6 @@ Welcome to wesp's documentation!
    
    wesp
    
-   
 .. automodule:: wesp
    
 

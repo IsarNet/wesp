@@ -90,9 +90,11 @@ class CustomGroup(click.Group):
         snmp_found = False
         other_options_found = False
 
+        # loop all params
         for param in self.get_params(ctx):
             rv = param.get_help_record(ctx)
 
+            # add help text
             if rv is not None:
 
                 # add blank line and headline to SNMP Options
@@ -112,6 +114,9 @@ class CustomGroup(click.Group):
         if opts:
             with formatter.section('Options'):
                 formatter.write_dl(opts)
+
+        # Add commands to help
+        self.format_commands(ctx, formatter)
 
     def parse_args(self, ctx, args):
         """

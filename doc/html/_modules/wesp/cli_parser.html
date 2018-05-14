@@ -503,7 +503,8 @@
 
     <span class="c1"># Init Database with ctx</span>
     <span class="c1"># and a config which contains hostname, port etc.</span>
-    <span class="c1"># and the create statement for the parameters listed in the definition file</span>
+    <span class="c1"># and the create statement for the parameters listed in the definition file,</span>
+    <span class="c1"># as well as the insert statement</span>
     <span class="n">Database</span><span class="o">.</span><span class="n">init_database</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span>
                            <span class="n">generate_db_conf_from_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">),</span>
                            <span class="n">generate_parameter_create_statement</span><span class="p">(),</span>

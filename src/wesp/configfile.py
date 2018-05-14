@@ -9,7 +9,6 @@ This module uses the click extension click-configfile (https://github.com/click-
 
 from click_configfile import ConfigFileReader, Param, SectionSchema, matches_section
 import click
-import sys
 from click import BadParameter
 
 

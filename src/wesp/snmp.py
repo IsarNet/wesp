@@ -3,8 +3,7 @@ This module contains everything related to the SNMP protocol. Every communicatio
 the :class:`.Snmp` class. For more information see :class:`.Snmp`
 """
 
-from easysnmp import Session, EasySNMPConnectionError, EasySNMPTimeoutError, \
-    EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError
+from easysnmp import Session, EasySNMPConnectionError, EasySNMPTimeoutError
 from wesp.helper import *
 import click
 
@@ -223,5 +222,5 @@ class Snmp:
                 value=item.value
             )
 
-        if (len(system_items) == 0):
+        if len(system_items) == 0:
             print("No items found for OID " + oid)

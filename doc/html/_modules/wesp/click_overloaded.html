@@ -346,7 +346,7 @@
                 <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;load_conf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="c1"># add -h as help option in addition to --help</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">help_option_names</span> <span class="o">=</span> <span class="n">HELP_PARAMETERS</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">help_option_names</span> <span class="o">=</span> <span class="n">GlobalSettings</span><span class="o">.</span><span class="n">HELP_PARAMETERS</span>
 
             <span class="c1"># run original or adapted argument list to parser</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">CustomGroup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span></div></div>

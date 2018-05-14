@@ -154,6 +154,7 @@
 
 <span class="kn">from</span> <span class="nn">click_configfile</span> <span class="k">import</span> <span class="n">ConfigFileReader</span><span class="p">,</span> <span class="n">Param</span><span class="p">,</span> <span class="n">SectionSchema</span><span class="p">,</span> <span class="n">matches_section</span>
 <span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">from</span> <span class="nn">click</span> <span class="k">import</span> <span class="n">BadParameter</span>
 
 
 <div class="viewcode-block" id="ConfigSectionSchema"><a class="viewcode-back" href="../../wesp.configfile.html#wesp.configfile.ConfigSectionSchema">[docs]</a><span class="k">class</span> <span class="nc">ConfigSectionSchema</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -219,9 +220,10 @@
 <span class="sd">    It allows to set the schemas of the sections.</span>
 <span class="sd">    It also holds the path to the configfile (config_files) but this field is set</span>
 <span class="sd">    by the command :meth:`load_config` in :mod:`wesp.cli_parser`. This is triggered by :class:`.CustomGroup`.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config_section_schemas</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">ConfigSectionSchema</span><span class="o">.</span><span class="n">General</span><span class="p">,</span> <span class="c1"># PRIMARY SCHEMA</span>
+        <span class="n">ConfigSectionSchema</span><span class="o">.</span><span class="n">General</span><span class="p">,</span>  <span class="c1"># PRIMARY SCHEMA</span>
         <span class="n">ConfigSectionSchema</span><span class="o">.</span><span class="n">SNMP</span><span class="p">,</span>
         <span class="n">ConfigSectionSchema</span><span class="o">.</span><span class="n">Options</span><span class="p">,</span>
         <span class="n">ConfigSectionSchema</span><span class="o">.</span><span class="n">Default</span><span class="p">,</span>
@@ -238,8 +240,16 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># parse config section</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ConfigFileProcessor</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">process_config_section</span><span class="p">(</span><span class="n">config_section</span><span class="p">,</span><span class="n">storage</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># parse config section</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">ConfigFileProcessor</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">process_config_section</span><span class="p">(</span><span class="n">config_section</span><span class="p">,</span> <span class="n">storage</span><span class="p">)</span>
+
+        <span class="c1"># catch Bad Parameter exception to prevent error inside of click.</span>
+        <span class="c1"># Reformat error to enhance user experience</span>
+        <span class="k">except</span> <span class="n">BadParameter</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+
+            <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
+                <span class="s2">&quot;Usage error in configfile: `</span><span class="si">%s</span><span class="s2">`&quot;</span> <span class="o">%</span> <span class="n">ex</span><span class="p">)</span>
 
         <span class="c1"># if section is DEFAULT_OFF, then find corresponding dict in storage</span>
         <span class="c1"># and invert all values</span>

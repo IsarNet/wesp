@@ -148,8 +148,7 @@
 <span class="sd">the :class:`.Snmp` class. For more information see :class:`.Snmp`</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">easysnmp</span> <span class="k">import</span> <span class="n">Session</span><span class="p">,</span> <span class="n">EasySNMPConnectionError</span><span class="p">,</span> <span class="n">EasySNMPTimeoutError</span><span class="p">,</span> \
-    <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">,</span> <span class="n">EasySNMPNoSuchObjectError</span>
+<span class="kn">from</span> <span class="nn">easysnmp</span> <span class="k">import</span> <span class="n">Session</span><span class="p">,</span> <span class="n">EasySNMPConnectionError</span><span class="p">,</span> <span class="n">EasySNMPTimeoutError</span>
 <span class="kn">from</span> <span class="nn">wesp.helper</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">click</span>
 
@@ -368,7 +367,7 @@
                 <span class="n">value</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">value</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">system_items</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">system_items</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No items found for OID &quot;</span> <span class="o">+</span> <span class="n">oid</span><span class="p">)</span></div></div>
 </pre></div>
 

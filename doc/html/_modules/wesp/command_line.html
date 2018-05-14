@@ -143,10 +143,19 @@
            <div itemprop="articleBody">
             
   <h1>Source code for wesp.command_line</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">wesp.cli_parser</span> <span class="k">import</span> <span class="n">cli_parser</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module is only an entry point for the script and does not have any tasks.</span>
+
+<span class="sd">It will start the :mod:`wesp.cli_parser`</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">wesp.cli_parser</span> <span class="k">import</span> <span class="n">cli_parser</span>
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../wesp.command_line.html#wesp.command_line.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main function which is called by user from CLI. This marks the start of this program.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cli_parser</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="p">{})</span></div>
 </pre></div>
 

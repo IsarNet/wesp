@@ -114,7 +114,7 @@ class AllParameter:
     #
     data_rate_off = Parameter("Client Data Rate",
                               "1.3.6.1.4.1.9.9.599.1.3.1.1.17",
-                              'double')
+                              'varchar(255)')
 
     @staticmethod
     def get_all_parameter():

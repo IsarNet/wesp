@@ -7,4 +7,8 @@ from wesp.cli_parser import cli_parser
 
 
 def main():
+    """
+    Main function which is called by user from CLI. This marks the start of this program.
+
+    """
     cli_parser(obj={})
