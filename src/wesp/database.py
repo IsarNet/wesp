@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 import click
-
+from wesp.definitions import AllParameter
 
 class Database:
     """
@@ -26,7 +26,9 @@ class Database:
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
       `Timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       %%PARAMETER%%
-      PRIMARY KEY (`id`)
+      PRIMARY KEY (`id`),
+      KEY `ipIndex` (`%%IP_INDEX%%`),
+      KEY `macIndex` (`%%MAC_INDEX%%`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"""
     """This statement creates the table. It will only trigger if the database does 
     not exists. Note the name of the database and table, as well as all other fields (based on 
@@ -76,6 +78,11 @@ class Database:
         # add the human readable as well as their program name into the insert statement
         Database.insertStatement = Database.insertStatement.replace('%%PARAMETER%%', parameter_insert)
 
+        # add names for the indices
+        Database.tableCreateStatement = Database.tableCreateStatement.replace('%%IP_INDEX%%',
+                                                                              AllParameter.client_ip.name)
+        Database.tableCreateStatement = Database.tableCreateStatement.replace('%%MAC_INDEX%%',
+                                                                              AllParameter.client_mac.name)
         # add the database config to the class
         Database.global_config = config
 
@@ -128,7 +135,7 @@ class Database:
                 cnx.close()
 
     @staticmethod
-    def insert_data_set(data_set, ctx):
+    def insert_data_set(data_set, ctx, time):
         """
         Will inserted the given data into the database based on the config
         and statement form the :meth:`init_database` function
@@ -138,10 +145,13 @@ class Database:
 
         """
 
-        # Temporary add client_ip and client_mac (which should not be represented in client_data
+        # Temporary add client_ip, client_mac and timestamp(which should not be represented in client_data
         # to prevent output to CLI)
+        # convert timestamp to ISO format to ensure that timezone is included and understand by DB
         data_set = data_set.copy()
-        data_set.update({'client_ip': ctx.obj['client_ip'], 'client_mac': ctx.obj['client_mac']})
+        data_set.update({'client_ip': ctx.obj['client_ip'],
+                         'client_mac': ctx.obj['client_mac'],
+                         'timestamp': str(time.isoformat())})
 
         cnx = cur = None
         try:

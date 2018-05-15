@@ -4,6 +4,9 @@ as well as their name and database type. For more information see :class:`.Param
 
 In addition the class :class:`GlobalSettings` defines basic options like the help flags, the usage text
 or the welcome string
+\n\n
+NOTE: Changes to name or db_data_type will only be reflected in the database, if the table is dropped
+and recreated by this program
 """
 
 
@@ -32,10 +35,13 @@ class Parameter:
     """
     DB Data Type which should be used for this parameter.
     For string use varchar(255) with the length of the string in the brackets
-    For real numbers use int(11) with the length of the int in the brackets
-    For real non negative numbers use int(11) unsigned
+    For real numbers use int(11) with a fixed maximum of 2147483647. Length in brackets is only for display 
+    and will not effect this program
+    For real non negative numbers use int(11) unsigned ot have a maximum of 4294967295
     For rational numbers use double, no length needed. Be aware of the rounding problems in comparision
     e.g. https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues
+    \n
+    NOTE: Changes here will only be reflected in the database, if the table is dropped and recreated by this program
     """
 
     def __init__(self, name, oid, db_data_type):
@@ -61,6 +67,7 @@ class AllParameter:
 
     #
     # Internal usage only
+    # !!!DO NOT CHANGE!!!
     #
     client_ip = Parameter("Client IP Address",
                           "1.3.6.1.4.1.9.9.599.1.3.1.1.10",
@@ -72,6 +79,10 @@ class AllParameter:
     #
     ap_mac_address = Parameter("AP Mac Address",
                                "1.3.6.1.4.1.9.9.599.1.3.1.1.39",
+                               None)
+    #
+    timestamp = Parameter("Timestamp",
+                               None,
                                None)
 
     #
@@ -89,11 +100,11 @@ class AllParameter:
                         "1.3.6.1.4.1.9.9.513.4.1.1.1.1.1",
                         'varchar(255)')
     #
-    rx_packages = Parameter("RX Packages",
+    rx_packets = Parameter("RX Packets",
                             "1.3.6.1.4.1.9.9.599.1.4.1.1.27",
                             'int(11)')
     #
-    tx_packages = Parameter("TX Packages",
+    tx_packets = Parameter("TX Packets",
                             "1.3.6.1.4.1.9.9.599.1.4.1.1.25",
                             'int(11)')
     #

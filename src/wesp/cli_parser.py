@@ -27,6 +27,8 @@ from wesp.click_overloaded import *
 from wesp.helper import *
 from wesp.database import Database
 from wesp.snmp import Snmp
+from datetime import datetime
+import tzlocal
 
 # TODO Check Error Messages at wrong config file input, e.g. v2 instead of 2c
 # TODO populate
@@ -278,13 +280,13 @@ def get_ping(ctx, param, flag_set):
               is_flag=True,
               help='Name of Access Point the client is associated with')
 #
-@click.option('--rx_packages', '-re', 'rx_packages', required=False, callback=get_snmp_value_with_mac,
+@click.option('--rx_packets', '-re', 'rx_packets', required=False, callback=get_snmp_value_with_mac,
               is_flag=True,
-              help='Number of client received packages')
+              help='Number of client received packets')
 #
-@click.option('--tx_packages', '-re', 'tx_packages', required=False, callback=get_snmp_value_with_mac,
+@click.option('--tx_packets', '-re', 'tx_packets', required=False, callback=get_snmp_value_with_mac,
               is_flag=True,
-              help='Number of client transmitted packages')
+              help='Number of client transmitted packets')
 #
 @click.option('--ping', '-pi', 'ping', required=False, callback=get_ping,
               is_flag=True,
@@ -310,7 +312,7 @@ def get_ping(ctx, param, flag_set):
 #
 def cli_parser(ctx, wlc_address, client_address,
                snmp_version, snmp_community, snmp_user, snmp_password, snmp_encryption,
-               interval, iterations, channel, retries, ap_name, rx_packages, tx_packages, ping,
+               interval, iterations, channel, retries, ap_name, rx_packets, tx_packets, ping,
                rssi_off, snr_off, data_rate_off):
     """
 
@@ -502,13 +504,16 @@ def process_result(result, **kwargs):
     # get reference of context
     ctx = click.get_current_context()
 
+    # get current time with timezone
+    current_time = datetime.now(tzlocal.get_localzone())
+
     # if not silent print results to CLI
     if 'silent' not in ctx.obj or not ctx.obj['silent']:
-        print(generate_cli_output(CLIENT_DATA, ctx))
+        print(generate_cli_output(CLIENT_DATA, ctx, current_time))
 
     # if print_to_db command was set, insert data
     if Database.is_ready():
-        Database.insert_data_set(CLIENT_DATA, ctx)
+        Database.insert_data_set(CLIENT_DATA, ctx, current_time)
 
     # decrease iteration by one
     ctx.obj['iterations'] -= 1
@@ -527,13 +532,16 @@ def process_result(result, **kwargs):
         # fetch newest info from wlc
         update_client_data(ctx)
 
+        # get current time with timezone
+        current_time = datetime.now(tzlocal.get_localzone())
+
         # if not silent print to output again
         if 'silent' not in ctx.obj or not ctx.obj['silent']:
-            print(generate_cli_output(CLIENT_DATA, ctx))
+            print(generate_cli_output(CLIENT_DATA, ctx, current_time))
 
         # if print_to_db command was set, insert data again
         if Database.is_ready():
-            Database.insert_data_set(CLIENT_DATA, ctx)
+            Database.insert_data_set(CLIENT_DATA, ctx, current_time)
 
 
 def update_client_data(ctx):

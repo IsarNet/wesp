@@ -46,8 +46,8 @@ class ConfigSectionSchema(object):
         retries = Param(type=bool)
         channel = Param(type=bool)
         ap_name = Param(type=bool)
-        rx_packages = Param(type=bool)
-        tx_packages = Param(type=bool)
+        rx_packets = Param(type=bool)
+        tx_packets = Param(type=bool)
         ping = Param(type=bool)
 
     # parse data for section DEFAULT_OFF (default options)

@@ -234,7 +234,7 @@ def replace_last_occurrence(str, old, new):
     return str[:k] + new + str[k + 1:]
 
 
-def generate_cli_output(client_data, ctx):
+def generate_cli_output(client_data, ctx, time):
     """
     will generate the CLI output based on the given client_data. It also includes the current time
     and the mac address of the client. It always has the following form:
@@ -250,7 +250,7 @@ def generate_cli_output(client_data, ctx):
 
     # Add time and mac address to output
     # as well as ping, if ping was performed
-    output = str(strftime("%Y-%m-%d %H:%M:%S", gmtime())) \
+    output = str(time.strftime("%Y-%m-%d %H:%M:%S")) \
              + " [" + str(ctx.obj['client_mac']) + "] " \
              + ping_to_str(client_data, ctx) + " { "
 
@@ -331,10 +331,10 @@ def generate_parameter_insert_statement(client_data):
     parameter_names = ""
     parameter_values = ""
 
-    # Temporary add client_ip and client_mac (which should not be represented in client_data
+    # Temporary add client_ip, client_mac and timestamp (which should not be represented in client_data
     # to prevent output to CLI)
     client_data = client_data.copy()
-    client_data.update({'client_ip': None, 'client_mac': None})
+    client_data.update({'client_ip': None, 'client_mac': None, 'timestamp': None})
 
     # for all entries in the given client_data set, which are represented in the class AllParameter
     for entry in client_data:

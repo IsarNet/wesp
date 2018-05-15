@@ -16,6 +16,7 @@ setup(
         'multiping',
         'IPy',
         'mysql-connector',
+        'tzlocal'
     ],
     entry_points={
         'console_scripts': ['wesp=wesp.command_line:main'],
