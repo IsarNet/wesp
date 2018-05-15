@@ -10,7 +10,7 @@ setup(
     description='TODO',
     install_requires=[
         'easysnmp',
-        'Click',
+        'click>=6.7',
         'click_configfile',
         'mysql-connector',
         'multiping',
