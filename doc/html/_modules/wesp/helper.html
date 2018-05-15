@@ -214,6 +214,7 @@
 <span class="sd">    If not it will raise an exception.</span>
 
 <span class="sd">    :param response: snmp variable</span>
+<span class="sd">    :param oid: oid of response (is needed for better error text)</span>
 <span class="sd">    :raises: EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError</span>
 <span class="sd">    :return: True, if everything is fine</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -227,12 +228,24 @@
                 <span class="s2">&quot;No IP address found for given MAC address. Is device connected?&quot;</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># raise Error with name of parameter, handling is done in calling function</span>
-            <span class="k">raise</span> <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">(</span><span class="n">AllParameter</span><span class="o">.</span><span class="n">get_parameter_by_oid</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">parameter</span> <span class="o">=</span> <span class="n">AllParameter</span><span class="o">.</span><span class="n">get_parameter_by_oid</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># raise Error with name of parameter, handling is done in calling function</span>
+                <span class="k">raise</span> <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># raise Error without name of parameter, handling is done in calling function</span>
+                <span class="k">raise</span> <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">(</span><span class="s2">&quot;No Parameter with OID found, maybe Ping or Mac Address?&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">snmp_type</span> <span class="o">==</span> <span class="s2">&quot;NOSUCHOBJECT&quot;</span><span class="p">:</span>
-        <span class="c1"># raise Error with name of parameter, handling is done in calling function</span>
-        <span class="k">raise</span> <span class="n">EasySNMPNoSuchObjectError</span><span class="p">(</span><span class="n">AllParameter</span><span class="o">.</span><span class="n">get_parameter_by_oid</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">parameter</span> <span class="o">=</span> <span class="n">AllParameter</span><span class="o">.</span><span class="n">get_parameter_by_oid</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># raise Error with name of parameter, handling is done in calling function</span>
+            <span class="k">raise</span> <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># raise Error without name of parameter, handling is done in calling function</span>
+            <span class="k">raise</span> <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">(</span><span class="s2">&quot;No Parameter with OID found, maybe Ping or Mac Address?&quot;</span><span class="p">)</span>
 
     <span class="c1"># Everything okay? return true</span>
     <span class="k">return</span> <span class="kc">True</span></div>

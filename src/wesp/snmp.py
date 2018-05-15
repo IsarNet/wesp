@@ -140,12 +140,12 @@ class Snmp:
 
         except EasySNMPNoSuchInstanceError, e:
             raise click.UsageError(
-                "No such Instance at: `%s` (`%s`)" % (
+                "No such Instance at `%s` (`%s`)" % (
                     oid, e.message))
 
         except EasySNMPNoSuchObjectError, e:
             raise click.UsageError(
-                "No such Object at: `%s` (`%s`)" % (
+                "No such Object at `%s` (`%s`)" % (
                     oid, e.message))
 
     @staticmethod

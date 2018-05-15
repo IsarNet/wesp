@@ -145,6 +145,8 @@ class AllParameter:
         :return: parameter with the given oid or None if no existing
         """
 
+        print(oid)
+
         # loop through all fields of class AllParameter
         for field in vars(AllParameter):
 
@@ -153,12 +155,12 @@ class AllParameter:
 
                 # check parameter has a OID associated with it
                 if candidate.oid is not None:
+
                     # OID matches, then return it
                     if candidate.oid in oid:
                         return candidate
-                else:
-                    return "No Parameter with OID found, maybe Ping or Mac Address?"
 
+        # if nothing was found, return None
         return None
 
 

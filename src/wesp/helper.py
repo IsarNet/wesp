@@ -69,6 +69,7 @@ def validate_snmp_type(response, oid):
     If not it will raise an exception.
 
     :param response: snmp variable
+    :param oid: oid of response (is needed for better error text)
     :raises: EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError
     :return: True, if everything is fine
     """
@@ -82,12 +83,24 @@ def validate_snmp_type(response, oid):
                 "No IP address found for given MAC address. Is device connected?")
 
         else:
-            # raise Error with name of parameter, handling is done in calling function
-            raise EasySNMPNoSuchInstanceError(AllParameter.get_parameter_by_oid(oid).name)
+            parameter = AllParameter.get_parameter_by_oid(oid)
+
+            if parameter is not None:
+                # raise Error with name of parameter, handling is done in calling function
+                raise EasySNMPNoSuchInstanceError(parameter.name)
+            else:
+                # raise Error without name of parameter, handling is done in calling function
+                raise EasySNMPNoSuchInstanceError("No Parameter with OID found, maybe Ping or Mac Address?")
 
     if response.snmp_type == "NOSUCHOBJECT":
-        # raise Error with name of parameter, handling is done in calling function
-        raise EasySNMPNoSuchObjectError(AllParameter.get_parameter_by_oid(oid).name)
+        parameter = AllParameter.get_parameter_by_oid(oid)
+
+        if parameter is not None:
+            # raise Error with name of parameter, handling is done in calling function
+            raise EasySNMPNoSuchInstanceError(parameter.name)
+        else:
+            # raise Error without name of parameter, handling is done in calling function
+            raise EasySNMPNoSuchInstanceError("No Parameter with OID found, maybe Ping or Mac Address?")
 
     # Everything okay? return true
     return True
