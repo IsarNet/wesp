@@ -149,17 +149,42 @@
 
 
 <div class="viewcode-block" id="Database"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database">[docs]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Contains all functions related to the database. To ensure that only one DB connection is used, everything</span>
+<span class="sd">    in this class ist static.</span>
 
-    <span class="n">databaseCreateStatement</span> <span class="o">=</span> <span class="s2">&quot;CREATE DATABASE IF NOT EXISTS $$DATABASE$$;&quot;</span>
+<span class="sd">    The different raw statements are completed in the</span>
+<span class="sd">    :meth:`init_database` using the data inside of :class:`wesp.definitions.AllParameter`.</span>
 
-    <span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS $$DATABASE$$.$$TABLE$$ (</span>
+<span class="sd">    The function :meth:`create_database_and_table_if_not_existing` will check if the database and the table exist,</span>
+<span class="sd">    otherwise it will create it using the databaseCreateStatement.</span>
+
+<span class="sd">    Data can be inserted using the function :meth:`insert_data_set`. This function expects the data to be in the</span>
+<span class="sd">    format of CLIENT_DATA inside the :mod:`cli_parser` module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">databaseCreateStatement</span> <span class="o">=</span> <span class="s2">&quot;CREATE DATABASE IF NOT EXISTS </span><span class="si">%%</span><span class="s2">DATABASE</span><span class="si">%%</span><span class="s2">;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;This statement will be used to create the database. It will only trigger if the database does </span>
+<span class="sd">    not exists. Note the name of the database will be inserted in the :meth:`init_database` function&quot;&quot;&quot;</span>
+
+    <span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS </span><span class="si">%%</span><span class="s2">DATABASE</span><span class="si">%%</span><span class="s2">.</span><span class="si">%%</span><span class="s2">TABLE</span><span class="si">%%</span><span class="s2"> (</span>
 <span class="s2">    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,</span>
 <span class="s2">      `Timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,</span>
-<span class="s2">      $$PARAMETER$$</span>
+<span class="s2">      </span><span class="si">%%</span><span class="s2">PARAMETER</span><span class="si">%%</span><span class="s2"></span>
 <span class="s2">      PRIMARY KEY (`id`)</span>
 <span class="s2">    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;This statement creates the table. It will only trigger if the database does </span>
+<span class="sd">    not exists. Note the name of the database and table, as well as all other fields (based on </span>
+<span class="sd">    registered Parameter in :class:`wesp.definitions.AllParameter`) will be inserted in the :meth:`init_database` </span>
+<span class="sd">    function. The generation of that data is done in </span>
+<span class="sd">    :meth:`wesp.helper.generate_parameter_create_statement` function but has to be ran by the caller of </span>
+<span class="sd">    the :meth:`init_database` function&quot;&quot;&quot;</span>
 
-    <span class="n">insertStatement</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;INSERT INTO $$TABLE$$ $$PARAMETER$$;&quot;&quot;&quot;</span><span class="p">;</span>
+    <span class="n">insertStatement</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;INSERT INTO </span><span class="si">%%</span><span class="s2">TABLE</span><span class="si">%%</span><span class="s2"> </span><span class="si">%%</span><span class="s2">PARAMETER</span><span class="si">%%</span><span class="s2">;&quot;&quot;&quot;</span><span class="p">;</span>
+    <span class="sd">&quot;&quot;&quot;This statement is used to insert data, the name and list of parameters as well its value names are</span>
+<span class="sd">    inserted in the function :meth:`init_database`. The generation of that data is done in </span>
+<span class="sd">    :meth:`wesp.helper.generate_parameter_insert_statement` function but has to be ran by the caller of </span>
+<span class="sd">    the :meth:`init_database` function&quot;&quot;&quot;</span>
 
     <span class="n">table_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">db_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -169,27 +194,32 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="c1"># will initialize the database and complete the SQL Statements with the given names and sub-statements</span>
 <div class="viewcode-block" id="Database.init_database"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database.init_database">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">init_database</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">parameter_create</span><span class="p">,</span> <span class="n">parameter_insert</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Will initialize the database and complete the SQL Statements with the given names and sub-statements</span>
+
+<span class="sd">        :param ctx: current Context</span>
+<span class="sd">        :param config: config for database connection, can be generated by :meth:`wesp.helper.generate_db_conf_from_context`</span>
+<span class="sd">        :param parameter_create: parameter part of create statement, can be generated by :meth:`wesp.helper.generate_parameter_create_statement`</span>
+<span class="sd">        :param parameter_insert: parameter part of insert statement, can be generated by :meth:`wesp.helper.generate_parameter_insert_statement`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_table&#39;</span><span class="p">]</span>
         <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_name&#39;</span><span class="p">]</span>
 
         <span class="c1"># add given names to SQL statements</span>
-        <span class="n">Database</span><span class="o">.</span><span class="n">databaseCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">databaseCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$DATABASE$$&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span>
-        <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$DATABASE$$&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">databaseCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">databaseCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">DATABASE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">DATABASE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span>
 
-        <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$TABLE$$&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
-        <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$TABLE$$&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">TABLE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">TABLE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
 
         <span class="c1"># add the parameters create statement into the tableCreateStatement</span>
-        <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$PARAMETER$$&#39;</span><span class="p">,</span> <span class="n">parameter_create</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">PARAMETER</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">parameter_create</span><span class="p">)</span>
 
-        <span class="c1"># add the human readable as well as their programm name into the insert statement</span>
-        <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$$PARAMETER$$&#39;</span><span class="p">,</span> <span class="n">parameter_insert</span><span class="p">)</span>
-
-        <span class="c1"># TODO Remove</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="p">)</span>
+        <span class="c1"># add the human readable as well as their program name into the insert statement</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">insertStatement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">PARAMETER</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">parameter_insert</span><span class="p">)</span>
 
         <span class="c1"># add the database config to the class</span>
         <span class="n">Database</span><span class="o">.</span><span class="n">global_config</span> <span class="o">=</span> <span class="n">config</span>
@@ -198,12 +228,17 @@
 
         <span class="n">Database</span><span class="o">.</span><span class="n">ready</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-    <span class="c1"># Will check the existence of the database and the Table with the names specified in the init_database function.</span>
-    <span class="c1"># If they do not exist they will be created</span>
-    <span class="c1"># Therefore a connection to the DB Information_Schema is performed.</span>
 <div class="viewcode-block" id="Database.create_database_and_table_if_not_existing"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database.create_database_and_table_if_not_existing">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_database_and_table_if_not_existing</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
 
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Will check the existence of the database and the table with the names specified in the :meth:`init_database`</span>
+<span class="sd">        function. If they do not exist they will be created.</span>
+<span class="sd">        Therefore a connection to the DB Information_Schema is performed.</span>
+
+<span class="sd">        :param config: config for database connection, can be generated by :meth:`wesp.helper.generate_db_conf_from_context`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># copy dict to prevent changes in original config</span>
         <span class="n">config_information_schema</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
@@ -237,10 +272,16 @@
             <span class="k">if</span> <span class="n">cnx</span><span class="p">:</span>
                 <span class="n">cnx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-    <span class="c1"># will inserted the given data into the database based on the config</span>
-    <span class="c1"># and statement form the init function</span>
 <div class="viewcode-block" id="Database.insert_data_set"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database.insert_data_set">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">insert_data_set</span><span class="p">(</span><span class="n">data_set</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Will inserted the given data into the database based on the config</span>
+<span class="sd">        and statement form the :meth:`init_database` function</span>
+
+<span class="sd">        :param data_set: data_set to be inserted, must contain the same fields name as defined in the *insertStatement*</span>
+<span class="sd">        :param ctx: current Context</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Temporary add client_ip and client_mac (which should not be represented in client_data</span>
         <span class="c1"># to prevent output to CLI)</span>
@@ -274,10 +315,15 @@
             <span class="k">if</span> <span class="n">cnx</span><span class="p">:</span>
                 <span class="n">cnx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-    <span class="c1"># if database has been initialized return True,</span>
-    <span class="c1"># Otherwise False</span>
 <div class="viewcode-block" id="Database.is_ready"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database.is_ready">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_ready</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Will check, if this class is ready, which means that the config has been set and the raw</span>
+<span class="sd">        statements have been initialized.</span>
+
+<span class="sd">        :return: True if database has been initialized, otherwise False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Database</span><span class="o">.</span><span class="n">ready</span></div></div>
 
 </pre></div>

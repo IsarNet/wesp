@@ -341,26 +341,6 @@
     <span class="k">return</span> <span class="n">normal_dict</span></div>
 
 
-<div class="viewcode-block" id="generate_db_conf_from_context"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.generate_db_conf_from_context">[docs]</a><span class="k">def</span> <span class="nf">generate_db_conf_from_context</span> <span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will create the config dict for the database</span>
-<span class="sd">    from the context object</span>
-
-<span class="sd">    :param: ctx: current Context object</span>
-<span class="sd">    :rtype: dict</span>
-<span class="sd">    :return: database config as dict based on the current context</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_user&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_pass&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_address&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_port&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;database&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_name&#39;</span><span class="p">],</span>
-    <span class="p">}</span></div>
-
-
 <div class="viewcode-block" id="print_session_info"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.print_session_info">[docs]</a><span class="k">def</span> <span class="nf">print_session_info</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Will print the info&#39;s of the current snmp session to Std out</span>
@@ -534,6 +514,25 @@
     <span class="c1"># return statement with surrounding brackets.</span>
     <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">parameter_names</span> <span class="o">+</span> <span class="s1">&#39;) VALUES &#39;</span> <span class="o">+</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">parameter_values</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span></div>
 
+
+<div class="viewcode-block" id="generate_db_conf_from_context"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.generate_db_conf_from_context">[docs]</a><span class="k">def</span> <span class="nf">generate_db_conf_from_context</span> <span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function will create the config dict for the database</span>
+<span class="sd">    from the context object</span>
+
+<span class="sd">    :param: ctx: current Context object</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    :return: database config as dict based on the current context</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_user&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_pass&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_address&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_port&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;database&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;db_name&#39;</span><span class="p">],</span>
+    <span class="p">}</span></div>
 </pre></div>
 
            </div>

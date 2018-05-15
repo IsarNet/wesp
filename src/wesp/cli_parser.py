@@ -99,7 +99,6 @@ def get_snmp_value_with_mac(ctx, param, flag_set):
         # print('with mac', param.name)
 
 
-# TODO Handle FQDN and Error
 def check_wlc_address(ctx, param, value):
     """
     This function will check if the WLC Address is a valid IP or FQDN
@@ -216,7 +215,12 @@ def get_ping(ctx, param, flag_set):
 #
 # Click Options
 #
-@click.group(chain=True, cls=CustomGroup, invoke_without_command=True)
+@click.group(chain=True, cls=CustomGroup, invoke_without_command=True,
+             help="This program will automatically monitor a WiFi device for defined parameters using "
+                  "the MAC or IPv4 address. In addition a ping can check if the client is reachable. "
+                  "Per Default the results are outputted on the CLI but an command exists to write the data "
+                  "to a database. All parameters can be inputted via a configfile. \n\n"
+                  "An example usage can be found above, while details on the options can be found below:")
 #
 @click.pass_context
 #
@@ -309,13 +313,66 @@ def cli_parser(ctx, wlc_address, client_address,
                interval, iterations, channel, retries, ap_name, rx_packages, tx_packages, ping,
                rssi_off, snr_off, data_rate_off):
     """
-    Example USAGE: wesp -W wlc_address -C client_address [SNMP Options] [Options]
-    This tool ist awesome:
 
-        WLC_..."""
+    This function represents the main command and contains all options ranging from WLC/client information,
+    SNMP options to all options, which enable or disable the output of certain parameter. A list of the
+    associated options can be found below. Since this is a click group all other commands (e.g. for
+    config file and db) are sub commands of this command. The name of this group is *cli_parser*.
 
-    # TODO Remove
-    # print("MAIN", ctx.default_map)
+    Note, that this group command does not contain any logic, handling of the options is done in the
+    specified callback. Click expects the click options to be inside the arguments of this command, although
+    they are not used.
+
+    Fore more information about click options and it's attributes see: http://click.pocoo.org/5/options/,
+    http://click.pocoo.org/5/parameters/#differences and http://click.pocoo.org/5/commands/
+
+
+
+    The following callbacks are implemented and may be used for future options:
+
+    :meth:`add_value_to_context`: sets the value of the option to the context, without any modification. The name of the
+    option is used as key.
+
+    :meth:`get_snmp_value`: will search in :class:`wesp.definitions.AllParameter` for a matching OID and requests the
+    data via GET from the WLC. The result is added to the context, under the name of the option.
+
+    :meth:`get_snmp_value_with_mac`: will do the same as the latter function but will include the mac address of the
+    client to get client specific data.
+
+    :meth:`check_wlc_address`: will check if the given address is a valid IP address or a resolvable hostname. If so it
+    will add it to the context under the name of the option.
+
+    :meth:`check_client_address`: will check if the given address is a valid IP or MAC address. If so it will add
+    it to the context under the name of the option.
+
+    :meth:`get_ap_name`: will retrieve the name of the AP of a client. For details see the function itself. The name of
+    the option is used as key.
+
+    :meth:`get_ping`: will try to ping the client. For details see the function itself. The name of the option
+    is used as key.
+
+
+    :param ctx: current Context
+    :param wlc_address: click option (is not be used)
+    :param client_address: click option (is not be used)
+    :param snmp_version: click option (is not be used)
+    :param snmp_community: click option (is not be used)
+    :param snmp_user: click option (is not be used)
+    :param snmp_password: click option (is not be used)
+    :param snmp_encryption: click option (is not be used)
+    :param interval: click option (is not be used)
+    :param iterations: click option (is not be used)
+    :param channel: click option (is not be used)
+    :param retries: click option (is not be used)
+    :param ap_name: click option (is not be used)
+    :param rx_packages: click option (is not be used)
+    :param tx_packages: click option (is not be used)
+    :param ping: click option (is not be used)
+    :param rssi_off: click option (is not be used)
+    :param snr_off: click option (is not be used)
+    :param data_rate_off: click option (is not be used)
+
+    """
 
 
 """________ DATABASE COMMAND _____________"""
@@ -325,7 +382,7 @@ def cli_parser(ctx, wlc_address, client_address,
 # Database Command
 #
 @cli_parser.command(cls=CommandAllowConfigFile,
-                    short_help="Will output the results to a database. See print_to_db --help for more details.",
+                    short_help="Will output the results to a database. For more information see print_to_db --help.",
                     help="Will output the results to a database. Details on the options can be found below. \n\n"
                          "Ensure that an existing MySQL database is running at the default or given address. "
                          "The SQL installation is not part of this program! \n\n"

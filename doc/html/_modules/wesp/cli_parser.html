@@ -244,7 +244,6 @@
         <span class="c1"># print(&#39;with mac&#39;, param.name)</span>
 
 
-<span class="c1"># TODO Handle FQDN and Error</span>
 <div class="viewcode-block" id="check_wlc_address"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.check_wlc_address">[docs]</a><span class="k">def</span> <span class="nf">check_wlc_address</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function will check if the WLC Address is a valid IP or FQDN</span>
@@ -361,7 +360,12 @@
 <span class="c1">#</span>
 <span class="c1"># Click Options</span>
 <span class="c1">#</span>
-<span class="nd">@click</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">chain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CustomGroup</span><span class="p">,</span> <span class="n">invoke_without_command</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">chain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CustomGroup</span><span class="p">,</span> <span class="n">invoke_without_command</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;This program will automatically monitor a WiFi device for defined parameters using &quot;</span>
+                  <span class="s2">&quot;the MAC or IPv4 address. In addition a ping can check if the client is reachable. &quot;</span>
+                  <span class="s2">&quot;Per Default the results are outputted on the CLI but an command exists to write the data &quot;</span>
+                  <span class="s2">&quot;to a database. All parameters can be inputted via a configfile. </span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                  <span class="s2">&quot;An example usage can be found above, while details on the options can be found below:&quot;</span><span class="p">)</span>
 <span class="c1">#</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
 <span class="c1">#</span>
@@ -454,13 +458,66 @@
                <span class="n">interval</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">retries</span><span class="p">,</span> <span class="n">ap_name</span><span class="p">,</span> <span class="n">rx_packages</span><span class="p">,</span> <span class="n">tx_packages</span><span class="p">,</span> <span class="n">ping</span><span class="p">,</span>
                <span class="n">rssi_off</span><span class="p">,</span> <span class="n">snr_off</span><span class="p">,</span> <span class="n">data_rate_off</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Example USAGE: wesp -W wlc_address -C client_address [SNMP Options] [Options]</span>
-<span class="sd">    This tool ist awesome:</span>
 
-<span class="sd">        WLC_...&quot;&quot;&quot;</span>
+<span class="sd">    This function represents the main command and contains all options ranging from WLC/client information,</span>
+<span class="sd">    SNMP options to all options, which enable or disable the output of certain parameter. A list of the</span>
+<span class="sd">    associated options can be found below. Since this is a click group all other commands (e.g. for</span>
+<span class="sd">    config file and db) are sub commands of this command. The name of this group is *cli_parser*.</span>
 
-    <span class="c1"># TODO Remove</span>
-    <span class="c1"># print(&quot;MAIN&quot;, ctx.default_map)</span>
+<span class="sd">    Note, that this group command does not contain any logic, handling of the options is done in the</span>
+<span class="sd">    specified callback. Click expects the click options to be inside the arguments of this command, although</span>
+<span class="sd">    they are not used.</span>
+
+<span class="sd">    Fore more information about click options and it&#39;s attributes see: http://click.pocoo.org/5/options/,</span>
+<span class="sd">    http://click.pocoo.org/5/parameters/#differences and http://click.pocoo.org/5/commands/</span>
+
+
+
+<span class="sd">    The following callbacks are implemented and may be used for future options:</span>
+
+<span class="sd">    :meth:`add_value_to_context`: sets the value of the option to the context, without any modification. The name of the</span>
+<span class="sd">    option is used as key.</span>
+
+<span class="sd">    :meth:`get_snmp_value`: will search in :class:`wesp.definitions.AllParameter` for a matching OID and requests the</span>
+<span class="sd">    data via GET from the WLC. The result is added to the context, under the name of the option.</span>
+
+<span class="sd">    :meth:`get_snmp_value_with_mac`: will do the same as the latter function but will include the mac address of the</span>
+<span class="sd">    client to get client specific data.</span>
+
+<span class="sd">    :meth:`check_wlc_address`: will check if the given address is a valid IP address or a resolvable hostname. If so it</span>
+<span class="sd">    will add it to the context under the name of the option.</span>
+
+<span class="sd">    :meth:`check_client_address`: will check if the given address is a valid IP or MAC address. If so it will add</span>
+<span class="sd">    it to the context under the name of the option.</span>
+
+<span class="sd">    :meth:`get_ap_name`: will retrieve the name of the AP of a client. For details see the function itself. The name of</span>
+<span class="sd">    the option is used as key.</span>
+
+<span class="sd">    :meth:`get_ping`: will try to ping the client. For details see the function itself. The name of the option</span>
+<span class="sd">    is used as key.</span>
+
+
+<span class="sd">    :param ctx: current Context</span>
+<span class="sd">    :param wlc_address: click option (is not be used)</span>
+<span class="sd">    :param client_address: click option (is not be used)</span>
+<span class="sd">    :param snmp_version: click option (is not be used)</span>
+<span class="sd">    :param snmp_community: click option (is not be used)</span>
+<span class="sd">    :param snmp_user: click option (is not be used)</span>
+<span class="sd">    :param snmp_password: click option (is not be used)</span>
+<span class="sd">    :param snmp_encryption: click option (is not be used)</span>
+<span class="sd">    :param interval: click option (is not be used)</span>
+<span class="sd">    :param iterations: click option (is not be used)</span>
+<span class="sd">    :param channel: click option (is not be used)</span>
+<span class="sd">    :param retries: click option (is not be used)</span>
+<span class="sd">    :param ap_name: click option (is not be used)</span>
+<span class="sd">    :param rx_packages: click option (is not be used)</span>
+<span class="sd">    :param tx_packages: click option (is not be used)</span>
+<span class="sd">    :param ping: click option (is not be used)</span>
+<span class="sd">    :param rssi_off: click option (is not be used)</span>
+<span class="sd">    :param snr_off: click option (is not be used)</span>
+<span class="sd">    :param data_rate_off: click option (is not be used)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
 
 <span class="sd">&quot;&quot;&quot;________ DATABASE COMMAND _____________&quot;&quot;&quot;</span>
@@ -470,7 +527,7 @@
 <span class="c1"># Database Command</span>
 <span class="c1">#</span>
 <span class="nd">@cli_parser</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">CommandAllowConfigFile</span><span class="p">,</span>
-                    <span class="n">short_help</span><span class="o">=</span><span class="s2">&quot;Will output the results to a database. See print_to_db --help for more details.&quot;</span><span class="p">,</span>
+                    <span class="n">short_help</span><span class="o">=</span><span class="s2">&quot;Will output the results to a database. For more information see print_to_db --help.&quot;</span><span class="p">,</span>
                     <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Will output the results to a database. Details on the options can be found below. </span><span class="se">\n\n</span><span class="s2">&quot;</span>
                          <span class="s2">&quot;Ensure that an existing MySQL database is running at the default or given address. &quot;</span>
                          <span class="s2">&quot;The SQL installation is not part of this program! </span><span class="se">\n\n</span><span class="s2">&quot;</span>

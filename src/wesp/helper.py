@@ -196,26 +196,6 @@ def decompress_nested_dict(nested_dict):
     return normal_dict
 
 
-def generate_db_conf_from_context (ctx):
-    """
-    This function will create the config dict for the database
-    from the context object
-
-    :param: ctx: current Context object
-    :rtype: dict
-    :return: database config as dict based on the current context
-
-    """
-
-    return {
-        'user': ctx.obj['db_user'],
-        'password': ctx.obj['db_pass'],
-        'host': ctx.obj['db_address'],
-        'port': ctx.obj['db_port'],
-        'database': ctx.obj['db_name'],
-    }
-
-
 def print_session_info(session):
     """
     Will print the info's of the current snmp session to Std out
@@ -389,3 +369,22 @@ def generate_parameter_insert_statement(client_data):
     # return statement with surrounding brackets.
     return '(' + parameter_names + ') VALUES ' + '(' + parameter_values + ')'
 
+
+def generate_db_conf_from_context (ctx):
+    """
+    This function will create the config dict for the database
+    from the context object
+
+    :param: ctx: current Context object
+    :rtype: dict
+    :return: database config as dict based on the current context
+
+    """
+
+    return {
+        'user': ctx.obj['db_user'],
+        'password': ctx.obj['db_pass'],
+        'host': ctx.obj['db_address'],
+        'port': ctx.obj['db_port'],
+        'database': ctx.obj['db_name'],
+    }
