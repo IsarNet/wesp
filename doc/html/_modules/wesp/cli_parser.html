@@ -257,16 +257,7 @@
 
     <span class="c1"># If not IP is should be a FQDN</span>
     <span class="k">if</span> <span class="n">ip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-
-        <span class="c1"># test if hostname can be resolved</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip</span>
-
-        <span class="c1"># if not raise error</span>
-        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
-                <span class="s2">&quot;Host Resolve error: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">err</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip</span></div>
 

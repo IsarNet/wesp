@@ -290,8 +290,6 @@
 <span class="sd">        :return: parameter with the given oid or None if no existing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span>
-
         <span class="c1"># loop through all fields of class AllParameter</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">AllParameter</span><span class="p">):</span>
 
@@ -300,12 +298,12 @@
 
                 <span class="c1"># check parameter has a OID associated with it</span>
                 <span class="k">if</span> <span class="n">candidate</span><span class="o">.</span><span class="n">oid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
                     <span class="c1"># OID matches, then return it</span>
                     <span class="k">if</span> <span class="n">candidate</span><span class="o">.</span><span class="n">oid</span> <span class="ow">in</span> <span class="n">oid</span><span class="p">:</span>
                         <span class="k">return</span> <span class="n">candidate</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="s2">&quot;No Parameter with OID found, maybe Ping or Mac Address?&quot;</span>
 
-        <span class="c1"># if nothing was found, return None</span>
         <span class="k">return</span> <span class="kc">None</span></div></div>
 
 

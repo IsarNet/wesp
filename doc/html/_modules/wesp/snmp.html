@@ -285,12 +285,12 @@
 
         <span class="k">except</span> <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
-                <span class="s2">&quot;No such Instance at `</span><span class="si">%s</span><span class="s2">` (`</span><span class="si">%s</span><span class="s2">`)&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="s2">&quot;No such Instance at: `</span><span class="si">%s</span><span class="s2">` (`</span><span class="si">%s</span><span class="s2">`)&quot;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="n">oid</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
 
         <span class="k">except</span> <span class="n">EasySNMPNoSuchObjectError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
-                <span class="s2">&quot;No such Object at `</span><span class="si">%s</span><span class="s2">` (`</span><span class="si">%s</span><span class="s2">`)&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="s2">&quot;No such Object at: `</span><span class="si">%s</span><span class="s2">` (`</span><span class="si">%s</span><span class="s2">`)&quot;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="n">oid</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Snmp.get_mac_from_ip"><a class="viewcode-back" href="../../wesp.snmp.html#wesp.snmp.Snmp.get_mac_from_ip">[docs]</a>    <span class="nd">@staticmethod</span>
