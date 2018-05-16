@@ -167,8 +167,6 @@ class AllParameter:
                     # OID matches, then return it
                     if candidate.oid in oid:
                         return candidate
-                else:
-                    return "No Parameter with OID found, maybe Ping or Mac Address?"
 
         return None
 

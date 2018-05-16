@@ -34,7 +34,7 @@ import tzlocal
 # TODO populate
 
 # Order at which the Data is outputted, make sure to always add a None to each tuple!
-order = [('channel', None), ('retries', None), ('snr_off', None),('rssi_off', None)]
+order = [('channel', None), ('retries', None), ('snr_off', None), ('ap_name', None), ('rssi_off', None)]
 
 
 """
@@ -499,7 +499,6 @@ def process_result(result, **kwargs):
     :param kwargs:
     :return: Nothing
     """
-    click.echo('All parameters parsed')
 
     # get reference of context
     ctx = click.get_current_context()
@@ -530,18 +529,31 @@ def process_result(result, **kwargs):
         time.sleep(ctx.obj['interval'])
 
         # fetch newest info from wlc
-        update_client_data(ctx)
+        error = update_client_data(ctx)
 
-        # get current time with timezone
-        current_time = datetime.now(tzlocal.get_localzone())
+        # only output if no error, if at least one parameter raised an error
+        # output error and proceed to next iteration
+        if not error:
 
-        # if not silent print to output again
-        if 'silent' not in ctx.obj or not ctx.obj['silent']:
-            print(generate_cli_output(CLIENT_DATA, ctx, current_time))
+            # get current time with timezone
+            current_time = datetime.now(tzlocal.get_localzone())
 
-        # if print_to_db command was set, insert data again
-        if Database.is_ready():
-            Database.insert_data_set(CLIENT_DATA, ctx, current_time)
+            # if not silent print to output again
+            if 'silent' not in ctx.obj or not ctx.obj['silent']:
+                print(generate_cli_output(CLIENT_DATA, ctx, current_time))
+
+            # if print_to_db command was set, insert data again
+            if Database.is_ready():
+                # catch exception, if db connections drop during session
+                # only output error message
+                try:
+                    Database.insert_data_set(CLIENT_DATA, ctx, current_time)
+                except click.UsageError as ex:
+                    click.echo(str(ex) + " ... Entry lost. Trying to reconnect ...", err=True)
+
+        else:
+            # output error
+            click.echo(" Client not available ... Retrying next time ...", err=True)
 
 
 def update_client_data(ctx):
@@ -561,8 +573,12 @@ def update_client_data(ctx):
         if value is not None:
             option = get_option_with_name(ctx.command, ctx, key)
 
-            # run callback function for this option again
-            option.callback(ctx, option, True)
+            try:
+                # run callback function for this option again
+                option.callback(ctx, option, True)
+            except click.UsageError as ex:
+                return True
 
+    return False
 
 

@@ -7,7 +7,8 @@ setup(
     url='https://github.com/IsarNet/wesp',
     license='GNU GPLv3',
     author='Marcel Rummens and Maximilian Tichter',
-    description='TODO',
+    description='This program will automatically monitor a WiFi device for defined parameters using '
+                'the MAC or IPv4 address. In addition a ping can check if the client is reachable.',
     install_requires=[
         'easysnmp',
         'click>=6.7',

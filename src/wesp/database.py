@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import errorcode
+from mysql.connector.errors import *
 import click
 from wesp.definitions import AllParameter
 
@@ -119,7 +120,7 @@ class Database:
                     "MySQL Error: Database INFORMATION_SCHEMA does not exist. Check your MySQL installation.'")
             else:
                 raise click.UsageError(
-                    "Unknown MySQL Error: `%s`" % (
+                    "Unknown MySQL Error at initial connection: `%s`" % (
                         err))
         else:
             cur = cnx.cursor()
@@ -165,12 +166,23 @@ class Database:
                     "MySQL Error: Database" + str(Database.db_name) + "does not exist. Check your MySQL installation.'")
             else:
                 raise click.UsageError(
-                    "Unknown MySQL Error: `%s`" % (
+                    "Unknown MySQL Error at insert connection: `%s`" % (
                         err))
         else:
             cur = cnx.cursor()
-            # Insert new data set
-            cur.execute(Database.insertStatement, data_set)
+
+            try:
+                # Insert new data set
+                cur.execute(Database.insertStatement, data_set)
+            except ProgrammingError as ex:
+                raise click.UsageError(
+                    "SQL error: `%s` "
+                    "\n(If new field has been added, drop the table or add it manually to the table)" % ex)
+
+            except (Error, DatabaseError, DataError, IntegrityError, InterfaceError, InternalError,
+                    MySQLFabricError, NotSupportedError, OperationalError, PoolError) as ex:
+                raise click.UsageError(
+                    "Unknown SQL error at insert: `%s` " % ex)
 
             # Commit data to the database
             cnx.commit()
