@@ -117,6 +117,10 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
+## Install Instructions for PyCharm
+TODO Maybe external file?
+
+
 ## Authors
 
 * **Marcel Rummens** - *Initial work* - [Rummens](https://github.com/Rummens)
