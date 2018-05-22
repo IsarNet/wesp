@@ -40,6 +40,7 @@ class Parameter:
     For real non negative numbers use int(11) unsigned ot have a maximum of 4294967295
     For rational numbers use double, no length needed. Be aware of the rounding problems in comparision
     e.g. https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues
+    Keep in mind, that the wrong length can result in partial loss of the data
     \n
     NOTE: Changes here will only be reflected in the database, if the table is dropped and recreated by this program
     """
