@@ -9,12 +9,18 @@ echo $DIR
 if [[ "$os" == *"Ubuntu"* ]]
 then
     echo "Will install for Ubuntu..."
-    # install dependencies
-    sudo apt-get install libsnmp-dev snmp-mibs-downloader gcc python-dev git python-setuptools
-    echo "Dependencies installed"
+    # install dependencies and check if error happened
+    if sudo apt-get install libsnmp-dev snmp-mibs-downloader gcc python-dev git python-setuptools
+    then
+        echo "Dependencies installed"
+    else
+        echo "Error  during installation of Dependencies occurred"
+        exit 1
+    fi
     
-    #run python installer
-    sudo python $DIR/setup.py install
+    #run python installer (installer needs to be run from inside the src folder)
+    cd $DIR/src
+    sudo python setup.py install
     echo "Installation completed. Check for errors!"
 
 fi
@@ -22,12 +28,19 @@ fi
 if [[ "$os" == *"Debian"* ]]
 then
     echo "Will install for Debian..."
-    # install dependencies
-    sudo apt-get install libsnmp-dev snmp-mibs-downloader gcc python-dev git python-setuptools
-    echo "Dependencies installed"
+    # install dependencies and check if error happened
+    if sudo apt-get install libsnmp-dev snmp-mibs-downloader gcc python-dev git python-setuptools
+    then
+        echo "Dependencies installed"
+    else
+        echo "Error  during installation of Dependencies occurred"
+        exit 1
+    fi
 
-    #run python installer
-    sudo python $DIR/setup.py install
+
+    #run python installer (installer needs to be run from inside the src folder)
+    cd $DIR/src
+    sudo python setup.py install
     echo "Installation completed. Check for errors!"
 
 fi
