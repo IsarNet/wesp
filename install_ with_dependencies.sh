@@ -12,8 +12,8 @@ then
     echo "Dependencies installed"
     
     #run python installer
-    sudo src/python setup.py install
-    echo "Installed wesp successfully"
+    sudo python src/setup.py install
+    echo "Installation completed. Check for errors!"
 
 fi
 
@@ -25,7 +25,7 @@ then
     echo "Dependencies installed"
 
     #run python installer
-    sudo src/python setup.py install
-    echo "Installed wesp successfully"
+    sudo python src/setup.py install
+    echo "Installation completed. Check for errors!"
 
 fi
