@@ -1,8 +1,10 @@
 #!/bin/bash
 
 os=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo $os
+echo $DIR
 
 if [[ "$os" == *"Ubuntu"* ]]
 then
@@ -12,7 +14,7 @@ then
     echo "Dependencies installed"
     
     #run python installer
-    sudo python src/setup.py install
+    sudo python $DIR/setup.py install
     echo "Installation completed. Check for errors!"
 
 fi
@@ -25,7 +27,7 @@ then
     echo "Dependencies installed"
 
     #run python installer
-    sudo python src/setup.py install
+    sudo python $DIR/setup.py install
     echo "Installation completed. Check for errors!"
 
 fi
