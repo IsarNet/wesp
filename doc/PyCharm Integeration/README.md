@@ -7,11 +7,11 @@
 2. Enter you GitHub credentials in Preferences -> Version Control -> GitHub. More details can be found [here](https://www.jetbrains.com/help/pycharm/settings-version-control-github.html). 
 ![enter image description here](https://github.com/IsarNet/wesp/blob/master/doc/PyCharm%20Integeration/github%20.png?raw=true)
 <br><br>
-3. Make a check out of the repository: VCS -> Checkout from Version Control -> Git 
-![enter image description here](https://github.com/IsarNet/wesp/blob/master/doc/PyCharm%20Integeration/vcs_check_out.png?raw=true)
+3. Make a checkout of the repository: VCS -> Checkout from Version Control -> Git 
+![VCS Checkout](vcs_check_out.png)
 <br><br>
 4. Clone the repository (https://github.com/IsarNet/wesp/) to your computer. 
-![enter image description here](https://github.com/IsarNet/wesp/blob/master/doc/PyCharm%20Integeration/clone_repository.png?raw=true)
+![Clone Repository](clone_repository.png)
 <br><br>
 5. Confirm the Checkout: 
 ![enter image description here](https://github.com/IsarNet/wesp/blob/master/doc/PyCharm%20Integeration/Checkout_confirm.png?raw=true)
