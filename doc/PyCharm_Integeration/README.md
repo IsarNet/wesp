@@ -5,12 +5,13 @@
 1. [Download](https://www.jetbrains.com/pycharm/download/#section=mac) latest version of GitHub (Community or Professional):   
 <br>
 2. Enter you GitHub credentials in Preferences -> Version Control -> GitHub. More details can be found [here](https://www.jetbrains.com/help/pycharm/settings-version-control-github.html). 
-(./github.png)
+![GitHub Credentials](./github.png)
 <br><br>
-3. Make a checkout of the repository: VCS -> Checkout from Version Control -> Git (https://assets-cdn.github.com/images/modules/open_graph/github-mark.png)
+3. Make a checkout of the repository: VCS -> Checkout from Version Control -> Git 
+![VCS Checkout](vcs_check_out.png)
 <br><br>
 4. Clone the repository (https://github.com/IsarNet/wesp/) to your computer. 
-(https://assets-cdn.github.com/images/modules/open_graph/github-mark.png)
+![Clone Repository](clone_repository.png)
 <br><br>
 5. Confirm the Checkout: 
 ![Confirm Checkout](Checkout_confirm.png)
