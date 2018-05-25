@@ -229,7 +229,7 @@ the <a class="reference internal" href="#wesp.database.Database.init_database" t
 
 <dl class="staticmethod">
 <dt id="wesp.database.Database.insert_data_set">
-<em class="property">static </em><code class="descname">insert_data_set</code><span class="sig-paren">(</span><em>ctx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/database.html#Database.insert_data_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.database.Database.insert_data_set" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">insert_data_set</code><span class="sig-paren">(</span><em>ctx</em>, <em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/database.html#Database.insert_data_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.database.Database.insert_data_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Will inserted the given data into the database based on the config
 and statement form the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> function</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -263,7 +263,7 @@ statements have been initialized.</p>
 
 <dl class="attribute">
 <dt id="wesp.database.Database.tableCreateStatement">
-<code class="descname">tableCreateStatement</code><em class="property"> = 'CREATE TABLE IF NOT EXISTS %%DATABASE%%.%%TABLE%% (\n    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n      `Timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n      %%PARAMETER%%\n      PRIMARY KEY (`id`)\n    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;'</em><a class="headerlink" href="#wesp.database.Database.tableCreateStatement" title="Permalink to this definition">¶</a></dt>
+<code class="descname">tableCreateStatement</code><em class="property"> = 'CREATE TABLE IF NOT EXISTS %%DATABASE%%.%%TABLE%% (\n    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n      `Timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n      %%PARAMETER%%\n      PRIMARY KEY (`id`),\n      KEY `ipIndex` (`%%IP_INDEX%%`),\n      KEY `macIndex` (`%%MAC_INDEX%%`)\n    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;'</em><a class="headerlink" href="#wesp.database.Database.tableCreateStatement" title="Permalink to this definition">¶</a></dt>
 <dd><p>This statement creates the table. It will only trigger if the database does 
 not exists. Note the name of the database and table, as well as all other fields (based on 
 registered Parameter in <a class="reference internal" href="wesp.definitions.html#wesp.definitions.AllParameter" title="wesp.definitions.AllParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.definitions.AllParameter</span></code></a>) will be inserted in the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> 

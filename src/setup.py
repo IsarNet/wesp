@@ -13,6 +13,7 @@ setup(
         'easysnmp',
         'click>=6.7',
         'click_configfile',
+        'click-man',
         'mysql-connector',
         'multiping',
         'IPy',
@@ -20,7 +21,7 @@ setup(
         'tzlocal'
     ],
     entry_points={
-        'console_scripts': ['wesp=wesp.command_line:main'],
+        'console_scripts': ['wesp=wesp.cli_parser:cli_parser'],
     },
     zip_safe=False
 

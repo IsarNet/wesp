@@ -168,6 +168,8 @@
 as well as their name and database type. For more information see <a class="reference internal" href="#wesp.definitions.Parameter" title="wesp.definitions.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a></p>
 <p>In addition the class <a class="reference internal" href="#wesp.definitions.GlobalSettings" title="wesp.definitions.GlobalSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">GlobalSettings</span></code></a> defines basic options like the help flags, the usage text
 or the welcome string</p>
+<p>NOTE: Changes to name or db_data_type will only be reflected in the database, if the table is dropped
+and recreated by this program</p>
 <dl class="class">
 <dt id="wesp.definitions.AllParameter">
 <em class="property">class </em><code class="descclassname">wesp.definitions.</code><code class="descname">AllParameter</code><a class="reference internal" href="_modules/wesp/definitions.html#AllParameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.definitions.AllParameter" title="Permalink to this definition">¶</a></dt>
@@ -256,10 +258,13 @@ More information on the fields can be found below</p>
 <code class="descname">db_data_type</code><em class="property"> = ''</em><a class="headerlink" href="#wesp.definitions.Parameter.db_data_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>DB Data Type which should be used for this parameter.
 For string use varchar(255) with the length of the string in the brackets
-For real numbers use int(11) with the length of the int in the brackets
-For real non negative numbers use int(11) unsigned
+For real numbers use int(11) with a fixed maximum of 2147483647. Length in brackets is only for display 
+and will not effect this program
+For real non negative numbers use int(11) unsigned ot have a maximum of 4294967295
 For rational numbers use double, no length needed. Be aware of the rounding problems in comparision
-e.g. <a class="reference external" href="https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues">https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues</a></p>
+e.g. <a class="reference external" href="https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues">https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues</a>
+Keep in mind, that the wrong length can result in partial loss of the data</p>
+<p>NOTE: Changes here will only be reflected in the database, if the table is dropped and recreated by this program</p>
 </dd></dl>
 
 <dl class="attribute">

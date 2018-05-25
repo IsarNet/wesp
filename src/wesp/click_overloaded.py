@@ -135,6 +135,10 @@ class CustomGroup(click.Group):
         config_command_index = None
         command_found = None
 
+        # create context object, if it does not exist
+        if ctx.obj is None:
+            ctx.obj = {}
+
         # per default no config is loaded
         ctx.obj['load_conf'] = False
 

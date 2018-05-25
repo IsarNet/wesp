@@ -1,6 +1,7 @@
 easysnmp
 click
 click_configfile
+click-man
 mysql-connector
 multiping
 IPy

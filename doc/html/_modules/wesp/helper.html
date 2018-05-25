@@ -153,7 +153,6 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">click</span> <span class="k">import</span> <span class="n">UsageError</span>
 <span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">gmtime</span><span class="p">,</span> <span class="n">strftime</span>
 <span class="kn">from</span> <span class="nn">wesp.definitions</span> <span class="k">import</span> <span class="n">AllParameter</span>
 
 <span class="c1">#</span>
@@ -227,12 +226,26 @@
                 <span class="s2">&quot;No IP address found for given MAC address. Is device connected?&quot;</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># raise Error with name of parameter, handling is done in calling function</span>
-            <span class="k">raise</span> <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">(</span><span class="n">AllParameter</span><span class="o">.</span><span class="n">get_parameter_by_oid</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">parameter</span> <span class="o">=</span> <span class="n">AllParameter</span><span class="o">.</span><span class="n">get_parameter_by_oid</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># raise Error with name of parameter, handling is done in calling function</span>
+                <span class="k">raise</span> <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># raise Error without name of parameter, handling is done in calling function</span>
+                <span class="k">raise</span> <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">(</span><span class="s2">&quot;No Parameter with OID found, maybe Ping or Mac Address?&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">snmp_type</span> <span class="o">==</span> <span class="s2">&quot;NOSUCHOBJECT&quot;</span><span class="p">:</span>
-        <span class="c1"># raise Error with name of parameter, handling is done in calling function</span>
-        <span class="k">raise</span> <span class="n">EasySNMPNoSuchObjectError</span><span class="p">(</span><span class="n">AllParameter</span><span class="o">.</span><span class="n">get_parameter_by_oid</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">parameter</span> <span class="o">=</span> <span class="n">AllParameter</span><span class="o">.</span><span class="n">get_parameter_by_oid</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># raise Error with name of parameter, handling is done in calling function</span>
+            <span class="k">raise</span> <span class="n">EasySNMPNoSuchObjectError</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># raise Error without name of parameter, handling is done in calling function</span>
+            <span class="k">raise</span> <span class="n">EasySNMPNoSuchObjectError</span><span class="p">(</span><span class="s2">&quot;No Parameter with OID found, maybe Ping or Mac Address?&quot;</span><span class="p">)</span>
 
     <span class="c1"># Everything okay? return true</span>
     <span class="k">return</span> <span class="kc">True</span></div>
@@ -379,7 +392,7 @@
     <span class="k">return</span> <span class="nb">str</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">new</span> <span class="o">+</span> <span class="nb">str</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span></div>
 
 
-<div class="viewcode-block" id="generate_cli_output"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.generate_cli_output">[docs]</a><span class="k">def</span> <span class="nf">generate_cli_output</span><span class="p">(</span><span class="n">client_data</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<div class="viewcode-block" id="generate_cli_output"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.generate_cli_output">[docs]</a><span class="k">def</span> <span class="nf">generate_cli_output</span><span class="p">(</span><span class="n">client_data</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    will generate the CLI output based on the given client_data. It also includes the current time</span>
 <span class="sd">    and the mac address of the client. It always has the following form:</span>
@@ -395,7 +408,7 @@
 
     <span class="c1"># Add time and mac address to output</span>
     <span class="c1"># as well as ping, if ping was performed</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span> <span class="n">gmtime</span><span class="p">()))</span> \
+    <span class="n">output</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span> \
              <span class="o">+</span> <span class="s2">&quot; [&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_mac&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;] &quot;</span> \
              <span class="o">+</span> <span class="n">ping_to_str</span><span class="p">(</span><span class="n">client_data</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; { &quot;</span>
 
@@ -476,10 +489,10 @@
     <span class="n">parameter_names</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">parameter_values</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-    <span class="c1"># Temporary add client_ip and client_mac (which should not be represented in client_data</span>
+    <span class="c1"># Temporary add client_ip, client_mac and timestamp (which should not be represented in client_data</span>
     <span class="c1"># to prevent output to CLI)</span>
     <span class="n">client_data</span> <span class="o">=</span> <span class="n">client_data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">client_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;client_ip&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;client_mac&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+    <span class="n">client_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;client_ip&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;client_mac&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
 
     <span class="c1"># for all entries in the given client_data set, which are represented in the class AllParameter</span>
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">client_data</span><span class="p">:</span>

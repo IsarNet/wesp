@@ -8,7 +8,6 @@ from easysnmp import EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError
 import re
 from click import UsageError
 import types
-from time import gmtime, strftime
 from wesp.definitions import AllParameter
 
 #

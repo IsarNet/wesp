@@ -172,12 +172,14 @@
 <span class="kn">from</span> <span class="nn">wesp.helper</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">wesp.database</span> <span class="k">import</span> <span class="n">Database</span>
 <span class="kn">from</span> <span class="nn">wesp.snmp</span> <span class="k">import</span> <span class="n">Snmp</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">tzlocal</span>
 
 <span class="c1"># TODO Check Error Messages at wrong config file input, e.g. v2 instead of 2c</span>
 <span class="c1"># TODO populate</span>
 
 <span class="c1"># Order at which the Data is outputted, make sure to always add a None to each tuple!</span>
-<span class="n">order</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;retries&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;snr_off&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),(</span><span class="s1">&#39;rssi_off&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
+<span class="n">order</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;retries&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;snr_off&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ap_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;rssi_off&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -423,13 +425,13 @@
               <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of Access Point the client is associated with&#39;</span><span class="p">)</span>
 <span class="c1">#</span>
-<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--rx_packages&#39;</span><span class="p">,</span> <span class="s1">&#39;-re&#39;</span><span class="p">,</span> <span class="s1">&#39;rx_packages&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--rx_packets&#39;</span><span class="p">,</span> <span class="s1">&#39;-re&#39;</span><span class="p">,</span> <span class="s1">&#39;rx_packets&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
               <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of client received packages&#39;</span><span class="p">)</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of client received packets&#39;</span><span class="p">)</span>
 <span class="c1">#</span>
-<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--tx_packages&#39;</span><span class="p">,</span> <span class="s1">&#39;-re&#39;</span><span class="p">,</span> <span class="s1">&#39;tx_packages&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--tx_packets&#39;</span><span class="p">,</span> <span class="s1">&#39;-re&#39;</span><span class="p">,</span> <span class="s1">&#39;tx_packets&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
               <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of client transmitted packages&#39;</span><span class="p">)</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of client transmitted packets&#39;</span><span class="p">)</span>
 <span class="c1">#</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--ping&#39;</span><span class="p">,</span> <span class="s1">&#39;-pi&#39;</span><span class="p">,</span> <span class="s1">&#39;ping&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_ping</span><span class="p">,</span>
               <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -455,7 +457,7 @@
 <span class="c1">#</span>
 <span class="k">def</span> <span class="nf">cli_parser</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">wlc_address</span><span class="p">,</span> <span class="n">client_address</span><span class="p">,</span>
                <span class="n">snmp_version</span><span class="p">,</span> <span class="n">snmp_community</span><span class="p">,</span> <span class="n">snmp_user</span><span class="p">,</span> <span class="n">snmp_password</span><span class="p">,</span> <span class="n">snmp_encryption</span><span class="p">,</span>
-               <span class="n">interval</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">retries</span><span class="p">,</span> <span class="n">ap_name</span><span class="p">,</span> <span class="n">rx_packages</span><span class="p">,</span> <span class="n">tx_packages</span><span class="p">,</span> <span class="n">ping</span><span class="p">,</span>
+               <span class="n">interval</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">retries</span><span class="p">,</span> <span class="n">ap_name</span><span class="p">,</span> <span class="n">rx_packets</span><span class="p">,</span> <span class="n">tx_packets</span><span class="p">,</span> <span class="n">ping</span><span class="p">,</span>
                <span class="n">rssi_off</span><span class="p">,</span> <span class="n">snr_off</span><span class="p">,</span> <span class="n">data_rate_off</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
@@ -642,18 +644,20 @@
 <span class="sd">    :param kwargs:</span>
 <span class="sd">    :return: Nothing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;All parameters parsed&#39;</span><span class="p">)</span>
 
     <span class="c1"># get reference of context</span>
     <span class="n">ctx</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">get_current_context</span><span class="p">()</span>
 
+    <span class="c1"># get current time with timezone</span>
+    <span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tzlocal</span><span class="o">.</span><span class="n">get_localzone</span><span class="p">())</span>
+
     <span class="c1"># if not silent print results to CLI</span>
     <span class="k">if</span> <span class="s1">&#39;silent&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;silent&#39;</span><span class="p">]:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">generate_cli_output</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">generate_cli_output</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">current_time</span><span class="p">))</span>
 
     <span class="c1"># if print_to_db command was set, insert data</span>
     <span class="k">if</span> <span class="n">Database</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
-        <span class="n">Database</span><span class="o">.</span><span class="n">insert_data_set</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">insert_data_set</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">current_time</span><span class="p">)</span>
 
     <span class="c1"># decrease iteration by one</span>
     <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;iterations&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
@@ -670,15 +674,31 @@
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;interval&#39;</span><span class="p">])</span>
 
         <span class="c1"># fetch newest info from wlc</span>
-        <span class="n">update_client_data</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">update_client_data</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
 
-        <span class="c1"># if not silent print to output again</span>
-        <span class="k">if</span> <span class="s1">&#39;silent&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;silent&#39;</span><span class="p">]:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">generate_cli_output</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">))</span>
+        <span class="c1"># only output if no error, if at least one parameter raised an error</span>
+        <span class="c1"># output error and proceed to next iteration</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">error</span><span class="p">:</span>
 
-        <span class="c1"># if print_to_db command was set, insert data again</span>
-        <span class="k">if</span> <span class="n">Database</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
-            <span class="n">Database</span><span class="o">.</span><span class="n">insert_data_set</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span></div>
+            <span class="c1"># get current time with timezone</span>
+            <span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tzlocal</span><span class="o">.</span><span class="n">get_localzone</span><span class="p">())</span>
+
+            <span class="c1"># if not silent print to output again</span>
+            <span class="k">if</span> <span class="s1">&#39;silent&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;silent&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">generate_cli_output</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">current_time</span><span class="p">))</span>
+
+            <span class="c1"># if print_to_db command was set, insert data again</span>
+            <span class="k">if</span> <span class="n">Database</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+                <span class="c1"># catch exception, if db connections drop during session</span>
+                <span class="c1"># only output error message</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">Database</span><span class="o">.</span><span class="n">insert_data_set</span><span class="p">(</span><span class="n">CLIENT_DATA</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">current_time</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; ... Entry lost. Trying to reconnect ...&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># output error</span>
+            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot; Client not available ... Retrying next time ...&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="update_client_data"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.update_client_data">[docs]</a><span class="k">def</span> <span class="nf">update_client_data</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
@@ -698,9 +718,13 @@
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">option</span> <span class="o">=</span> <span class="n">get_option_with_name</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
 
-            <span class="c1"># run callback function for this option again</span>
-            <span class="n">option</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># run callback function for this option again</span>
+                <span class="n">option</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
 
+    <span class="k">return</span> <span class="kc">False</span></div>
 
 
 </pre></div>

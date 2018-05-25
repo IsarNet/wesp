@@ -118,7 +118,7 @@ sudo apt-get upgrade
 ```
 
 ## Install Instructions for PyCharm
-Can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/PyCharm%20Integeration)
+Can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/PyCharm_Integeration)
 
 
 ## Authors
