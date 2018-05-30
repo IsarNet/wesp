@@ -280,6 +280,10 @@
         <span class="n">config_command_index</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">command_found</span> <span class="o">=</span> <span class="kc">None</span>
 
+        <span class="c1"># create context object, if it does not exist</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="p">{}</span>
+
         <span class="c1"># per default no config is loaded</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;load_conf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 

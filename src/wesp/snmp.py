@@ -57,7 +57,7 @@ class Snmp:
                                   use_sprint_value=True)
             except EasySNMPConnectionError, e:
                 raise click.UsageError(
-                    "SNMP Connection Error: `%s`" % (
+                    "WLC / SNMP Connection Error: `%s`" % (
                         e.message))
 
         # init Snmp with generated Session
@@ -74,9 +74,6 @@ class Snmp:
         # because IP address is mandatory to ping
         if 'client_ip' not in ctx.obj:
             ctx.obj['client_ip'] = Snmp.get_by_mac_address(AllParameter.client_ip.oid, ctx.obj['client_mac'])
-
-        # TODO Remove
-        # print_session_info(session)
 
     @staticmethod
     def get_session():
@@ -112,7 +109,7 @@ class Snmp:
         except EasySNMPTimeoutError, e:
 
             raise click.UsageError(
-                "SNMP Timeout Error: `%s`" % (
+                "WLC connection / SNMP Timeout Error: `%s`" % (
                     e.message))
 
     @staticmethod
@@ -135,7 +132,7 @@ class Snmp:
         except EasySNMPTimeoutError, e:
 
             raise click.UsageError(
-                "SNMP Timeout Error: `%s`" % (
+                "WLC connection / SNMP Timeout Error: `%s`" % (
                     e.message))
 
         except EasySNMPNoSuchInstanceError, e:
@@ -188,7 +185,7 @@ class Snmp:
         """
         # convert mac from hex to dec
         mac_int = mac_hex_to_dec(mac_address, separator)
-        # todo add catch for empty mac
+
         # add connecting dot, if not existing between end of oid and mac address
         oid = oid + mac_int if (oid[-1] == '.') else oid + '.' + mac_int
 

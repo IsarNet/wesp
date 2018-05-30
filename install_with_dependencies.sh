@@ -19,10 +19,10 @@ then
     
     #run python installer (installer needs to be run from inside the src folder)
     cd $DIR/src
-    echo "Creating man pages..."
-    sudo python setup.py --command-packages=click_man.commands man_pages --target /usr/share/man/man1/
 
     sudo python setup.py install
+    sudo click-man wesp --target /usr/share/man/man1/
+
     echo "Installation completed. Check for errors!"
 
 fi
@@ -42,10 +42,10 @@ then
 
     #run python installer (installer needs to be run from inside the src folder)
     cd $DIR/src
-    echo "Creating man pages..."
-    sudo python setup.py --command-packages=click_man.commands man_pages --target /usr/share/man/man1/
 
     sudo python setup.py install
+    sudo click-man wesp --target /usr/share/man/man1/
+
     echo "Installation completed. Check for errors!"
 
 fi
@@ -65,10 +65,9 @@ then
 
     #run python installer (installer needs to be run from inside the src folder)
     cd $DIR/src
-    sudo python setup.py install
 
-    echo "Creating man pages..."
-    sudo python setup.py --command-packages=click_man.commands man_pages --target /usr/share/man/man1/
+    sudo python setup.py install
+    sudo click-man wesp --target /usr/share/man/man1/
 
     echo "Installation completed. Check for errors!"
 

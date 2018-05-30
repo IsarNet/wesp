@@ -28,6 +28,7 @@ from wesp.helper import *
 from wesp.database import Database
 from wesp.snmp import Snmp
 from datetime import datetime
+from easysnmp import EasySNMPTimeoutError
 import tzlocal
 
 # TODO Check Error Messages at wrong config file input, e.g. v2 instead of 2c
@@ -75,9 +76,6 @@ def get_snmp_value(ctx, param, flag_set):
         # load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary
         CLIENT_DATA[param.name] = Snmp.get(getattr(AllParameter, param.name).oid)
 
-        # TODO Remove
-        # print(param.name)
-
 
 def get_snmp_value_with_mac(ctx, param, flag_set):
     """
@@ -96,9 +94,6 @@ def get_snmp_value_with_mac(ctx, param, flag_set):
 
         # load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary
         CLIENT_DATA[param.name] = Snmp.get_by_mac_address(getattr(AllParameter, param.name).oid, ctx.obj['client_mac'])
-
-        # TODO Remove
-        # print('with mac', param.name)
 
 
 def check_wlc_address(ctx, param, value):
@@ -367,8 +362,8 @@ def cli_parser(ctx, wlc_address, client_address,
     :param channel: click option (is not be used)
     :param retries: click option (is not be used)
     :param ap_name: click option (is not be used)
-    :param rx_packages: click option (is not be used)
-    :param tx_packages: click option (is not be used)
+    :param rx_packets: click option (is not be used)
+    :param tx_packets: click option (is not be used)
     :param ping: click option (is not be used)
     :param rssi_off: click option (is not be used)
     :param snr_off: click option (is not be used)
@@ -552,8 +547,8 @@ def process_result(result, **kwargs):
                     click.echo(str(ex) + " ... Entry lost. Trying to reconnect ...", err=True)
 
         else:
-            # output error
-            click.echo(" Client not available ... Retrying next time ...", err=True)
+            # output other error
+            click.echo("Client not available ... Retrying next time ... (%s)" % (str(error)), err=True)
 
 
 def update_client_data(ctx):
@@ -577,7 +572,7 @@ def update_client_data(ctx):
                 # run callback function for this option again
                 option.callback(ctx, option, True)
             except click.UsageError as ex:
-                return True
+                return ex
 
     return False
 
