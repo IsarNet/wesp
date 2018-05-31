@@ -219,6 +219,7 @@ def get_ping(ctx, param, flag_set):
                   "to a database. All parameters can be inputted via a configfile. \n\n"
                   "An example usage can be found above, while details on the options can be found below:")
 #
+# make sure group has access to context
 @click.pass_context
 #
 # Address Options
@@ -229,7 +230,6 @@ def get_ping(ctx, param, flag_set):
 @click.option('--CLI', '-C', 'client_address', required=True, is_eager=True, callback=check_client_address,
               help='IP or MAC address of Client')
 #
-# TODO is eager ensures parsing before everything else
 # SNMP Options
 #
 @click.option('--version', '-v', 'snmp_version', required=False, callback=add_value_to_context,

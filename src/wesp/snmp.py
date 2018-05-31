@@ -65,7 +65,7 @@ class Snmp:
 
         # Check if the Client Mac Address was given
         # or only the Client IP,
-        # because Mac address is mandatory to find Cisco attributes
+        # because MAC address is mandatory to find Cisco attributes
         if 'client_mac' not in ctx.obj:
             ctx.obj['client_mac'] = Snmp.get_mac_from_ip(ctx.obj['client_ip'])
 

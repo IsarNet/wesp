@@ -198,6 +198,7 @@ class CustomGroup(click.Group):
 
             # Ensure that the version flag is the first parameter
             # If it was not set, set the context to the default value
+            # Otherwise SNMP options cannot be set to required/optional based on the version
             if version_flag_index is not None:
                 version_flag = args[version_flag_index:version_flag_index + 2]
                 args = version_flag + args
