@@ -85,7 +85,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="wesp.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="wesp.cli_parser.html">wesp.cli_parser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.click_overloaded.html">wesp.click_overloaded module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="wesp.command_line.html">wesp.command_line module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.configfile.html">wesp.configfile module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.database.html">wesp.database module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.definitions.html">wesp.definitions module</a></li>
@@ -164,18 +163,18 @@
             
   <div class="section" id="module-wesp.helper">
 <span id="wesp-helper-module"></span><h1>wesp.helper module<a class="headerlink" href="#module-wesp.helper" title="Permalink to this headline">¶</a></h1>
-<p>This module contains helper function for this program.
-For further details look at the description of the corresponding functions.</p>
+<p>This module contains helper functions for this program.
+For further details look at the description of the corresponding function.</p>
 <dl class="function">
 <dt id="wesp.helper.check_ip_address">
 <code class="descclassname">wesp.helper.</code><code class="descname">check_ip_address</code><span class="sig-paren">(</span><em>address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#check_ip_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.check_ip_address" title="Permalink to this definition">¶</a></dt>
-<dd><p>This functions ensure that the given address is a valid IP Address.
+<dd><p>This function ensures that the given address is a valid IP address.
 It will also complete addresses, e.g. 192.168.1 will become 192.168.1.0</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> – IP address to compare</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> – IP address to check</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)">bool</a></td>
 </tr>
@@ -188,12 +187,12 @@ It will also complete addresses, e.g. 192.168.1 will become 192.168.1.0</p>
 <dl class="function">
 <dt id="wesp.helper.check_mac_address">
 <code class="descclassname">wesp.helper.</code><code class="descname">check_mac_address</code><span class="sig-paren">(</span><em>address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#check_mac_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.check_mac_address" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will check if the given address is a valid hex mac address (e.g. aa:bb:cc:dd:ee:ff)</p>
+<dd><p>This function will check if the given address is a valid hex MAC address (e.g. aa:bb:cc:dd:ee:ff).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> – mac address to check</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> – MAC address to check</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)">bool</a></td>
 </tr>
@@ -206,14 +205,14 @@ It will also complete addresses, e.g. 192.168.1 will become 192.168.1.0</p>
 <dl class="function">
 <dt id="wesp.helper.compare_ips">
 <code class="descclassname">wesp.helper.</code><code class="descname">compare_ips</code><span class="sig-paren">(</span><em>ip_a</em>, <em>ip_b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#compare_ips"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.compare_ips" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will compare if two IPs are the same or not</p>
+<dd><p>This function will compare if two IPs are the same or not.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ip_a</strong> – IP Address A to compare</li>
-<li><strong>ip_b</strong> – IP Address B to compare</li>
+<li><strong>ip_a</strong> – IP address A to compare</li>
+<li><strong>ip_b</strong> – IP address B to compare</li>
 </ul>
 </td>
 </tr>
@@ -230,13 +229,13 @@ It will also complete addresses, e.g. 192.168.1 will become 192.168.1.0</p>
 <dl class="function">
 <dt id="wesp.helper.decompress_nested_dict">
 <code class="descclassname">wesp.helper.</code><code class="descname">decompress_nested_dict</code><span class="sig-paren">(</span><em>nested_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#decompress_nested_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.decompress_nested_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will decompress all sub dict in the given nested dict
-and return only single non nested dict</p>
+<dd><p>This function will decompress all sub dicts in the given nested dict
+and return only a single non nested dict.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">nested_dict:</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nested_dict</strong> – nested dict to decompress</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)">dict</a></td>
 </tr>
@@ -249,16 +248,16 @@ and return only single non nested dict</p>
 <dl class="function">
 <dt id="wesp.helper.extract_mac_from_oid">
 <code class="descclassname">wesp.helper.</code><code class="descname">extract_mac_from_oid</code><span class="sig-paren">(</span><em>oid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#extract_mac_from_oid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.extract_mac_from_oid" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will extract the Mac Address from the given OID and return it in Hex Format</p>
+<dd><p>This function will extract the MAC Address from the given OID and return it in Hex format.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">oid: OID which contains the decimal mac address</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>oid</strong> – OID which contains the decimal MAC address</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Hex mac address of device which was represented in given OID</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Hex MAC address of device which was represented in given OID</td>
 </tr>
 </tbody>
 </table>
@@ -267,16 +266,16 @@ and return only single non nested dict</p>
 <dl class="function">
 <dt id="wesp.helper.generate_cli_output">
 <code class="descclassname">wesp.helper.</code><code class="descname">generate_cli_output</code><span class="sig-paren">(</span><em>client_data</em>, <em>ctx</em>, <em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#generate_cli_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.generate_cli_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>will generate the CLI output based on the given client_data. It also includes the current time
-and the mac address of the client. It always has the following form:</p>
-<p>YYYY-mm-dd HH:MM:SS [aa:bb:cc:dd:ee:ff] [[No] Reply from 192.168.123.123 (XX ms)] {other parameter}</p>
+<dd><p>Will generate the CLI output based on the given <em>client_data</em>. It also includes the current time
+and the MAC address of the client. It always has the following form:</p>
+<p>YYYY-mm-dd HH:MM:SS [aa:bb:cc:dd:ee:ff] [[No] Reply from 192.168.123.123 (XX ms)] {other parameters}</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">client_data: dict of requested client data</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Param:</th><td class="field-body">ctx:</td>
+<tr class="field-even field"><th class="field-name">Param:</th><td class="field-body">ctx: current context</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a></td>
 </tr>
@@ -295,7 +294,7 @@ from the context object</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">ctx: current Context object</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">ctx: current context</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)">dict</a></td>
 </tr>
@@ -308,10 +307,10 @@ from the context object</p>
 <dl class="function">
 <dt id="wesp.helper.generate_parameter_create_statement">
 <code class="descclassname">wesp.helper.</code><code class="descname">generate_parameter_create_statement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#generate_parameter_create_statement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.generate_parameter_create_statement" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will create the table create statement based on the represented parameters in AllParameter.
-The statement will have the following form:
-<cite>Retries</cite> int(11) DEFAULT NULL,`RSSI` double DEFAULT NULL,`Channel` int(11) DEFAULT NULL,
-Note that id, timestamp and front and end part of the statement will be add by the database init function</p>
+<dd><p>This function will create the table create statement based on the represented parameters in <code class="xref py py-class docutils literal notranslate"><span class="pre">AllParameter</span></code>.
+The statement will have the following form:</p>
+<p><em>`Retries` int(11) DEFAULT NULL,`RSSI` double DEFAULT NULL,`Channel` int(11) DEFAULT NULL, […]</em></p>
+<p>Note that id, timestamp, front and end part of the statement will be added by the database init function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -327,15 +326,15 @@ Note that id, timestamp and front and end part of the statement will be add by t
 <dl class="function">
 <dt id="wesp.helper.generate_parameter_insert_statement">
 <code class="descclassname">wesp.helper.</code><code class="descname">generate_parameter_insert_statement</code><span class="sig-paren">(</span><em>client_data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#generate_parameter_insert_statement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.generate_parameter_insert_statement" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will create the insert statement based on the represented parameters in client_data.
-The statement will have the following form:
-INSERT INTO TableName (<cite>Retries</cite>, <cite>Channel</cite> ) VALUES (%(retries)s, %(channel)s );
-The front part (up to the TableName) and the final semicolon will be add by the database init function</p>
+<dd><p>This function will create the insert statement based on the represented parameters in <em>client_data</em>.
+The statement will have the following form:</p>
+<p><em>INSERT INTO TableName (`Retries`, `Channel` ) VALUES (%(retries)s, %(channel)s );</em></p>
+<p>The front part (up to <em>TableName</em>) and the final semicolon will be added by the database init function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">client_data: dict of requested client data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>client_data</strong> – dict of requested client data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a></td>
 </tr>
@@ -348,21 +347,21 @@ The front part (up to the TableName) and the final semicolon will be add by the 
 <dl class="function">
 <dt id="wesp.helper.get_option_with_name">
 <code class="descclassname">wesp.helper.</code><code class="descname">get_option_with_name</code><span class="sig-paren">(</span><em>self</em>, <em>ctx</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#get_option_with_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.get_option_with_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>will search all click options and return the option with the given name
-or none if non was found</p>
+<dd><p>Will search all Click options and return the option with the given name
+or <em>None</em> if none was found</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">self: reference to Click Group or Command</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">self: reference to Click group or command</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Param:</th><td class="field-body">ctx: current context object</td>
+<tr class="field-even field"><th class="field-name">Param:</th><td class="field-body">ctx: current context</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">name: name of the option</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">click.Option</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">click.core.Option</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">option with the name or None if no match exists</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">option with the name or None if no match exist</td>
 </tr>
 </tbody>
 </table>
@@ -371,16 +370,16 @@ or none if non was found</p>
 <dl class="function">
 <dt id="wesp.helper.mac_dec_to_hex">
 <code class="descclassname">wesp.helper.</code><code class="descname">mac_dec_to_hex</code><span class="sig-paren">(</span><em>mac_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#mac_dec_to_hex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.mac_dec_to_hex" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will convert decimal mac address into a hex mac address</p>
+<dd><p>This function will convert a decimal MAC address into a hex MAC address</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">mac_address: Mac address in decimal format (e.g. 170.187.204.221.238.255)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mac_address</strong> – MAC address in decimal format (e.g. 170.187.204.221.238.255)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mac address in hex format</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">MAC address in hex format</td>
 </tr>
 </tbody>
 </table>
@@ -389,13 +388,13 @@ or none if non was found</p>
 <dl class="function">
 <dt id="wesp.helper.mac_hex_to_dec">
 <code class="descclassname">wesp.helper.</code><code class="descname">mac_hex_to_dec</code><span class="sig-paren">(</span><em>mac_address</em>, <em>separator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#mac_hex_to_dec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.mac_hex_to_dec" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will convert hex mac address into a decimal mac address</p>
+<dd><p>This function will convert a hex MAC address into a decimal MAC address</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mac_address</strong> – Mac address in hex format (e.g. aa:bb:cc:dd:ee:ff)</li>
+<li><strong>mac_address</strong> – MAC address in hex format (e.g. aa:bb:cc:dd:ee:ff)</li>
 <li><strong>separator</strong> – the character which is used for the split</li>
 </ul>
 </td>
@@ -403,7 +402,7 @@ or none if non was found</p>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Mac address in decimal format</p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">MAC address in decimal format</p>
 </td>
 </tr>
 </tbody>
@@ -415,7 +414,7 @@ or none if non was found</p>
 <code class="descclassname">wesp.helper.</code><code class="descname">ping_to_str</code><span class="sig-paren">(</span><em>client_data</em>, <em>ctx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#ping_to_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.ping_to_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function checks if a ping has been made and will create a string
 based on the result.
-It will look like this “Reply from 192.0.2.1 (12 ms)” or “No Reply from 192.0.2.1”</p>
+It will look like this <em>“Reply from 192.0.2.1 (12 ms)”</em> or <em>“No Reply from 192.0.2.1”</em></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -433,12 +432,12 @@ It will look like this “Reply from 192.0.2.1 (12 ms)” or “No Reply from 19
 <dl class="function">
 <dt id="wesp.helper.print_session_info">
 <code class="descclassname">wesp.helper.</code><code class="descname">print_session_info</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#print_session_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.print_session_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Will print the info’s of the current snmp session to Std out</p>
+<dd><p>Will print the info’s of the current SNMP session to the CLI</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">session: current snmp session</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">session: current SNMP session</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Nothing, Output will go directly to the CLI</td>
 </tr>
@@ -449,7 +448,7 @@ It will look like this “Reply from 192.0.2.1 (12 ms)” or “No Reply from 19
 <dl class="function">
 <dt id="wesp.helper.replace_last_occurrence">
 <code class="descclassname">wesp.helper.</code><code class="descname">replace_last_occurrence</code><span class="sig-paren">(</span><em>str</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/helper.html#replace_last_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.helper.replace_last_occurrence" title="Permalink to this definition">¶</a></dt>
-<dd><p>will replace the last occurrence of old with new in the given string str</p>
+<dd><p>Will replace the last occurrence of <em>old</em> with <em>new</em> in the given string <em>str</em>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -462,7 +461,7 @@ It will look like this “Reply from 192.0.2.1 (12 ms)” or “No Reply from 19
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the given string with the last occurrence of old replaced by new</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the given string with the last occurrence of <em>old</em> replaced by <em>new</em></td>
 </tr>
 </tbody>
 </table>
@@ -477,11 +476,11 @@ If not it will raise an exception.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>response</strong> – snmp variable</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>response</strong> – SNMP variable</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True, if everything is fine</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if everything is fine, exception if not</td>
 </tr>
 </tbody>
 </table>

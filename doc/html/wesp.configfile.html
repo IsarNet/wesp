@@ -30,7 +30,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="wesp.database module" href="wesp.database.html" />
-    <link rel="prev" title="wesp.command_line module" href="wesp.command_line.html" /> 
+    <link rel="prev" title="wesp.click_overloaded module" href="wesp.click_overloaded.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -85,7 +85,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="wesp.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="wesp.cli_parser.html">wesp.cli_parser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.click_overloaded.html">wesp.click_overloaded module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="wesp.command_line.html">wesp.command_line module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">wesp.configfile module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.database.html">wesp.database module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.definitions.html">wesp.definitions module</a></li>
@@ -164,26 +163,27 @@
             
   <div class="section" id="module-wesp.configfile">
 <span id="wesp-configfile-module"></span><h1>wesp.configfile module<a class="headerlink" href="#module-wesp.configfile" title="Permalink to this headline">¶</a></h1>
-<p>This module is responsible for the configfile. It loads it and matches its content with the defined
+<p>This module is responsible for the configfile. It loads it and matches its content to the defined
 parameters in the module <a class="reference internal" href="wesp.cli_parser.html#module-wesp.cli_parser" title="wesp.cli_parser"><code class="xref py py-mod docutils literal notranslate"><span class="pre">wesp.cli_parser</span></code></a>.
 The schema of the configfile it described in the class <a class="reference internal" href="#wesp.configfile.ConfigSectionSchema" title="wesp.configfile.ConfigSectionSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSectionSchema</span></code></a>, while the parsing
-is triggered and performed by <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFileReader</span></code> and its overload <a class="reference internal" href="#wesp.configfile.ConfigFileProcessor" title="wesp.configfile.ConfigFileProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFileProcessor</span></code></a></p>
-<p>This module uses the click extension click-configfile (<a class="reference external" href="https://github.com/click-contrib/click-configfile">https://github.com/click-contrib/click-configfile</a>).</p>
+is triggered and performed by <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFileReader</span></code> and its derivative <a class="reference internal" href="#wesp.configfile.ConfigFileProcessor" title="wesp.configfile.ConfigFileProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFileProcessor</span></code></a>.</p>
+<p>This module uses the click extension Click-configfile (<a class="reference external" href="https://github.com/click-contrib/click-configfile">https://github.com/click-contrib/click-configfile</a>).</p>
+<p>More information on how to add a parameter can be found in the individual classes.</p>
 <dl class="class">
 <dt id="wesp.configfile.ConfigFileProcessor">
 <em class="property">class </em><code class="descclassname">wesp.configfile.</code><code class="descname">ConfigFileProcessor</code><a class="reference internal" href="_modules/wesp/configfile.html#ConfigFileProcessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.configfile.ConfigFileProcessor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">click_configfile.ConfigFileReader</span></code></p>
 <p>This class overloads the class <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFileReader</span></code> from click-configfile.
 It allows to set the schemas of the sections.
-It also holds the path to the configfile (config_files) but this field is set
-by the command <code class="xref py py-meth docutils literal notranslate"><span class="pre">load_config()</span></code> in <a class="reference internal" href="wesp.cli_parser.html#module-wesp.cli_parser" title="wesp.cli_parser"><code class="xref py py-mod docutils literal notranslate"><span class="pre">wesp.cli_parser</span></code></a>. This is triggered by <a class="reference internal" href="wesp.click_overloaded.html#wesp.click_overloaded.CustomGroup" title="wesp.click_overloaded.CustomGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">CustomGroup</span></code></a>.</p>
+It also holds the path to the configfile (attribute <em>config_files</em>) but this field is set
+by the command <code class="xref py py-meth docutils literal notranslate"><span class="pre">load_config()</span></code> in <a class="reference internal" href="wesp.cli_parser.html#module-wesp.cli_parser" title="wesp.cli_parser"><code class="xref py py-mod docutils literal notranslate"><span class="pre">wesp.cli_parser</span></code></a>. It is triggered by the class <a class="reference internal" href="wesp.click_overloaded.html#wesp.click_overloaded.CustomGroup" title="wesp.click_overloaded.CustomGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">CustomGroup</span></code></a>.</p>
 <dl class="classmethod">
 <dt id="wesp.configfile.ConfigFileProcessor.process_config_section">
 <em class="property">classmethod </em><code class="descname">process_config_section</code><span class="sig-paren">(</span><em>config_section</em>, <em>storage</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/configfile.html#ConfigFileProcessor.process_config_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.configfile.ConfigFileProcessor.process_config_section" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function overrides the process_config_section function
-of the <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFileReader</span></code>.
-It inverts all boolean values of the section DEFAULT_OFF to make all
-parameters in this section to Off switches, since these describe the default behaviour.</p>
+<dd><p>This function overrides the <em>process_config_section</em> function
+of the class <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFileReader</span></code>.
+It inverts all boolean values of the section <em>DEFAULT_OFF</em> to make all
+parameters in this section to off switches, since they describe the default behaviour.</p>
 </dd></dl>
 
 </dd></dl>
@@ -193,12 +193,13 @@ parameters in this section to Off switches, since these describe the default beh
 <em class="property">class </em><code class="descclassname">wesp.configfile.</code><code class="descname">ConfigSectionSchema</code><a class="reference internal" href="_modules/wesp/configfile.html#ConfigSectionSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.configfile.ConfigSectionSchema" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>This class contains a description of each configfile section.
-Each section then contains the parameter which can be configured through the configfile.</p>
-<p>To add a new section just create a new class and a <cite>&#64;matches_section</cite> decorator to it.
-Ensure that the Name of the section is written in capital letters and does not contains any brackets.
-In the created class add the exact name of the parameter as defined in the <a class="reference internal" href="wesp.cli_parser.html#module-wesp.cli_parser" title="wesp.cli_parser"><code class="xref py py-mod docutils literal notranslate"><span class="pre">wesp.cli_parser</span></code></a> and set it to a Param.
-More information about the Param Types can be found here: <a class="reference external" href="http://click.pocoo.org/5/parameters/#parameter-types">http://click.pocoo.org/5/parameters/#parameter-types</a>
-The last step is to add the Schema to the parsing list in the class ConfigFileProcessor below.</p>
+Each section contains the parameter which can be configured by the configfile.</p>
+<p>To add a new section just create a new class and add a <cite>&#64;matches_section</cite> decorator to it.
+Ensure that the name of the section is written in capital letters and does not contain any brackets.</p>
+<p>In the created class add the exact name of the parameter as defined in the <a class="reference internal" href="wesp.cli_parser.html#module-wesp.cli_parser" title="wesp.cli_parser"><code class="xref py py-mod docutils literal notranslate"><span class="pre">wesp.cli_parser</span></code></a> and
+set it to a a Click param.
+More information about the param types can be found here: <a class="reference external" href="http://click.pocoo.org/5/parameters/#parameter-types">http://click.pocoo.org/5/parameters/#parameter-types</a></p>
+<p>The last step is to add the schema to the parsing list in the class <a class="reference internal" href="#wesp.configfile.ConfigFileProcessor" title="wesp.configfile.ConfigFileProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFileProcessor</span></code></a> below.</p>
 <dl class="class">
 <dt id="wesp.configfile.ConfigSectionSchema.Database">
 <em class="property">class </em><code class="descname">Database</code><a class="reference internal" href="_modules/wesp/configfile.html#ConfigSectionSchema.Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.configfile.ConfigSectionSchema.Database" title="Permalink to this definition">¶</a></dt>
@@ -244,7 +245,7 @@ The last step is to add the Schema to the parsing list in the class ConfigFilePr
         <a href="wesp.database.html" class="btn btn-neutral float-right" title="wesp.database module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="wesp.command_line.html" class="btn btn-neutral" title="wesp.command_line module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="wesp.click_overloaded.html" class="btn btn-neutral" title="wesp.click_overloaded module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

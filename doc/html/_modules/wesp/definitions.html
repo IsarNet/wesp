@@ -144,14 +144,14 @@
             
   <h1>Source code for wesp.definitions</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module contains everything which can be changed by a user. It holds the OIDs for the Parameters,</span>
-<span class="sd">as well as their name and database type. For more information see :class:`.Parameter`</span>
+<span class="sd">This module contains everything which can be changed by a user. It holds the OIDs for the parameters,</span>
+<span class="sd">as well as their names and database types. For more information see :class:`.Parameter`.</span>
 
 <span class="sd">In addition the class :class:`GlobalSettings` defines basic options like the help flags, the usage text</span>
-<span class="sd">or the welcome string</span>
+<span class="sd">or the welcome string.</span>
 <span class="sd">\n\n</span>
-<span class="sd">NOTE: Changes to name or db_data_type will only be reflected in the database, if the table is dropped</span>
-<span class="sd">and recreated by this program</span>
+<span class="sd">NOTE: Changes to the *name* or *db_data_type* will only be reflected in the database if the table is dropped</span>
+<span class="sd">and recreated by this program.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -160,34 +160,39 @@
 
 <div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../../wesp.definitions.html#wesp.definitions.Parameter">[docs]</a><span class="k">class</span> <span class="nc">Parameter</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Represents a basic Parameter with fundamental information about it.</span>
-<span class="sd">    More information on the fields can be found below</span>
+<span class="sd">    Represents a basic parameter with fundamental information about it.</span>
+<span class="sd">    More information on the fields can be found below:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    human readable name, which will be used for the CLI output and the row name in the DB</span>
+<span class="sd">    human readable name that will be used for the CLI output and the column name in the database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">oid</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    OID at which parameter can be found, in case this parameter needs the mac address to work</span>
-<span class="sd">    don&#39;t enter it here. The mac address will be added in the parser, based on which callback</span>
-<span class="sd">    is used for this parameter</span>
+<span class="sd">    OID at which the parameter can be found, in case this parameter needs the MAC address to work</span>
+<span class="sd">    don&#39;t enter it here. The MAC address will be added in the parser, based on which callback</span>
+<span class="sd">    is used for this parameter.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">db_data_type</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    DB Data Type which should be used for this parameter.</span>
-<span class="sd">    For string use varchar(255) with the length of the string in the brackets</span>
-<span class="sd">    For real numbers use int(11) with a fixed maximum of 2147483647. Length in brackets is only for display </span>
-<span class="sd">    and will not effect this program</span>
-<span class="sd">    For real non negative numbers use int(11) unsigned ot have a maximum of 4294967295</span>
-<span class="sd">    For rational numbers use double, no length needed. Be aware of the rounding problems in comparision</span>
-<span class="sd">    e.g. https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues</span>
-<span class="sd">    Keep in mind, that the wrong length can result in partial loss of the data</span>
+<span class="sd">    Database data type which should be used for this parameter.</span>
+<span class="sd">    </span>
+<span class="sd">    For strings use *varchar(255)* with the length of the string in the brackets.</span>
+<span class="sd">    </span>
+<span class="sd">    For real numbers use *int(11)* with a fixed maximum of 2147483647. Length in brackets is only for display </span>
+<span class="sd">    and will not effect this program but are expected by SQL.</span>
+<span class="sd">    </span>
+<span class="sd">    For real non negative numbers use *int(11) unsigned* which has a maximum of 4294967295.</span>
+<span class="sd">    </span>
+<span class="sd">    For rational numbers use *double*, no length needed. Be aware of the rounding problems in comparision</span>
+<span class="sd">    e.g. https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues.</span>
+<span class="sd">    </span>
+<span class="sd">    Keep in mind, that the wrong length can result in partial loss of the data.</span>
 <span class="sd">    \n</span>
-<span class="sd">    NOTE: Changes here will only be reflected in the database, if the table is dropped and recreated by this program</span>
+<span class="sd">    NOTE: Changes here will only be reflected in the database, if the table is dropped and recreated by this program.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">oid</span><span class="p">,</span> <span class="n">db_data_type</span><span class="p">):</span>
@@ -199,10 +204,12 @@
 
 <div class="viewcode-block" id="AllParameter"><a class="viewcode-back" href="../../wesp.definitions.html#wesp.definitions.AllParameter">[docs]</a><span class="k">class</span> <span class="nc">AllParameter</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class that contains all Parameters, which can be requested by the user or</span>
-<span class="sd">    are necessary for the program</span>
+<span class="sd">    Class that contains all parameters which can be requested by the user or</span>
+<span class="sd">    are necessary for the program.</span>
 <span class="sd">    Ensure that the name of the attribute (e.g. channel) is the same as the name</span>
-<span class="sd">    of the click option specified in the cli_parser. Note Lower and Uppercase</span>
+<span class="sd">    of the Click option specified in the cli_parser. Note Lower and Uppercase.</span>
+
+<span class="sd">    Do not change the internal fields.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -276,10 +283,10 @@
 <div class="viewcode-block" id="AllParameter.get_all_parameter"><a class="viewcode-back" href="../../wesp.definitions.html#wesp.definitions.AllParameter.get_all_parameter">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_all_parameter</span><span class="p">():</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns all parameters listed in this class</span>
+<span class="sd">        Returns all parameters specified in this class</span>
 
 <span class="sd">        :rtype: list</span>
-<span class="sd">        :return: a list of all parameters, which are defined in this class</span>
+<span class="sd">        :return: a list of all parameters which are defined in this class</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">list_of_all_parameter</span> <span class="o">=</span> <span class="p">[]</span>
@@ -296,10 +303,10 @@
 <div class="viewcode-block" id="AllParameter.get_parameter_by_oid"><a class="viewcode-back" href="../../wesp.definitions.html#wesp.definitions.AllParameter.get_parameter_by_oid">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_parameter_by_oid</span><span class="p">(</span><span class="n">oid</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the parameter with the given oid or nothing if no existing</span>
+<span class="sd">        Returns the parameter with the given OID or None if the respective parameter does not exist.</span>
 
 <span class="sd">        :rtype: Parameter or None</span>
-<span class="sd">        :return: parameter with the given oid or None if no existing</span>
+<span class="sd">        :return: parameter with the given OID or None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># loop through all fields of class AllParameter</span>
@@ -320,7 +327,7 @@
 <div class="viewcode-block" id="GlobalSettings"><a class="viewcode-back" href="../../wesp.definitions.html#wesp.definitions.GlobalSettings">[docs]</a><span class="k">class</span> <span class="nc">GlobalSettings</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class holds global settings, which are not viable for the program flow.</span>
-<span class="sd">    For Example one is able to change the Welcome text or the Usage String.</span>
+<span class="sd">    For example one is able to change the welcome text or the usage string.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -330,32 +337,32 @@
 
     <span class="n">HELP_PARAMETERS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="s1">&#39;--help&#39;</span><span class="p">]</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Name of help flags, will be set in the :meth:`wesp.click_overloaded.CustomGroup.parse_args` </span>
+<span class="sd">    Identifier of help flags, will be set in the function :meth:`wesp.click_overloaded.CustomGroup.parse_args` </span>
 <span class="sd">    or :meth:`wesp.click_overloaded.CommandAllowConfigFile.parse_args`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">WELCOME_STRING</span> <span class="o">=</span> <span class="s2">&quot;Welcome to the wesp tool - Wireless Endpoint Statistics Program </span><span class="se">\n</span><span class="s2">&quot;</span> \
                      <span class="s2">&quot;For help run wesp -h&quot;</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    String which greets the user, if no parameters are given.</span>
-<span class="sd">    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.parse_args` </span>
+<span class="sd">    String which greets the user if no parameters are given.</span>
+<span class="sd">    Will be set in the function :meth:`wesp.click_overloaded.CustomGroup.parse_args` </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">PROGRAM_NAME</span> <span class="o">=</span> <span class="s2">&quot;wesp&quot;</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Name of the program, which appears as part of the Usage String.</span>
-<span class="sd">    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.format_usage` </span>
+<span class="sd">    Name of the program which appears as part of the usage string.</span>
+<span class="sd">    Will be set in the function :meth:`wesp.click_overloaded.CustomGroup.format_usage` </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">USAGE</span> <span class="o">=</span> <span class="s2">&quot;-W wlc_ip|wlc_fqdn -C client_ip|client_mac  [SNMP OPTIONS] [OTHER OPTIONS] &quot;</span> \
             <span class="s2">&quot;load_config [Options] print_to_db [Options]&quot;</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Usage String to help user understand the structure of the program. This string also</span>
-<span class="sd">    appears at every error message. </span>
+<span class="sd">    Usage string to show the structure of this program. This string also</span>
+<span class="sd">    appears at every error message. The program name is set separably.</span>
 <span class="sd">    </span>
-<span class="sd">    Additional help on the usage is defined in the help text of the :class:`wesp.click_overloaded.CustomGroup` </span>
+<span class="sd">    Additional help on the usage is defined in the help text of the class :class:`wesp.click_overloaded.CustomGroup`. </span>
 <span class="sd">    </span>
-<span class="sd">    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.format_usage` </span>
+<span class="sd">    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.format_usage`.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 </pre></div>

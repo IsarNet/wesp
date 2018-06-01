@@ -1,10 +1,10 @@
 """
-This module contains overloads of click classes to allow custom reactions.
+This module contains overloads of Click classes to allow custom reactions.
 The class :class:`.CustomGroup` overloads the class :class:`.click.core.Group` to allow custom parsing and
 rearranging of the options.
 
 The class :class:`.OnlyRequiredIf` overloads the class :class:`.click.core.Option` to allow an option to be
-required if a certain snmp version has been set.
+required if a certain SNMP version has been set.
 
 The class :class:`.CommandAllowConfigFile` overloads the class :class:`.click.core.Command` to allow a
 command to access the configfile.
@@ -20,15 +20,14 @@ from wesp.definitions import GlobalSettings
 def read_config_file_flag(self, ctx, args, idx):
     """
     This function will read and check the flag of the command
-    load_config. It will inform about an missing file path or
-    load the given or default config file.
+    *load_config*. It will inform about an missing file path or
+    load the given or default configfile.
 
     :param self: Reference to CustomGroup
-    :param ctx: Reference to current Context
+    :param ctx: Reference to current context
     :param args: list of given args
-    :param idx: index at which the load_config command has been found
-    :raise: BadParameter if argument for -f option is missing
-    :return: Nothing, result will be saved in default map of context
+    :param idx: index at which the *load_config* command has been found
+    :raise: *BadParameter* if argument for option -f is missing
 
     """
 
@@ -56,20 +55,21 @@ def read_config_file_flag(self, ctx, args, idx):
 
 class CustomGroup(click.Group):
     """
-    This class overloads :class:`.Group`
+    This class overloads the class :class:`click.core.Group`.
     It will ensure that the config file is loaded before any other parameter is evaluated and
     the required options do not suppress the help option.
     In addition the version parameter is moved to the front of the args list to enable the class
-    OnlyRequiredIf to set an option (e.g. community) only to required if an version is set (e.g. 2c)
+    :class:`OnlyRequiredIf` to set an option (e.g. community) only to required if the corresponding version is set
+    (e.g. 2c).
 
     """
 
     def format_usage(self, ctx, formatter):
         """
-        Overloads the :meth:`format_usage` of class :class:`click.core.Group`.
-        This allows a custom usage string, which is defined in the :class:`.GlobalSettings`
+        Overloads the :meth:`format_usage` function of the class :class:`click.core.Group`.
+        This allows a custom usage string, which is defined in the :class:`.GlobalSettings`.
 
-        :param ctx: current Context
+        :param ctx: current context
         :param formatter: Reference to class:`click.formatting.HelpFormatter`
 
         """
@@ -77,11 +77,11 @@ class CustomGroup(click.Group):
 
     def format_options(self, ctx, formatter):
         """
-         Overloads the :meth:`format_options` of class :class:`click.core.Group`.
+         Overloads the :meth:`format_options` function of the class :class:`click.core.Group`.
          This allows to add a custom headline above the SNMP Options as well as
-         the Other non SNMP Options. This makes the help text more clearly
+         the other non SNMP Options. This makes the help text more lucid.
 
-        :param ctx: current Context
+        :param ctx: current context
         :param formatter: Reference to class:`click.formatting.HelpFormatter`
 
         """
@@ -120,12 +120,16 @@ class CustomGroup(click.Group):
 
     def parse_args(self, ctx, args):
         """
-        Overloads the function parse_args of :class:`.Group`, which runs before the parsing of
-        the parameter of the super class
+        Overloads the function parse_args of :class:`click.core.Group`.
+        It will ensure that the config file is loaded before any other parameter is evaluated and
+        the required options do not suppress the help option.
+        In addition the version parameter is moved to the front of the args list to enable the class
+        :class:`OnlyRequiredIf` to set an option (e.g. community) only to required if the corresponding version is set
+    (   e.g. 2c).
 
-        :param ctx: current Context object
+        :param ctx: current context
         :param args: list of given parameters
-        :return: result of super function
+        :return: result of function's super
 
         """
 
@@ -285,8 +289,8 @@ class CommandAllowConfigFile(click.Command):
 
     def format_usage(self, ctx, formatter):
         """
-        Overloads the :meth:`format_usage` of class :class:`click.core.Command`.
-        This allows a custom usage string, looks like this:
+        Overloads the :meth:`format_usage` of the class :class:`click.core.Command`.
+        This allows a custom usage string, which looks like this:
 
         PROGRAM_NAME [...] Command_Name [OPTIONS]
 
@@ -299,12 +303,12 @@ class CommandAllowConfigFile(click.Command):
 
     def parse_args(self, ctx, args):
         """
-        Overloads the function parse_args of :class:`.Command`, which runs before the parsing of
+        Overloads the function :meth:`parse_args` of :class:`.Command`, which runs before the parsing of
         the parameter of the super class.
 
-        :param ctx: current Context
+        :param ctx: current context
         :param args: arguments given by user
-        :return: result of super function
+        :return: result of the function's super
 
         """
 

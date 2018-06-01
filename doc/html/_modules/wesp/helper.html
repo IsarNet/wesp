@@ -144,8 +144,8 @@
             
   <h1>Source code for wesp.helper</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module contains helper function for this program.</span>
-<span class="sd">For further details look at the description of the corresponding functions.</span>
+<span class="sd">This module contains helper functions for this program.</span>
+<span class="sd">For further details look at the description of the corresponding function.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">IPy</span> <span class="k">import</span> <span class="n">IP</span>
@@ -162,10 +162,10 @@
 
 <div class="viewcode-block" id="check_ip_address"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.check_ip_address">[docs]</a><span class="k">def</span> <span class="nf">check_ip_address</span><span class="p">(</span><span class="n">address</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This functions ensure that the given address is a valid IP Address.</span>
+<span class="sd">    This function ensures that the given address is a valid IP address.</span>
 <span class="sd">    It will also complete addresses, e.g. 192.168.1 will become 192.168.1.0</span>
 
-<span class="sd">    :param address: IP address to compare</span>
+<span class="sd">    :param address: IP address to check</span>
 <span class="sd">    :rtype: bool</span>
 <span class="sd">    :return: True if IP is correct, False if not</span>
 
@@ -182,9 +182,9 @@
 
 <div class="viewcode-block" id="check_mac_address"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.check_mac_address">[docs]</a><span class="k">def</span> <span class="nf">check_mac_address</span><span class="p">(</span><span class="n">address</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will check if the given address is a valid hex mac address (e.g. aa:bb:cc:dd:ee:ff)</span>
+<span class="sd">    This function will check if the given address is a valid hex MAC address (e.g. aa:bb:cc:dd:ee:ff).</span>
 
-<span class="sd">    :param address: mac address to check</span>
+<span class="sd">    :param address: MAC address to check</span>
 <span class="sd">    :rtype: bool</span>
 <span class="sd">    :return: True if address is a correct, False if not.</span>
 
@@ -195,10 +195,10 @@
 
 <div class="viewcode-block" id="compare_ips"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.compare_ips">[docs]</a><span class="k">def</span> <span class="nf">compare_ips</span><span class="p">(</span><span class="n">ip_a</span><span class="p">,</span> <span class="n">ip_b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will compare if two IPs are the same or not</span>
+<span class="sd">    This function will compare if two IPs are the same or not.</span>
 
-<span class="sd">    :param ip_a: IP Address A to compare</span>
-<span class="sd">    :param ip_b: IP Address B to compare</span>
+<span class="sd">    :param ip_a: IP address A to compare</span>
+<span class="sd">    :param ip_b: IP address B to compare</span>
 <span class="sd">    :rtype: bool</span>
 <span class="sd">    :return: True if IPs are the same, false if not</span>
 
@@ -212,9 +212,9 @@
 <span class="sd">    This function will validate that the response from the WLC is valid.</span>
 <span class="sd">    If not it will raise an exception.</span>
 
-<span class="sd">    :param response: snmp variable</span>
+<span class="sd">    :param response: SNMP variable</span>
 <span class="sd">    :raises: EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError</span>
-<span class="sd">    :return: True, if everything is fine</span>
+<span class="sd">    :return: True if everything is fine, exception if not</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">snmp_type</span> <span class="o">==</span> <span class="s2">&quot;NOSUCHINSTANCE&quot;</span><span class="p">:</span>
@@ -257,12 +257,12 @@
 
 <div class="viewcode-block" id="mac_hex_to_dec"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.mac_hex_to_dec">[docs]</a><span class="k">def</span> <span class="nf">mac_hex_to_dec</span><span class="p">(</span><span class="n">mac_address</span><span class="p">,</span> <span class="n">separator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will convert hex mac address into a decimal mac address</span>
+<span class="sd">    This function will convert a hex MAC address into a decimal MAC address</span>
 
-<span class="sd">    :param mac_address: Mac address in hex format (e.g. aa:bb:cc:dd:ee:ff)</span>
+<span class="sd">    :param mac_address: MAC address in hex format (e.g. aa:bb:cc:dd:ee:ff)</span>
 <span class="sd">    :param separator: the character which is used for the split</span>
 <span class="sd">    :rtype: str</span>
-<span class="sd">    :return: Mac address in decimal format</span>
+<span class="sd">    :return: MAC address in decimal format</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -274,11 +274,11 @@
 
 <div class="viewcode-block" id="mac_dec_to_hex"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.mac_dec_to_hex">[docs]</a><span class="k">def</span> <span class="nf">mac_dec_to_hex</span><span class="p">(</span><span class="n">mac_address</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will convert decimal mac address into a hex mac address</span>
+<span class="sd">    This function will convert a decimal MAC address into a hex MAC address</span>
 
-<span class="sd">    :param: mac_address: Mac address in decimal format (e.g. 170.187.204.221.238.255)</span>
+<span class="sd">    :param mac_address: MAC address in decimal format (e.g. 170.187.204.221.238.255)</span>
 <span class="sd">    :rtype: str</span>
-<span class="sd">    :return: Mac address in hex format</span>
+<span class="sd">    :return: MAC address in hex format</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -301,11 +301,11 @@
 
 <div class="viewcode-block" id="extract_mac_from_oid"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.extract_mac_from_oid">[docs]</a><span class="k">def</span> <span class="nf">extract_mac_from_oid</span><span class="p">(</span><span class="n">oid</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will extract the Mac Address from the given OID and return it in Hex Format</span>
+<span class="sd">    This function will extract the MAC Address from the given OID and return it in Hex format.</span>
 
-<span class="sd">    :param: oid: OID which contains the decimal mac address</span>
+<span class="sd">    :param oid: OID which contains the decimal MAC address</span>
 <span class="sd">    :rtype: str</span>
-<span class="sd">    :return: Hex mac address of device which was represented in given OID</span>
+<span class="sd">    :return: Hex MAC address of device which was represented in given OID</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -316,10 +316,10 @@
 
 <div class="viewcode-block" id="decompress_nested_dict"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.decompress_nested_dict">[docs]</a><span class="k">def</span> <span class="nf">decompress_nested_dict</span><span class="p">(</span><span class="n">nested_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will decompress all sub dict in the given nested dict</span>
-<span class="sd">    and return only single non nested dict</span>
+<span class="sd">    This function will decompress all sub dicts in the given nested dict</span>
+<span class="sd">    and return only a single non nested dict.</span>
 
-<span class="sd">    :param: nested_dict:</span>
+<span class="sd">    :param nested_dict: nested dict to decompress</span>
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: non nested dict based on the given nested dict</span>
 
@@ -343,9 +343,9 @@
 
 <div class="viewcode-block" id="print_session_info"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.print_session_info">[docs]</a><span class="k">def</span> <span class="nf">print_session_info</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Will print the info&#39;s of the current snmp session to Std out</span>
+<span class="sd">    Will print the info&#39;s of the current SNMP session to the CLI</span>
 
-<span class="sd">    :param: session: current snmp session</span>
+<span class="sd">    :param: session: current SNMP session</span>
 <span class="sd">    :return: Nothing, Output will go directly to the CLI</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -358,14 +358,14 @@
 
 <div class="viewcode-block" id="get_option_with_name"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.get_option_with_name">[docs]</a><span class="k">def</span> <span class="nf">get_option_with_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    will search all click options and return the option with the given name</span>
-<span class="sd">    or none if non was found</span>
+<span class="sd">    Will search all Click options and return the option with the given name</span>
+<span class="sd">    or *None* if none was found</span>
 
-<span class="sd">    :param: self: reference to Click Group or Command</span>
-<span class="sd">    :param: ctx: current context object</span>
+<span class="sd">    :param: self: reference to Click group or command</span>
+<span class="sd">    :param: ctx: current context</span>
 <span class="sd">    :param: name: name of the option</span>
-<span class="sd">    :rtype: click.Option</span>
-<span class="sd">    :return: option with the name or None if no match exists</span>
+<span class="sd">    :rtype: click.core.Option</span>
+<span class="sd">    :return: option with the name or None if no match exist</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -378,13 +378,13 @@
 
 <div class="viewcode-block" id="replace_last_occurrence"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.replace_last_occurrence">[docs]</a><span class="k">def</span> <span class="nf">replace_last_occurrence</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    will replace the last occurrence of old with new in the given string str</span>
+<span class="sd">    Will replace the last occurrence of *old* with *new* in the given string *str*.</span>
 
 <span class="sd">    :param: str: string to work on</span>
 <span class="sd">    :param: old: character to replace</span>
 <span class="sd">    :param: new: character to replace with</span>
 <span class="sd">    :rtype: str</span>
-<span class="sd">    :return: the given string with the last occurrence of old replaced by new</span>
+<span class="sd">    :return: the given string with the last occurrence of *old* replaced by *new*</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -394,13 +394,13 @@
 
 <div class="viewcode-block" id="generate_cli_output"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.generate_cli_output">[docs]</a><span class="k">def</span> <span class="nf">generate_cli_output</span><span class="p">(</span><span class="n">client_data</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    will generate the CLI output based on the given client_data. It also includes the current time</span>
-<span class="sd">    and the mac address of the client. It always has the following form:</span>
+<span class="sd">    Will generate the CLI output based on the given *client_data*. It also includes the current time</span>
+<span class="sd">    and the MAC address of the client. It always has the following form:</span>
 
-<span class="sd">    YYYY-mm-dd HH:MM:SS [aa:bb:cc:dd:ee:ff] [[No] Reply from 192.168.123.123 (XX ms)] {other parameter}</span>
+<span class="sd">    YYYY-mm-dd HH:MM:SS [aa:bb:cc:dd:ee:ff] [[No] Reply from 192.168.123.123 (XX ms)] {other parameters}</span>
 
 <span class="sd">    :param: client_data: dict of requested client data</span>
-<span class="sd">    :param: ctx:</span>
+<span class="sd">    :param: ctx: current context</span>
 <span class="sd">    :rtype: str</span>
 <span class="sd">    :return: string representation of all requested data</span>
 
@@ -426,7 +426,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function checks if a ping has been made and will create a string</span>
 <span class="sd">    based on the result.</span>
-<span class="sd">    It will look like this &quot;Reply from 192.0.2.1 (12 ms)&quot; or &quot;No Reply from 192.0.2.1&quot;</span>
+<span class="sd">    It will look like this *&quot;Reply from 192.0.2.1 (12 ms)&quot;* or *&quot;No Reply from 192.0.2.1&quot;*</span>
 
 <span class="sd">    :rtype: str</span>
 <span class="sd">    :param: client_data: dict of requested client data</span>
@@ -452,10 +452,12 @@
 
 <div class="viewcode-block" id="generate_parameter_create_statement"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.generate_parameter_create_statement">[docs]</a><span class="k">def</span> <span class="nf">generate_parameter_create_statement</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will create the table create statement based on the represented parameters in AllParameter.</span>
+<span class="sd">    This function will create the table create statement based on the represented parameters in :class:`AllParameter`.</span>
 <span class="sd">    The statement will have the following form:</span>
-<span class="sd">    `Retries` int(11) DEFAULT NULL,`RSSI` double DEFAULT NULL,`Channel` int(11) DEFAULT NULL,</span>
-<span class="sd">    Note that id, timestamp and front and end part of the statement will be add by the database init function</span>
+
+<span class="sd">    *`Retries` int(11) DEFAULT NULL,`RSSI` double DEFAULT NULL,`Channel` int(11) DEFAULT NULL, [...]*</span>
+
+<span class="sd">    Note that id, timestamp, front and end part of the statement will be added by the database init function.</span>
 
 <span class="sd">    :rtype: str</span>
 <span class="sd">    :return: SQL create statement for known parameters</span>
@@ -475,12 +477,14 @@
 
 <div class="viewcode-block" id="generate_parameter_insert_statement"><a class="viewcode-back" href="../../wesp.helper.html#wesp.helper.generate_parameter_insert_statement">[docs]</a><span class="k">def</span> <span class="nf">generate_parameter_insert_statement</span><span class="p">(</span><span class="n">client_data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will create the insert statement based on the represented parameters in client_data.</span>
+<span class="sd">    This function will create the insert statement based on the represented parameters in *client_data*.</span>
 <span class="sd">    The statement will have the following form:</span>
-<span class="sd">    INSERT INTO TableName (`Retries`, `Channel` ) VALUES (%(retries)s, %(channel)s );</span>
-<span class="sd">    The front part (up to the TableName) and the final semicolon will be add by the database init function</span>
 
-<span class="sd">    :param: client_data: dict of requested client data</span>
+<span class="sd">    *INSERT INTO TableName (`Retries`, `Channel` ) VALUES (%(retries)s, %(channel)s );*</span>
+
+<span class="sd">    The front part (up to *TableName*) and the final semicolon will be added by the database init function.</span>
+
+<span class="sd">    :param client_data: dict of requested client data</span>
 <span class="sd">    :rtype: str</span>
 <span class="sd">    :return: SQL insert statement for known parameters</span>
 
@@ -520,7 +524,7 @@
 <span class="sd">    This function will create the config dict for the database</span>
 <span class="sd">    from the context object</span>
 
-<span class="sd">    :param: ctx: current Context object</span>
+<span class="sd">    :param: ctx: current context</span>
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: database config as dict based on the current context</span>
 

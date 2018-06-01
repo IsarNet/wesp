@@ -157,10 +157,10 @@
 <span class="c1"># TODO Add error handling if mac address is not avaliable</span>
 <div class="viewcode-block" id="Snmp"><a class="viewcode-back" href="../../wesp.snmp.html#wesp.snmp.Snmp">[docs]</a><span class="k">class</span> <span class="nc">Snmp</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class handles all interactions via SNMP with the WLC. It provided the basics function to get,</span>
-<span class="sd">    walk or trap with SNMP.</span>
+<span class="sd">    This class handles all interactions via SNMP with the WLC. It provides the basics functions to get or</span>
+<span class="sd">    walk with SNMP.</span>
 <span class="sd">    The SNMP session will be initialized in the init function.</span>
-<span class="sd">    All functions have been made static to allow easy use without a reference to specific session.</span>
+<span class="sd">    All functions are static to allow easy use without a reference to specific sessions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Internal session reference</span>
@@ -202,7 +202,7 @@
                                   <span class="n">use_sprint_value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">EasySNMPConnectionError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
-                    <span class="s2">&quot;SNMP Connection Error: `</span><span class="si">%s</span><span class="s2">`&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="s2">&quot;WLC / SNMP Connection Error: `</span><span class="si">%s</span><span class="s2">`&quot;</span> <span class="o">%</span> <span class="p">(</span>
                         <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
 
         <span class="c1"># init Snmp with generated Session</span>
@@ -210,7 +210,7 @@
 
         <span class="c1"># Check if the Client Mac Address was given</span>
         <span class="c1"># or only the Client IP,</span>
-        <span class="c1"># because Mac address is mandatory to find Cisco attributes</span>
+        <span class="c1"># because MAC address is mandatory to find Cisco attributes</span>
         <span class="k">if</span> <span class="s1">&#39;client_mac&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">:</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_mac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">get_mac_from_ip</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_ip&#39;</span><span class="p">])</span>
 
@@ -220,13 +220,10 @@
         <span class="k">if</span> <span class="s1">&#39;client_ip&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">:</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_ip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">get_by_mac_address</span><span class="p">(</span><span class="n">AllParameter</span><span class="o">.</span><span class="n">client_ip</span><span class="o">.</span><span class="n">oid</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_mac&#39;</span><span class="p">])</span>
 
-        <span class="c1"># TODO Remove</span>
-        <span class="c1"># print_session_info(session)</span>
-
 <div class="viewcode-block" id="Snmp.get_session"><a class="viewcode-back" href="../../wesp.snmp.html#wesp.snmp.Snmp.get_session">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_session</span><span class="p">():</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :return: reference to current snmp session</span>
+<span class="sd">        :return: reference to current SNMP session</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">session</span></div>
@@ -235,7 +232,7 @@
     <span class="k">def</span> <span class="nf">is_ready</span><span class="p">():</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :rtype: bool</span>
-<span class="sd">        :return: True if session is ready, False if not</span>
+<span class="sd">        :return: True if session is ready / initialized, False if not</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">session</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
@@ -243,12 +240,12 @@
 <div class="viewcode-block" id="Snmp.walk"><a class="viewcode-back" href="../../wesp.snmp.html#wesp.snmp.Snmp.walk">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">walk</span><span class="p">(</span><span class="n">oid</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        will walk the given OID</span>
+<span class="sd">        Will WALK the given OID</span>
 
-<span class="sd">        :param oid: OID to walk</span>
+<span class="sd">        :param oid: OID to WALK</span>
 <span class="sd">        :rtype: list of SNMPVariable or None</span>
 <span class="sd">        :raises: SNMP Timeout Error</span>
-<span class="sd">        :return: a list of SNMPVariable objects containing the values that were retrieved via SNMP</span>
+<span class="sd">        :return: a list of *SNMPVariable* objects containing the values that were retrieved via SNMP</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -257,13 +254,13 @@
         <span class="k">except</span> <span class="n">EasySNMPTimeoutError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
 
             <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
-                <span class="s2">&quot;SNMP Timeout Error: `</span><span class="si">%s</span><span class="s2">`&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="s2">&quot;WLC connection / SNMP Timeout Error: `</span><span class="si">%s</span><span class="s2">`&quot;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Snmp.get"><a class="viewcode-back" href="../../wesp.snmp.html#wesp.snmp.Snmp.get">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">oid</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        will get the information stored at the given OID</span>
+<span class="sd">        will return the information stored at the given OID using GET.</span>
 
 <span class="sd">        :param oid: OID to get from</span>
 <span class="sd">        :rtype: SNMPVariable</span>
@@ -280,7 +277,7 @@
         <span class="k">except</span> <span class="n">EasySNMPTimeoutError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
 
             <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
-                <span class="s2">&quot;SNMP Timeout Error: `</span><span class="si">%s</span><span class="s2">`&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="s2">&quot;WLC connection / SNMP Timeout Error: `</span><span class="si">%s</span><span class="s2">`&quot;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
 
         <span class="k">except</span> <span class="n">EasySNMPNoSuchInstanceError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
@@ -296,11 +293,11 @@
 <div class="viewcode-block" id="Snmp.get_mac_from_ip"><a class="viewcode-back" href="../../wesp.snmp.html#wesp.snmp.Snmp.get_mac_from_ip">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_mac_from_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Will search for the associated Mac address to the given IP</span>
+<span class="sd">        Will search for the associated MAC address to the given IP</span>
 
-<span class="sd">        :param ip: IP address to get Mac address for</span>
+<span class="sd">        :param ip: IP address to get MAC address for</span>
 <span class="sd">        :rtype: str or None</span>
-<span class="sd">        :return: Mac address of client or None if no match was found</span>
+<span class="sd">        :return: MAC address of client or None if no match was found</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -321,19 +318,19 @@
     <span class="k">def</span> <span class="nf">get_by_mac_address</span><span class="p">(</span><span class="n">oid</span><span class="p">,</span> <span class="n">mac_address</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        will return in the information which is stored at the given OID and</span>
-<span class="sd">        is specific by the given Mac Address.</span>
-<span class="sd">        It will append the Mac Address in decimal format to the given OID and</span>
-<span class="sd">        get this.</span>
+<span class="sd">        is specific by the given MAC Address.</span>
+<span class="sd">        It will append the MAC Address in decimal format to the given OID and</span>
+<span class="sd">        GET this.</span>
 
-<span class="sd">        :param oid: Base OID to get for</span>
-<span class="sd">        :param mac_address: Mac Address of client</span>
+<span class="sd">        :param oid: Base OID to GET for</span>
+<span class="sd">        :param mac_address: MAC Address of client</span>
 <span class="sd">        :param separator: optional separator to split the mac address. Default &#39;:&#39;</span>
 <span class="sd">        :return: value stored at this OID. Type depends on value.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># convert mac from hex to dec</span>
         <span class="n">mac_int</span> <span class="o">=</span> <span class="n">mac_hex_to_dec</span><span class="p">(</span><span class="n">mac_address</span><span class="p">,</span> <span class="n">separator</span><span class="p">)</span>
-        <span class="c1"># todo add catch for empty mac</span>
+
         <span class="c1"># add connecting dot, if not existing between end of oid and mac address</span>
         <span class="n">oid</span> <span class="o">=</span> <span class="n">oid</span> <span class="o">+</span> <span class="n">mac_int</span> <span class="k">if</span> <span class="p">(</span><span class="n">oid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">oid</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">mac_int</span>
 
@@ -350,6 +347,7 @@
 <div class="viewcode-block" id="Snmp.print_walk"><a class="viewcode-back" href="../../wesp.snmp.html#wesp.snmp.Snmp.print_walk">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">print_walk</span><span class="p">(</span><span class="n">oid</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Will WALK the OID and print the results to the CLI.</span>
 
 <span class="sd">        :param oid: OID to walk</span>
 <span class="sd">        :return: Nothing, result will be outputted directly to the CLI</span>

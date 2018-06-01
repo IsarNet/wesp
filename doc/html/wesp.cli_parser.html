@@ -85,7 +85,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="wesp.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">wesp.cli_parser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.click_overloaded.html">wesp.click_overloaded module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="wesp.command_line.html">wesp.command_line module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.configfile.html">wesp.configfile module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.database.html">wesp.database module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.definitions.html">wesp.definitions module</a></li>
@@ -165,39 +164,36 @@
   <div class="section" id="module-wesp.cli_parser">
 <span id="wesp-cli-parser-module"></span><h1>wesp.cli_parser module<a class="headerlink" href="#module-wesp.cli_parser" title="Permalink to this headline">¶</a></h1>
 <p>This module’s main task is the parsing of the CLI parameters. This is done using the extension
-click (<a class="reference external" href="http://click.pocoo.org/5/">http://click.pocoo.org/5/</a>). Click separates three different parameters: commands, options and arguments.</p>
-<p>This module is made up of one Group (<a class="reference internal" href="#wesp.cli_parser.cli_parser" title="wesp.cli_parser.cli_parser"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cli_parser()</span></code></a>), which has two sub commands: <a class="reference internal" href="#wesp.cli_parser.load_config" title="wesp.cli_parser.load_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_config()</span></code></a>
+Click (<a class="reference external" href="http://click.pocoo.org/5/">http://click.pocoo.org/5/</a>). Click separates three different parameters: commands, options and arguments.</p>
+<p>This module is consists of one Group (<a class="reference internal" href="#wesp.cli_parser.cli_parser" title="wesp.cli_parser.cli_parser"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cli_parser()</span></code></a>), which has two sub commands: <a class="reference internal" href="#wesp.cli_parser.load_config" title="wesp.cli_parser.load_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_config()</span></code></a>
 and <a class="reference internal" href="#wesp.cli_parser.print_to_db" title="wesp.cli_parser.print_to_db"><code class="xref py py-meth docutils literal notranslate"><span class="pre">print_to_db()</span></code></a></p>
-<p><a class="reference internal" href="#wesp.cli_parser.cli_parser" title="wesp.cli_parser.cli_parser"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cli_parser()</span></code></a> contains all options to set up the main program (e.g. Client address and SNMP options),
-as well as optional parameters to turn on or off (e.g. RSSI, SNR, Ping).</p>
+<p><a class="reference internal" href="#wesp.cli_parser.cli_parser" title="wesp.cli_parser.cli_parser"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cli_parser()</span></code></a> contains all options to set up the main program (e.g. client address and SNMP options),
+as well as optional parameters to turn on or off certain features (e.g. RSSI, SNR, Ping).</p>
 <p>The command <a class="reference internal" href="#wesp.cli_parser.load_config" title="wesp.cli_parser.load_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_config()</span></code></a> triggers the loading of a config file for easier use. It has only one option
-to load a different file than the default one. Note the priority of input:</p>
+to load a different file than the default one. Note the priority of inputs (1 has the highest priority):</p>
 <ol class="arabic simple">
 <li>CLI</li>
 <li>Configfile</li>
 <li>Default values</li>
 </ol>
-<p>This means that although you defined an option in the configfile you can overwrite it by setting a flag on the CLI.</p>
+<p>This means that an option set in the configfile can be overwritten by setting a flag on the CLI.</p>
 <p>The command <a class="reference internal" href="#wesp.cli_parser.print_to_db" title="wesp.cli_parser.print_to_db"><code class="xref py py-meth docutils literal notranslate"><span class="pre">print_to_db()</span></code></a> triggers the output to the database. Through its options one is able to set
 the basic connection settings as well as database and table names. For detailed usage run <cite>print_to_db -h</cite>.
-Database and table are created, if they don’t exist. The create statement is built automatically based on the
+Database and table are created if they don’t exist. The create statement is built automatically based on the
 parameters defined in the module <a class="reference internal" href="wesp.definitions.html#module-wesp.definitions" title="wesp.definitions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">wesp.definitions</span></code></a>.</p>
 <dl class="function">
 <dt id="wesp.cli_parser.add_value_to_context">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">add_value_to_context</code><span class="sig-paren">(</span><em>ctx</em>, <em>param</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#add_value_to_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.add_value_to_context" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will just add the given value in the context object under the param’s name</p>
+<dd><p>This function will just add the given value to the context object under the param’s name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ctx</strong> – </li>
-<li><strong>param</strong> – </li>
-<li><strong>value</strong> – </li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> – current context object</li>
+<li><strong>param</strong> – calling parameter</li>
+<li><strong>value</strong> – value of parameter</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Nothing, value will be stored in context object</p>
 </td>
 </tr>
 </tbody>
@@ -207,19 +203,16 @@ parameters defined in the module <a class="reference internal" href="wesp.defini
 <dl class="function">
 <dt id="wesp.cli_parser.check_client_address">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">check_client_address</code><span class="sig-paren">(</span><em>ctx</em>, <em>param</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#check_client_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.check_client_address" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will validate the given Client Address and add it to the Context</p>
+<dd><p>This function will validate the given client address and add it to the context.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ctx</strong> – </li>
-<li><strong>param</strong> – </li>
-<li><strong>value</strong> – </li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> – current context object</li>
+<li><strong>param</strong> – calling parameter</li>
+<li><strong>value</strong> – value of parameter</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Nothing, value will be stored in context object</p>
 </td>
 </tr>
 </tbody>
@@ -229,16 +222,16 @@ parameters defined in the module <a class="reference internal" href="wesp.defini
 <dl class="function">
 <dt id="wesp.cli_parser.check_wlc_address">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">check_wlc_address</code><span class="sig-paren">(</span><em>ctx</em>, <em>param</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#check_wlc_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.check_wlc_address" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will check if the WLC Address is a valid IP or FQDN
-If so it will set to the context, otherwise it will raise an error</p>
+<dd><p>This function will check if the WLC address is a valid IP or resolvable FQDN address.
+If so it will add it to the context, otherwise it will raise an error.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ctx</strong> – </li>
-<li><strong>param</strong> – </li>
-<li><strong>value</strong> – </li>
+<li><strong>ctx</strong> – current context object</li>
+<li><strong>param</strong> – calling parameter</li>
+<li><strong>value</strong> – value of parameter</li>
 </ul>
 </td>
 </tr>
@@ -249,22 +242,41 @@ If so it will set to the context, otherwise it will raise an error</p>
 <dl class="function">
 <dt id="wesp.cli_parser.get_ap_name">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">get_ap_name</code><span class="sig-paren">(</span><em>ctx</em>, <em>param</em>, <em>flag_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#get_ap_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.get_ap_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function requests the Name of the associated AP of the Client.
-Therefore it will first request the MAC address of the AP from the cldcClientTable
-and then using the address to find its name in the clDLApBootTable
-:param ctx: Context of …
-:param param:
-:param flag_set: True if flag is set, otherwise false</p>
+<dd><p>This function requests the name of the associated AP of the client.
+Therefore it will first request the MAC address of the AP from the <em>cldcClientTable</em>
+and then using the address to find its name in the <em>clDLApBootTable</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> – current context object</li>
+<li><strong>param</strong> – calling parameter</li>
+<li><strong>flag_set</strong> – True if flag is set, false if not</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="wesp.cli_parser.get_ping">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">get_ping</code><span class="sig-paren">(</span><em>ctx</em>, <em>param</em>, <em>flag_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#get_ping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.get_ping" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will ping the client from the device, which runs this script.
-:param ctx:
-:param param:
-:param flag_set:
-:return: Nothing, value will be stored in context object</p>
+<dd><p>This function will ping the client from the device which runs this script.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> – current context object</li>
+<li><strong>param</strong> – calling parameter</li>
+<li><strong>flag_set</strong> – True if flag is set, false if not</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -275,14 +287,11 @@ and then using the address to find its name in the clDLApBootTable
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ctx</strong> – </li>
-<li><strong>param</strong> – </li>
-<li><strong>flag_set</strong> – </li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> – current context object</li>
+<li><strong>param</strong> – calling parameter</li>
+<li><strong>flag_set</strong> – True if flag is set, false if not</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Nothing, value will be stored in context object</p>
 </td>
 </tr>
 </tbody>
@@ -292,19 +301,17 @@ and then using the address to find its name in the clDLApBootTable
 <dl class="function">
 <dt id="wesp.cli_parser.get_snmp_value_with_mac">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">get_snmp_value_with_mac</code><span class="sig-paren">(</span><em>ctx</em>, <em>param</em>, <em>flag_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#get_snmp_value_with_mac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.get_snmp_value_with_mac" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will request and save an attribute based on the corresponding OID and Mac Address</p>
+<dd><p>This function will request and save an attribute based on the corresponding OID and MAC address. The OID
+is retrieved from the class <a class="reference internal" href="wesp.definitions.html#wesp.definitions.AllParameter" title="wesp.definitions.AllParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.definitions.AllParameter</span></code></a> using the name of the parameter.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ctx</strong> – </li>
-<li><strong>param</strong> – </li>
-<li><strong>flag_set</strong> – </li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> – current context object</li>
+<li><strong>param</strong> – calling parameter</li>
+<li><strong>flag_set</strong> – True if flag is set, false if not</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Nothing, value will be stored in context object</p>
 </td>
 </tr>
 </tbody>
@@ -314,47 +321,28 @@ and then using the address to find its name in the clDLApBootTable
 <dl class="data">
 <dt id="wesp.cli_parser.order">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">order</code><em class="property"> = [('channel', None), ('retries', None), ('snr_off', None), ('ap_name', None), ('rssi_off', None)]</em><a class="headerlink" href="#wesp.cli_parser.order" title="Permalink to this definition">¶</a></dt>
-<dd><p>This dict will hold the requested information about the client
-If you want the entries to be sorted, like they are inputted or worked on
-(Default values will be last) then just remove the order argument from this statement:</p>
+<dd><p>This attribute sets the order in which the data is outputted. Make sure to always add a <em>None</em> to each tuple!</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="wesp.cli_parser.process_result">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">process_result</code><span class="sig-paren">(</span><em>result</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#process_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.process_result" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function will run after all parameters have been parsed.
-It will make the CLI Output and depending on the settings the
-Insert to the DB.
+It will make the CLI output and depending on the settings the
+insert to the database.
 It also repeats the process until the user kills the program or
-an end end condition is met</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>result</strong> – </li>
-<li><strong>kwargs</strong> – </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Nothing</p>
-</td>
-</tr>
-</tbody>
-</table>
+an end condition is met</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="wesp.cli_parser.update_client_data">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">update_client_data</code><span class="sig-paren">(</span><em>ctx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#update_client_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.update_client_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will update the values by re-retrieving the values from the WLC</p>
+<dd><p>This function will update the values by re-retrieving the values from the WLC.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ctx</strong> – current Context</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Nothing, results are saved in Context</td>
 </tr>
 </tbody>
 </table>
@@ -364,10 +352,10 @@ an end end condition is met</p>
 <dl class="function">
 <dt id="wesp.cli_parser.print_to_db">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">print_to_db</code><span class="sig-paren">(</span><em>ctx</em>, <em>db_name</em>, <em>db_table</em>, <em>db_address</em>, <em>db_port</em>, <em>db_user</em>, <em>db_pass</em>, <em>silent</em><span class="sig-paren">)</span><a class="headerlink" href="#wesp.cli_parser.print_to_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function represents the command print_to_db, it takes the options and uses them
-to create a connection to the database. It also generates the Statements for the creation of
-the table and for the insertion of data into this table.</p>
-<p>Note that the click options have to be inside the arguments of this command, since they are expected by
+<dd><p>This function represents the command <em>print_to_db</em>, it takes the options and uses them
+to create a connection to the database. It also generates the statements for the creation of
+the table and the insertion of data into this table.</p>
+<p>Note that the Click options have to be inside the arguments of this command, since they are expected by
 click. The actual handling of them is done in the corresponding callback.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -375,13 +363,13 @@ click. The actual handling of them is done in the corresponding callback.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>ctx</strong> – current Context</li>
-<li><strong>db_name</strong> – click option (is not be used)</li>
-<li><strong>db_table</strong> – click option (is not be used)</li>
-<li><strong>db_address</strong> – click option (is not be used)</li>
-<li><strong>db_port</strong> – click option (is not be used)</li>
-<li><strong>db_user</strong> – click option (is not be used)</li>
-<li><strong>db_pass</strong> – click option (is not be used)</li>
-<li><strong>silent</strong> – click option (is not be used)</li>
+<li><strong>db_name</strong> – click option (is not being used)</li>
+<li><strong>db_table</strong> – click option (is not being used)</li>
+<li><strong>db_address</strong> – click option (is not being used)</li>
+<li><strong>db_port</strong> – click option (is not being used)</li>
+<li><strong>db_user</strong> – click option (is not being used)</li>
+<li><strong>db_pass</strong> – click option (is not being used)</li>
+<li><strong>silent</strong> – click option (is not being used)</li>
 </ul>
 </td>
 </tr>
@@ -393,25 +381,25 @@ click. The actual handling of them is done in the corresponding callback.</p>
 <dt id="wesp.cli_parser.cli_parser">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">cli_parser</code><span class="sig-paren">(</span><em>ctx</em>, <em>wlc_address</em>, <em>client_address</em>, <em>snmp_version</em>, <em>snmp_community</em>, <em>snmp_user</em>, <em>snmp_password</em>, <em>snmp_encryption</em>, <em>interval</em>, <em>iterations</em>, <em>channel</em>, <em>retries</em>, <em>ap_name</em>, <em>rx_packages</em>, <em>tx_packages</em>, <em>ping</em>, <em>rssi_off</em>, <em>snr_off</em>, <em>data_rate_off</em><span class="sig-paren">)</span><a class="headerlink" href="#wesp.cli_parser.cli_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function represents the main command and contains all options ranging from WLC/client information,
-SNMP options to all options, which enable or disable the output of certain parameter. A list of the
-associated options can be found below. Since this is a click group all other commands (e.g. for
-config file and db) are sub commands of this command. The name of this group is <em>cli_parser</em>.</p>
+SNMP options to all options which enable or disable the output of certain parameters. A list of the
+associated options can be found below. Since this is a <em>Click Group</em> all other commands (e.g. for
+configfile and database) are sub commands of this command. The name of this group is <em>cli_parser</em>.</p>
 <p>Note, that this group command does not contain any logic, handling of the options is done in the
-specified callback. Click expects the click options to be inside the arguments of this command, although
+specified callbacks. Click expects the click options to be inside the arguments of this command, although
 they are not used.</p>
 <p>Fore more information about click options and it’s attributes see: <a class="reference external" href="http://click.pocoo.org/5/options/">http://click.pocoo.org/5/options/</a>,
 <a class="reference external" href="http://click.pocoo.org/5/parameters/#differences">http://click.pocoo.org/5/parameters/#differences</a> and <a class="reference external" href="http://click.pocoo.org/5/commands/">http://click.pocoo.org/5/commands/</a></p>
 <p>The following callbacks are implemented and may be used for future options:</p>
-<p><a class="reference internal" href="#wesp.cli_parser.add_value_to_context" title="wesp.cli_parser.add_value_to_context"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_value_to_context()</span></code></a>: sets the value of the option to the context, without any modification. The name of the
+<p><a class="reference internal" href="#wesp.cli_parser.add_value_to_context" title="wesp.cli_parser.add_value_to_context"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_value_to_context()</span></code></a>: adds the value of the option to the context, without any modification. The name of the
 option is used as key.</p>
 <p><a class="reference internal" href="#wesp.cli_parser.get_snmp_value" title="wesp.cli_parser.get_snmp_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_snmp_value()</span></code></a>: will search in <a class="reference internal" href="wesp.definitions.html#wesp.definitions.AllParameter" title="wesp.definitions.AllParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.definitions.AllParameter</span></code></a> for a matching OID and requests the
-data via GET from the WLC. The result is added to the context, under the name of the option.</p>
-<p><a class="reference internal" href="#wesp.cli_parser.get_snmp_value_with_mac" title="wesp.cli_parser.get_snmp_value_with_mac"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_snmp_value_with_mac()</span></code></a>: will do the same as the latter function but will include the mac address of the
+data via GET from the WLC. The result is added to the context, using the name of the option.</p>
+<p><a class="reference internal" href="#wesp.cli_parser.get_snmp_value_with_mac" title="wesp.cli_parser.get_snmp_value_with_mac"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_snmp_value_with_mac()</span></code></a>: will do the same as the latter function but will include the MAC address of the
 client to get client specific data.</p>
 <p><a class="reference internal" href="#wesp.cli_parser.check_wlc_address" title="wesp.cli_parser.check_wlc_address"><code class="xref py py-meth docutils literal notranslate"><span class="pre">check_wlc_address()</span></code></a>: will check if the given address is a valid IP address or a resolvable hostname. If so it
-will add it to the context under the name of the option.</p>
+will add it to the context using the name of the option.</p>
 <p><a class="reference internal" href="#wesp.cli_parser.check_client_address" title="wesp.cli_parser.check_client_address"><code class="xref py py-meth docutils literal notranslate"><span class="pre">check_client_address()</span></code></a>: will check if the given address is a valid IP or MAC address. If so it will add
-it to the context under the name of the option.</p>
+it to the context using the name of the option.</p>
 <p><a class="reference internal" href="#wesp.cli_parser.get_ap_name" title="wesp.cli_parser.get_ap_name"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_ap_name()</span></code></a>: will retrieve the name of the AP of a client. For details see the function itself. The name of
 the option is used as key.</p>
 <p><a class="reference internal" href="#wesp.cli_parser.get_ping" title="wesp.cli_parser.get_ping"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_ping()</span></code></a>: will try to ping the client. For details see the function itself. The name of the option
@@ -422,24 +410,24 @@ is used as key.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>ctx</strong> – current Context</li>
-<li><strong>wlc_address</strong> – click option (is not be used)</li>
-<li><strong>client_address</strong> – click option (is not be used)</li>
-<li><strong>snmp_version</strong> – click option (is not be used)</li>
-<li><strong>snmp_community</strong> – click option (is not be used)</li>
-<li><strong>snmp_user</strong> – click option (is not be used)</li>
-<li><strong>snmp_password</strong> – click option (is not be used)</li>
-<li><strong>snmp_encryption</strong> – click option (is not be used)</li>
-<li><strong>interval</strong> – click option (is not be used)</li>
-<li><strong>iterations</strong> – click option (is not be used)</li>
-<li><strong>channel</strong> – click option (is not be used)</li>
-<li><strong>retries</strong> – click option (is not be used)</li>
-<li><strong>ap_name</strong> – click option (is not be used)</li>
-<li><strong>rx_packages</strong> – click option (is not be used)</li>
-<li><strong>tx_packages</strong> – click option (is not be used)</li>
-<li><strong>ping</strong> – click option (is not be used)</li>
-<li><strong>rssi_off</strong> – click option (is not be used)</li>
-<li><strong>snr_off</strong> – click option (is not be used)</li>
-<li><strong>data_rate_off</strong> – click option (is not be used)</li>
+<li><strong>wlc_address</strong> – click option (is not being used)</li>
+<li><strong>client_address</strong> – click option (is not being used)</li>
+<li><strong>snmp_version</strong> – click option (is not being used)</li>
+<li><strong>snmp_community</strong> – click option (is not being used)</li>
+<li><strong>snmp_user</strong> – click option (is not being used)</li>
+<li><strong>snmp_password</strong> – click option (is not being used)</li>
+<li><strong>snmp_encryption</strong> – click option (is not being used)</li>
+<li><strong>interval</strong> – click option (is not being used)</li>
+<li><strong>iterations</strong> – click option (is not being used)</li>
+<li><strong>channel</strong> – click option (is not being used)</li>
+<li><strong>retries</strong> – click option (is not being used)</li>
+<li><strong>ap_name</strong> – click option (is not being used)</li>
+<li><strong>rx_packets</strong> – click option (is not being used)</li>
+<li><strong>tx_packets</strong> – click option (is not being used)</li>
+<li><strong>ping</strong> – click option (is not being used)</li>
+<li><strong>rssi_off</strong> – click option (is not being used)</li>
+<li><strong>snr_off</strong> – click option (is not being used)</li>
+<li><strong>data_rate_off</strong> – click option (is not being used)</li>
 </ul>
 </td>
 </tr>
@@ -450,17 +438,17 @@ is used as key.</p>
 <dl class="function">
 <dt id="wesp.cli_parser.load_config">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">load_config</code><span class="sig-paren">(</span><em>ctx</em>, <em>file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#wesp.cli_parser.load_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Will set the path to the config inside the class <a class="reference internal" href="wesp.configfile.html#wesp.configfile.ConfigFileProcessor" title="wesp.configfile.ConfigFileProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFileProcessor</span></code></a>. The actual loading is done
-in the function <code class="xref py py-meth docutils literal notranslate"><span class="pre">read_config_file_flag()</span></code> in module <a class="reference internal" href="wesp.click_overloaded.html#module-wesp.click_overloaded" title="wesp.click_overloaded"><code class="xref py py-mod docutils literal notranslate"><span class="pre">wesp.click_overloaded</span></code></a> over.</p>
-<p>Note that the click options have to be inside the arguments of this command, since they are expected by
-click.</p>
+<dd><p>Will set the path of the configfile inside the class <a class="reference internal" href="wesp.configfile.html#wesp.configfile.ConfigFileProcessor" title="wesp.configfile.ConfigFileProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFileProcessor</span></code></a>. The actual loading is done
+in the function <code class="xref py py-meth docutils literal notranslate"><span class="pre">read_config_file_flag()</span></code> in the module <a class="reference internal" href="wesp.click_overloaded.html#module-wesp.click_overloaded" title="wesp.click_overloaded"><code class="xref py py-mod docutils literal notranslate"><span class="pre">wesp.click_overloaded</span></code></a>.</p>
+<p>Note that the Click options have to be inside the arguments of this command, since they are expected by
+Click.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>ctx</strong> – current Context</li>
-<li><strong>file_path</strong> – click option (is not be used)</li>
+<li><strong>file_path</strong> – click option (is not being used)</li>
 </ul>
 </td>
 </tr>

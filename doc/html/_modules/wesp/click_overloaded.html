@@ -144,12 +144,12 @@
             
   <h1>Source code for wesp.click_overloaded</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module contains overloads of click classes to allow custom reactions.</span>
+<span class="sd">This module contains overloads of Click classes to allow custom reactions.</span>
 <span class="sd">The class :class:`.CustomGroup` overloads the class :class:`.click.core.Group` to allow custom parsing and</span>
 <span class="sd">rearranging of the options.</span>
 
 <span class="sd">The class :class:`.OnlyRequiredIf` overloads the class :class:`.click.core.Option` to allow an option to be</span>
-<span class="sd">required if a certain snmp version has been set.</span>
+<span class="sd">required if a certain SNMP version has been set.</span>
 
 <span class="sd">The class :class:`.CommandAllowConfigFile` overloads the class :class:`.click.core.Command` to allow a</span>
 <span class="sd">command to access the configfile.</span>
@@ -165,15 +165,14 @@
 <div class="viewcode-block" id="read_config_file_flag"><a class="viewcode-back" href="../../wesp.click_overloaded.html#wesp.cli_parser.read_config_file_flag">[docs]</a><span class="k">def</span> <span class="nf">read_config_file_flag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function will read and check the flag of the command</span>
-<span class="sd">    load_config. It will inform about an missing file path or</span>
-<span class="sd">    load the given or default config file.</span>
+<span class="sd">    *load_config*. It will inform about an missing file path or</span>
+<span class="sd">    load the given or default configfile.</span>
 
 <span class="sd">    :param self: Reference to CustomGroup</span>
-<span class="sd">    :param ctx: Reference to current Context</span>
+<span class="sd">    :param ctx: Reference to current context</span>
 <span class="sd">    :param args: list of given args</span>
-<span class="sd">    :param idx: index at which the load_config command has been found</span>
-<span class="sd">    :raise: BadParameter if argument for -f option is missing</span>
-<span class="sd">    :return: Nothing, result will be saved in default map of context</span>
+<span class="sd">    :param idx: index at which the *load_config* command has been found</span>
+<span class="sd">    :raise: *BadParameter* if argument for option -f is missing</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -201,20 +200,21 @@
 
 <div class="viewcode-block" id="CustomGroup"><a class="viewcode-back" href="../../wesp.click_overloaded.html#wesp.cli_parser.CustomGroup">[docs]</a><span class="k">class</span> <span class="nc">CustomGroup</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class overloads :class:`.Group`</span>
+<span class="sd">    This class overloads the class :class:`click.core.Group`.</span>
 <span class="sd">    It will ensure that the config file is loaded before any other parameter is evaluated and</span>
 <span class="sd">    the required options do not suppress the help option.</span>
 <span class="sd">    In addition the version parameter is moved to the front of the args list to enable the class</span>
-<span class="sd">    OnlyRequiredIf to set an option (e.g. community) only to required if an version is set (e.g. 2c)</span>
+<span class="sd">    :class:`OnlyRequiredIf` to set an option (e.g. community) only to required if the corresponding version is set</span>
+<span class="sd">    (e.g. 2c).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CustomGroup.format_usage"><a class="viewcode-back" href="../../wesp.click_overloaded.html#wesp.cli_parser.CustomGroup.format_usage">[docs]</a>    <span class="k">def</span> <span class="nf">format_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">formatter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Overloads the :meth:`format_usage` of class :class:`click.core.Group`.</span>
-<span class="sd">        This allows a custom usage string, which is defined in the :class:`.GlobalSettings`</span>
+<span class="sd">        Overloads the :meth:`format_usage` function of the class :class:`click.core.Group`.</span>
+<span class="sd">        This allows a custom usage string, which is defined in the :class:`.GlobalSettings`.</span>
 
-<span class="sd">        :param ctx: current Context</span>
+<span class="sd">        :param ctx: current context</span>
 <span class="sd">        :param formatter: Reference to class:`click.formatting.HelpFormatter`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -222,11 +222,11 @@
 
 <div class="viewcode-block" id="CustomGroup.format_options"><a class="viewcode-back" href="../../wesp.click_overloaded.html#wesp.cli_parser.CustomGroup.format_options">[docs]</a>    <span class="k">def</span> <span class="nf">format_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">formatter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">         Overloads the :meth:`format_options` of class :class:`click.core.Group`.</span>
+<span class="sd">         Overloads the :meth:`format_options` function of the class :class:`click.core.Group`.</span>
 <span class="sd">         This allows to add a custom headline above the SNMP Options as well as</span>
-<span class="sd">         the Other non SNMP Options. This makes the help text more clearly</span>
+<span class="sd">         the other non SNMP Options. This makes the help text more lucid.</span>
 
-<span class="sd">        :param ctx: current Context</span>
+<span class="sd">        :param ctx: current context</span>
 <span class="sd">        :param formatter: Reference to class:`click.formatting.HelpFormatter`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -265,12 +265,16 @@
 
 <div class="viewcode-block" id="CustomGroup.parse_args"><a class="viewcode-back" href="../../wesp.click_overloaded.html#wesp.cli_parser.CustomGroup.parse_args">[docs]</a>    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Overloads the function parse_args of :class:`.Group`, which runs before the parsing of</span>
-<span class="sd">        the parameter of the super class</span>
+<span class="sd">        Overloads the function parse_args of :class:`click.core.Group`.</span>
+<span class="sd">        It will ensure that the config file is loaded before any other parameter is evaluated and</span>
+<span class="sd">        the required options do not suppress the help option.</span>
+<span class="sd">        In addition the version parameter is moved to the front of the args list to enable the class</span>
+<span class="sd">        :class:`OnlyRequiredIf` to set an option (e.g. community) only to required if the corresponding version is set</span>
+<span class="sd">    (   e.g. 2c).</span>
 
-<span class="sd">        :param ctx: current Context object</span>
+<span class="sd">        :param ctx: current context</span>
 <span class="sd">        :param args: list of given parameters</span>
-<span class="sd">        :return: result of super function</span>
+<span class="sd">        :return: result of function&#39;s super</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -343,6 +347,7 @@
 
             <span class="c1"># Ensure that the version flag is the first parameter</span>
             <span class="c1"># If it was not set, set the context to the default value</span>
+            <span class="c1"># Otherwise SNMP options cannot be set to required/optional based on the version</span>
             <span class="k">if</span> <span class="n">version_flag_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">version_flag</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">version_flag_index</span><span class="p">:</span><span class="n">version_flag_index</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
                 <span class="n">args</span> <span class="o">=</span> <span class="n">version_flag</span> <span class="o">+</span> <span class="n">args</span>
@@ -429,8 +434,8 @@
 
 <div class="viewcode-block" id="CommandAllowConfigFile.format_usage"><a class="viewcode-back" href="../../wesp.click_overloaded.html#wesp.cli_parser.CommandAllowConfigFile.format_usage">[docs]</a>    <span class="k">def</span> <span class="nf">format_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">formatter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Overloads the :meth:`format_usage` of class :class:`click.core.Command`.</span>
-<span class="sd">        This allows a custom usage string, looks like this:</span>
+<span class="sd">        Overloads the :meth:`format_usage` of the class :class:`click.core.Command`.</span>
+<span class="sd">        This allows a custom usage string, which looks like this:</span>
 
 <span class="sd">        PROGRAM_NAME [...] Command_Name [OPTIONS]</span>
 
@@ -443,12 +448,12 @@
 
 <div class="viewcode-block" id="CommandAllowConfigFile.parse_args"><a class="viewcode-back" href="../../wesp.click_overloaded.html#wesp.cli_parser.CommandAllowConfigFile.parse_args">[docs]</a>    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Overloads the function parse_args of :class:`.Command`, which runs before the parsing of</span>
+<span class="sd">        Overloads the function :meth:`parse_args` of :class:`.Command`, which runs before the parsing of</span>
 <span class="sd">        the parameter of the super class.</span>
 
-<span class="sd">        :param ctx: current Context</span>
+<span class="sd">        :param ctx: current context</span>
 <span class="sd">        :param args: arguments given by user</span>
-<span class="sd">        :return: result of super function</span>
+<span class="sd">        :return: result of the function&#39;s super</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 

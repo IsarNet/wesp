@@ -31,7 +31,7 @@ Clone repository:
 git clone https://github.com/IsarNet/wesp
 ```
 
-Go to folder
+Change folder
 ```
 cd wesp
 ```
@@ -117,8 +117,17 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
+Rerun bash script.
+
 ## Install Instructions for PyCharm
 Can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/PyCharm_Integeration)
+
+## Documentation
+The Sphinx doc as html can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/html). To update the documentation run ```make html``` in the base folder of this project.
+
+The Sphinx doc as man file can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/man). To update the documentation run ```make man``` in the base folder of this project.
+
+Activity diagrams can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/Activity_Diagrams).
 
 
 ## Authors

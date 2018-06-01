@@ -1,10 +1,12 @@
 """
-This module is responsible for the configfile. It loads it and matches its content with the defined
+This module is responsible for the configfile. It loads it and matches its content to the defined
 parameters in the module :mod:`wesp.cli_parser`.
 The schema of the configfile it described in the class :class:`.ConfigSectionSchema`, while the parsing
-is triggered and performed by :class:`.ConfigFileReader` and its overload :class:`.ConfigFileProcessor`
+is triggered and performed by :class:`.ConfigFileReader` and its derivative :class:`.ConfigFileProcessor`.
 
-This module uses the click extension click-configfile (https://github.com/click-contrib/click-configfile).
+This module uses the click extension Click-configfile (https://github.com/click-contrib/click-configfile).
+
+More information on how to add a parameter can be found in the individual classes.
 """
 
 from click_configfile import ConfigFileReader, Param, SectionSchema, matches_section
@@ -14,13 +16,16 @@ from click import BadParameter
 
 class ConfigSectionSchema(object):
     """This class contains a description of each configfile section.
-    Each section then contains the parameter which can be configured through the configfile.
+    Each section contains the parameter which can be configured by the configfile.
 
-    To add a new section just create a new class and a `@matches_section` decorator to it.
-    Ensure that the Name of the section is written in capital letters and does not contains any brackets.
-    In the created class add the exact name of the parameter as defined in the :mod:`wesp.cli_parser` and set it to a Param.
-    More information about the Param Types can be found here: http://click.pocoo.org/5/parameters/#parameter-types
-    The last step is to add the Schema to the parsing list in the class ConfigFileProcessor below.
+    To add a new section just create a new class and add a `@matches_section` decorator to it.
+    Ensure that the name of the section is written in capital letters and does not contain any brackets.
+
+    In the created class add the exact name of the parameter as defined in the :mod:`wesp.cli_parser` and
+    set it to a a Click param.
+    More information about the param types can be found here: http://click.pocoo.org/5/parameters/#parameter-types
+
+    The last step is to add the schema to the parsing list in the class :class:`.ConfigFileProcessor` below.
     """
 
     # Parse data for section General
@@ -73,8 +78,8 @@ class ConfigFileProcessor(ConfigFileReader):
     """
     This class overloads the class :class:`.ConfigFileReader` from click-configfile.
     It allows to set the schemas of the sections.
-    It also holds the path to the configfile (config_files) but this field is set
-    by the command :meth:`load_config` in :mod:`wesp.cli_parser`. This is triggered by :class:`.CustomGroup`.
+    It also holds the path to the configfile (attribute *config_files*) but this field is set
+    by the command :meth:`load_config` in :mod:`wesp.cli_parser`. It is triggered by the class :class:`.CustomGroup`.
 
     """
     config_section_schemas = [
@@ -88,10 +93,10 @@ class ConfigFileProcessor(ConfigFileReader):
     @classmethod
     def process_config_section(cls, config_section, storage):
         """
-        This function overrides the process_config_section function
-        of the :class:`.ConfigFileReader`.
-        It inverts all boolean values of the section DEFAULT_OFF to make all
-        parameters in this section to Off switches, since these describe the default behaviour.
+        This function overrides the *process_config_section* function
+        of the class :class:`.ConfigFileReader`.
+        It inverts all boolean values of the section *DEFAULT_OFF* to make all
+        parameters in this section to off switches, since they describe the default behaviour.
 
         """
 

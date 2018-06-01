@@ -12,10 +12,10 @@ import click
 # TODO Add error handling if mac address is not avaliable
 class Snmp:
     """
-    This class handles all interactions via SNMP with the WLC. It provided the basics function to get,
-    walk or trap with SNMP.
+    This class handles all interactions via SNMP with the WLC. It provides the basics functions to get or
+    walk with SNMP.
     The SNMP session will be initialized in the init function.
-    All functions have been made static to allow easy use without a reference to specific session.
+    All functions are static to allow easy use without a reference to specific sessions.
     """
 
     # Internal session reference
@@ -78,7 +78,7 @@ class Snmp:
     @staticmethod
     def get_session():
         """
-        :return: reference to current snmp session
+        :return: reference to current SNMP session
 
         """
         return Snmp.session
@@ -87,7 +87,7 @@ class Snmp:
     def is_ready():
         """
         :rtype: bool
-        :return: True if session is ready, False if not
+        :return: True if session is ready / initialized, False if not
 
         """
         return Snmp.session is not None
@@ -95,12 +95,12 @@ class Snmp:
     @staticmethod
     def walk(oid):
         """
-        will walk the given OID
+        Will WALK the given OID
 
-        :param oid: OID to walk
+        :param oid: OID to WALK
         :rtype: list of SNMPVariable or None
         :raises: SNMP Timeout Error
-        :return: a list of SNMPVariable objects containing the values that were retrieved via SNMP
+        :return: a list of *SNMPVariable* objects containing the values that were retrieved via SNMP
 
         """
         try:
@@ -115,7 +115,7 @@ class Snmp:
     @staticmethod
     def get(oid):
         """
-        will get the information stored at the given OID
+        will return the information stored at the given OID using GET.
 
         :param oid: OID to get from
         :rtype: SNMPVariable
@@ -148,11 +148,11 @@ class Snmp:
     @staticmethod
     def get_mac_from_ip(ip):
         """
-        Will search for the associated Mac address to the given IP
+        Will search for the associated MAC address to the given IP
 
-        :param ip: IP address to get Mac address for
+        :param ip: IP address to get MAC address for
         :rtype: str or None
-        :return: Mac address of client or None if no match was found
+        :return: MAC address of client or None if no match was found
 
         """
 
@@ -173,12 +173,12 @@ class Snmp:
     def get_by_mac_address(oid, mac_address, separator=':'):
         """
         will return in the information which is stored at the given OID and
-        is specific by the given Mac Address.
-        It will append the Mac Address in decimal format to the given OID and
-        get this.
+        is specific by the given MAC Address.
+        It will append the MAC Address in decimal format to the given OID and
+        GET this.
 
-        :param oid: Base OID to get for
-        :param mac_address: Mac Address of client
+        :param oid: Base OID to GET for
+        :param mac_address: MAC Address of client
         :param separator: optional separator to split the mac address. Default ':'
         :return: value stored at this OID. Type depends on value.
 
@@ -202,6 +202,7 @@ class Snmp:
     @staticmethod
     def print_walk(oid):
         """
+        Will WALK the OID and print the results to the CLI.
 
         :param oid: OID to walk
         :return: Nothing, result will be outputted directly to the CLI

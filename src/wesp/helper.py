@@ -1,6 +1,6 @@
 """
-This module contains helper function for this program.
-For further details look at the description of the corresponding functions.
+This module contains helper functions for this program.
+For further details look at the description of the corresponding function.
 """
 
 from IPy import IP
@@ -17,10 +17,10 @@ from wesp.definitions import AllParameter
 
 def check_ip_address(address):
     """
-    This functions ensure that the given address is a valid IP Address.
+    This function ensures that the given address is a valid IP address.
     It will also complete addresses, e.g. 192.168.1 will become 192.168.1.0
 
-    :param address: IP address to compare
+    :param address: IP address to check
     :rtype: bool
     :return: True if IP is correct, False if not
 
@@ -37,9 +37,9 @@ def check_ip_address(address):
 
 def check_mac_address(address):
     """
-    This function will check if the given address is a valid hex mac address (e.g. aa:bb:cc:dd:ee:ff)
+    This function will check if the given address is a valid hex MAC address (e.g. aa:bb:cc:dd:ee:ff).
 
-    :param address: mac address to check
+    :param address: MAC address to check
     :rtype: bool
     :return: True if address is a correct, False if not.
 
@@ -50,10 +50,10 @@ def check_mac_address(address):
 
 def compare_ips(ip_a, ip_b):
     """
-    This function will compare if two IPs are the same or not
+    This function will compare if two IPs are the same or not.
 
-    :param ip_a: IP Address A to compare
-    :param ip_b: IP Address B to compare
+    :param ip_a: IP address A to compare
+    :param ip_b: IP address B to compare
     :rtype: bool
     :return: True if IPs are the same, false if not
 
@@ -67,9 +67,9 @@ def validate_snmp_type(response, oid):
     This function will validate that the response from the WLC is valid.
     If not it will raise an exception.
 
-    :param response: snmp variable
+    :param response: SNMP variable
     :raises: EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError
-    :return: True, if everything is fine
+    :return: True if everything is fine, exception if not
     """
 
     if response.snmp_type == "NOSUCHINSTANCE":
@@ -112,12 +112,12 @@ def validate_snmp_type(response, oid):
 
 def mac_hex_to_dec(mac_address, separator):
     """
-    This function will convert hex mac address into a decimal mac address
+    This function will convert a hex MAC address into a decimal MAC address
 
-    :param mac_address: Mac address in hex format (e.g. aa:bb:cc:dd:ee:ff)
+    :param mac_address: MAC address in hex format (e.g. aa:bb:cc:dd:ee:ff)
     :param separator: the character which is used for the split
     :rtype: str
-    :return: Mac address in decimal format
+    :return: MAC address in decimal format
 
     """
 
@@ -129,11 +129,11 @@ def mac_hex_to_dec(mac_address, separator):
 
 def mac_dec_to_hex(mac_address):
     """
-    This function will convert decimal mac address into a hex mac address
+    This function will convert a decimal MAC address into a hex MAC address
 
-    :param: mac_address: Mac address in decimal format (e.g. 170.187.204.221.238.255)
+    :param mac_address: MAC address in decimal format (e.g. 170.187.204.221.238.255)
     :rtype: str
-    :return: Mac address in hex format
+    :return: MAC address in hex format
 
     """
 
@@ -156,11 +156,11 @@ def mac_dec_to_hex(mac_address):
 
 def extract_mac_from_oid(oid):
     """
-    This function will extract the Mac Address from the given OID and return it in Hex Format
+    This function will extract the MAC Address from the given OID and return it in Hex format.
 
-    :param: oid: OID which contains the decimal mac address
+    :param oid: OID which contains the decimal MAC address
     :rtype: str
-    :return: Hex mac address of device which was represented in given OID
+    :return: Hex MAC address of device which was represented in given OID
 
     """
 
@@ -171,10 +171,10 @@ def extract_mac_from_oid(oid):
 
 def decompress_nested_dict(nested_dict):
     """
-    This function will decompress all sub dict in the given nested dict
-    and return only single non nested dict
+    This function will decompress all sub dicts in the given nested dict
+    and return only a single non nested dict.
 
-    :param: nested_dict:
+    :param nested_dict: nested dict to decompress
     :rtype: dict
     :return: non nested dict based on the given nested dict
 
@@ -198,9 +198,9 @@ def decompress_nested_dict(nested_dict):
 
 def print_session_info(session):
     """
-    Will print the info's of the current snmp session to Std out
+    Will print the info's of the current SNMP session to the CLI
 
-    :param: session: current snmp session
+    :param: session: current SNMP session
     :return: Nothing, Output will go directly to the CLI
 
     """
@@ -213,14 +213,14 @@ def print_session_info(session):
 
 def get_option_with_name(self, ctx, name):
     """
-    will search all click options and return the option with the given name
-    or none if non was found
+    Will search all Click options and return the option with the given name
+    or *None* if none was found
 
-    :param: self: reference to Click Group or Command
-    :param: ctx: current context object
+    :param: self: reference to Click group or command
+    :param: ctx: current context
     :param: name: name of the option
-    :rtype: click.Option
-    :return: option with the name or None if no match exists
+    :rtype: click.core.Option
+    :return: option with the name or None if no match exist
 
     """
 
@@ -233,13 +233,13 @@ def get_option_with_name(self, ctx, name):
 
 def replace_last_occurrence(str, old, new):
     """
-    will replace the last occurrence of old with new in the given string str
+    Will replace the last occurrence of *old* with *new* in the given string *str*.
 
     :param: str: string to work on
     :param: old: character to replace
     :param: new: character to replace with
     :rtype: str
-    :return: the given string with the last occurrence of old replaced by new
+    :return: the given string with the last occurrence of *old* replaced by *new*
 
     """
 
@@ -249,13 +249,13 @@ def replace_last_occurrence(str, old, new):
 
 def generate_cli_output(client_data, ctx, time):
     """
-    will generate the CLI output based on the given client_data. It also includes the current time
-    and the mac address of the client. It always has the following form:
+    Will generate the CLI output based on the given *client_data*. It also includes the current time
+    and the MAC address of the client. It always has the following form:
 
-    YYYY-mm-dd HH:MM:SS [aa:bb:cc:dd:ee:ff] [[No] Reply from 192.168.123.123 (XX ms)] {other parameter}
+    YYYY-mm-dd HH:MM:SS [aa:bb:cc:dd:ee:ff] [[No] Reply from 192.168.123.123 (XX ms)] {other parameters}
 
     :param: client_data: dict of requested client data
-    :param: ctx:
+    :param: ctx: current context
     :rtype: str
     :return: string representation of all requested data
 
@@ -281,7 +281,7 @@ def ping_to_str(client_data, ctx):
     """
     This function checks if a ping has been made and will create a string
     based on the result.
-    It will look like this "Reply from 192.0.2.1 (12 ms)" or "No Reply from 192.0.2.1"
+    It will look like this *"Reply from 192.0.2.1 (12 ms)"* or *"No Reply from 192.0.2.1"*
 
     :rtype: str
     :param: client_data: dict of requested client data
@@ -307,10 +307,12 @@ def ping_to_str(client_data, ctx):
 
 def generate_parameter_create_statement():
     """
-    This function will create the table create statement based on the represented parameters in AllParameter.
+    This function will create the table create statement based on the represented parameters in :class:`AllParameter`.
     The statement will have the following form:
-    `Retries` int(11) DEFAULT NULL,`RSSI` double DEFAULT NULL,`Channel` int(11) DEFAULT NULL,
-    Note that id, timestamp and front and end part of the statement will be add by the database init function
+
+    *`Retries` int(11) DEFAULT NULL,`RSSI` double DEFAULT NULL,`Channel` int(11) DEFAULT NULL, [...]*
+
+    Note that id, timestamp, front and end part of the statement will be added by the database init function.
 
     :rtype: str
     :return: SQL create statement for known parameters
@@ -330,12 +332,14 @@ def generate_parameter_create_statement():
 
 def generate_parameter_insert_statement(client_data):
     """
-    This function will create the insert statement based on the represented parameters in client_data.
+    This function will create the insert statement based on the represented parameters in *client_data*.
     The statement will have the following form:
-    INSERT INTO TableName (`Retries`, `Channel` ) VALUES (%(retries)s, %(channel)s );
-    The front part (up to the TableName) and the final semicolon will be add by the database init function
 
-    :param: client_data: dict of requested client data
+    *INSERT INTO TableName (`Retries`, `Channel` ) VALUES (%(retries)s, %(channel)s );*
+
+    The front part (up to *TableName*) and the final semicolon will be added by the database init function.
+
+    :param client_data: dict of requested client data
     :rtype: str
     :return: SQL insert statement for known parameters
 
@@ -375,7 +379,7 @@ def generate_db_conf_from_context (ctx):
     This function will create the config dict for the database
     from the context object
 
-    :param: ctx: current Context object
+    :param: ctx: current context
     :rtype: dict
     :return: database config as dict based on the current context
 

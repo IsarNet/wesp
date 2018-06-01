@@ -1,12 +1,12 @@
 """
-This module contains everything which can be changed by a user. It holds the OIDs for the Parameters,
-as well as their name and database type. For more information see :class:`.Parameter`
+This module contains everything which can be changed by a user. It holds the OIDs for the parameters,
+as well as their names and database types. For more information see :class:`.Parameter`.
 
 In addition the class :class:`GlobalSettings` defines basic options like the help flags, the usage text
-or the welcome string
+or the welcome string.
 \n\n
-NOTE: Changes to name or db_data_type will only be reflected in the database, if the table is dropped
-and recreated by this program
+NOTE: Changes to the *name* or *db_data_type* will only be reflected in the database if the table is dropped
+and recreated by this program.
 """
 
 
@@ -15,34 +15,39 @@ and recreated by this program
 
 class Parameter:
     """
-    Represents a basic Parameter with fundamental information about it.
-    More information on the fields can be found below
+    Represents a basic parameter with fundamental information about it.
+    More information on the fields can be found below:
     """
 
     name = ""
     """
-    human readable name, which will be used for the CLI output and the row name in the DB
+    human readable name that will be used for the CLI output and the column name in the database.
     """
 
     oid = ""
     """
-    OID at which parameter can be found, in case this parameter needs the mac address to work
-    don't enter it here. The mac address will be added in the parser, based on which callback
-    is used for this parameter
+    OID at which the parameter can be found, in case this parameter needs the MAC address to work
+    don't enter it here. The MAC address will be added in the parser, based on which callback
+    is used for this parameter.
     """
 
     db_data_type = ""
     """
-    DB Data Type which should be used for this parameter.
-    For string use varchar(255) with the length of the string in the brackets
-    For real numbers use int(11) with a fixed maximum of 2147483647. Length in brackets is only for display 
-    and will not effect this program
-    For real non negative numbers use int(11) unsigned ot have a maximum of 4294967295
-    For rational numbers use double, no length needed. Be aware of the rounding problems in comparision
-    e.g. https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues
-    Keep in mind, that the wrong length can result in partial loss of the data
+    Database data type which should be used for this parameter.
+    
+    For strings use *varchar(255)* with the length of the string in the brackets.
+    
+    For real numbers use *int(11)* with a fixed maximum of 2147483647. Length in brackets is only for display 
+    and will not effect this program but are expected by SQL.
+    
+    For real non negative numbers use *int(11) unsigned* which has a maximum of 4294967295.
+    
+    For rational numbers use *double*, no length needed. Be aware of the rounding problems in comparision
+    e.g. https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues.
+    
+    Keep in mind, that the wrong length can result in partial loss of the data.
     \n
-    NOTE: Changes here will only be reflected in the database, if the table is dropped and recreated by this program
+    NOTE: Changes here will only be reflected in the database, if the table is dropped and recreated by this program.
     """
 
     def __init__(self, name, oid, db_data_type):
@@ -54,10 +59,12 @@ class Parameter:
 
 class AllParameter:
     """
-    Class that contains all Parameters, which can be requested by the user or
-    are necessary for the program
+    Class that contains all parameters which can be requested by the user or
+    are necessary for the program.
     Ensure that the name of the attribute (e.g. channel) is the same as the name
-    of the click option specified in the cli_parser. Note Lower and Uppercase
+    of the Click option specified in the cli_parser. Note Lower and Uppercase.
+
+    Do not change the internal fields.
     """
 
     def __init__(self):
@@ -131,10 +138,10 @@ class AllParameter:
     @staticmethod
     def get_all_parameter():
         """
-        Returns all parameters listed in this class
+        Returns all parameters specified in this class
 
         :rtype: list
-        :return: a list of all parameters, which are defined in this class
+        :return: a list of all parameters which are defined in this class
 
         """
         list_of_all_parameter = []
@@ -151,10 +158,10 @@ class AllParameter:
     @staticmethod
     def get_parameter_by_oid(oid):
         """
-        Returns the parameter with the given oid or nothing if no existing
+        Returns the parameter with the given OID or None if the respective parameter does not exist.
 
         :rtype: Parameter or None
-        :return: parameter with the given oid or None if no existing
+        :return: parameter with the given OID or None.
         """
 
         # loop through all fields of class AllParameter
@@ -175,7 +182,7 @@ class AllParameter:
 class GlobalSettings:
     """
     This class holds global settings, which are not viable for the program flow.
-    For Example one is able to change the Welcome text or the Usage String.
+    For example one is able to change the welcome text or the usage string.
     """
     def __init__(self):
         """
@@ -185,31 +192,31 @@ class GlobalSettings:
 
     HELP_PARAMETERS = ['-h', '--help']
     """
-    Name of help flags, will be set in the :meth:`wesp.click_overloaded.CustomGroup.parse_args` 
+    Identifier of help flags, will be set in the function :meth:`wesp.click_overloaded.CustomGroup.parse_args` 
     or :meth:`wesp.click_overloaded.CommandAllowConfigFile.parse_args`
     """
 
     WELCOME_STRING = "Welcome to the wesp tool - Wireless Endpoint Statistics Program \n" \
                      "For help run wesp -h"
     """
-    String which greets the user, if no parameters are given.
-    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.parse_args` 
+    String which greets the user if no parameters are given.
+    Will be set in the function :meth:`wesp.click_overloaded.CustomGroup.parse_args` 
     """
 
     PROGRAM_NAME = "wesp"
     """
-    Name of the program, which appears as part of the Usage String.
-    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.format_usage` 
+    Name of the program which appears as part of the usage string.
+    Will be set in the function :meth:`wesp.click_overloaded.CustomGroup.format_usage` 
     """
 
     USAGE = "-W wlc_ip|wlc_fqdn -C client_ip|client_mac  [SNMP OPTIONS] [OTHER OPTIONS] " \
             "load_config [Options] print_to_db [Options]"
     """
-    Usage String to help user understand the structure of the program. This string also
-    appears at every error message. 
+    Usage string to show the structure of this program. This string also
+    appears at every error message. The program name is set separably.
     
-    Additional help on the usage is defined in the help text of the :class:`wesp.click_overloaded.CustomGroup` 
+    Additional help on the usage is defined in the help text of the class :class:`wesp.click_overloaded.CustomGroup`. 
     
-    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.format_usage` 
+    Will be set in the :meth:`wesp.click_overloaded.CustomGroup.format_usage`.
     
     """

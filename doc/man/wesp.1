@@ -1,0 +1,1245 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "WESP" "1" "May 31, 2018" "" "wesp"
+.SH NAME
+wesp \- wesp Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.SH WESP PACKAGE
+.SS Submodules
+.SS wesp.cli_parser module
+.sp
+This module\(aqs main task is the parsing of the CLI parameters. This is done using the extension
+click (\fI\%http://click.pocoo.org/5/\fP). Click separates three different parameters: commands, options and arguments.
+.sp
+This module is made up of one Group (\fI\%cli_parser()\fP), which has two sub commands: \fI\%load_config()\fP
+and \fI\%print_to_db()\fP
+.sp
+\fI\%cli_parser()\fP contains all options to set up the main program (e.g. Client address and SNMP options),
+as well as optional parameters to turn on or off (e.g. RSSI, SNR, Ping).
+.sp
+The command \fI\%load_config()\fP triggers the loading of a config file for easier use. It has only one option
+to load a different file than the default one. Note the priority of input:
+.INDENT 0.0
+.IP 1. 3
+CLI
+.IP 2. 3
+Configfile
+.IP 3. 3
+Default values
+.UNINDENT
+.sp
+This means that although you defined an option in the configfile you can overwrite it by setting a flag on the CLI.
+.sp
+The command \fI\%print_to_db()\fP triggers the output to the database. Through its options one is able to set
+the basic connection settings as well as database and table names. For detailed usage run \fIprint_to_db \-h\fP\&.
+Database and table are created, if they don\(aqt exist. The create statement is built automatically based on the
+parameters defined in the module \fBwesp.definitions\fP\&.
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.add_value_to_context(ctx, param, value)
+This function will just add the given value in the context object under the param\(aqs name
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- 
+.IP \(bu 2
+\fBparam\fP \-\- 
+.IP \(bu 2
+\fBvalue\fP \-\- 
+.UNINDENT
+.TP
+.B Returns
+Nothing, value will be stored in context object
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.check_client_address(ctx, param, value)
+This function will validate the given Client Address and add it to the Context
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- 
+.IP \(bu 2
+\fBparam\fP \-\- 
+.IP \(bu 2
+\fBvalue\fP \-\- 
+.UNINDENT
+.TP
+.B Returns
+Nothing, value will be stored in context object
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.check_wlc_address(ctx, param, value)
+This function will check if the WLC Address is a valid IP or FQDN
+If so it will set to the context, otherwise it will raise an error
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- 
+.IP \(bu 2
+\fBparam\fP \-\- 
+.IP \(bu 2
+\fBvalue\fP \-\- 
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.get_ap_name(ctx, param, flag_set)
+This function requests the Name of the associated AP of the Client.
+Therefore it will first request the MAC address of the AP from the cldcClientTable
+and then using the address to find its name in the clDLApBootTable
+:param ctx: Context of ...
+:param param:
+:param flag_set: True if flag is set, otherwise false
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.get_ping(ctx, param, flag_set)
+This function will ping the client from the device, which runs this script.
+:param ctx:
+:param param:
+:param flag_set:
+:return: Nothing, value will be stored in context object
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.get_snmp_value(ctx, param, flag_set)
+This function will request and save an attribute based on the corresponding OID and Mac Address
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- 
+.IP \(bu 2
+\fBparam\fP \-\- 
+.IP \(bu 2
+\fBflag_set\fP \-\- 
+.UNINDENT
+.TP
+.B Returns
+Nothing, value will be stored in context object
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.get_snmp_value_with_mac(ctx, param, flag_set)
+This function will request and save an attribute based on the corresponding OID and Mac Address
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- 
+.IP \(bu 2
+\fBparam\fP \-\- 
+.IP \(bu 2
+\fBflag_set\fP \-\- 
+.UNINDENT
+.TP
+.B Returns
+Nothing, value will be stored in context object
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.order = [(\(aqchannel\(aq, None), (\(aqretries\(aq, None), (\(aqsnr_off\(aq, None), (\(aqap_name\(aq, None), (\(aqrssi_off\(aq, None)]
+This dict will hold the requested information about the client
+If you want the entries to be sorted, like they are inputted or worked on
+(Default values will be last) then just remove the order argument from this statement:
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.process_result(result, **kwargs)
+This function will run after all parameters have been parsed.
+It will make the CLI Output and depending on the settings the
+Insert to the DB.
+It also repeats the process until the user kills the program or
+an end end condition is met
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBresult\fP \-\- 
+.IP \(bu 2
+\fBkwargs\fP \-\- 
+.UNINDENT
+.TP
+.B Returns
+Nothing
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.update_client_data(ctx)
+This function will update the values by re\-retrieving the values from the WLC
+.INDENT 7.0
+.TP
+.B Parameters
+\fBctx\fP \-\- current Context
+.TP
+.B Returns
+Nothing, results are saved in Context
+.UNINDENT
+.UNINDENT
+.sp
+# functions with decorates have to be added manuelly:
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, silent)
+This function represents the command print_to_db, it takes the options and uses them
+to create a connection to the database. It also generates the Statements for the creation of
+the table and for the insertion of data into this table.
+.sp
+Note that the click options have to be inside the arguments of this command, since they are expected by
+click. The actual handling of them is done in the corresponding callback.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- current Context
+.IP \(bu 2
+\fBdb_name\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBdb_table\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBdb_address\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBdb_port\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBdb_user\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBdb_pass\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBsilent\fP \-\- click option (is not be used)
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.cli_parser(ctx, wlc_address, client_address, snmp_version, snmp_community, snmp_user, snmp_password, snmp_encryption, interval, iterations, channel, retries, ap_name, rx_packages, tx_packages, ping, rssi_off, snr_off, data_rate_off)
+This function represents the main command and contains all options ranging from WLC/client information,
+SNMP options to all options, which enable or disable the output of certain parameter. A list of the
+associated options can be found below. Since this is a click group all other commands (e.g. for
+config file and db) are sub commands of this command. The name of this group is \fIcli_parser\fP\&.
+.sp
+Note, that this group command does not contain any logic, handling of the options is done in the
+specified callback. Click expects the click options to be inside the arguments of this command, although
+they are not used.
+.sp
+Fore more information about click options and it\(aqs attributes see: \fI\%http://click.pocoo.org/5/options/\fP,
+\fI\%http://click.pocoo.org/5/parameters/#differences\fP and \fI\%http://click.pocoo.org/5/commands/\fP
+.sp
+The following callbacks are implemented and may be used for future options:
+.sp
+\fI\%add_value_to_context()\fP: sets the value of the option to the context, without any modification. The name of the
+option is used as key.
+.sp
+\fI\%get_snmp_value()\fP: will search in \fBwesp.definitions.AllParameter\fP for a matching OID and requests the
+data via GET from the WLC. The result is added to the context, under the name of the option.
+.sp
+\fI\%get_snmp_value_with_mac()\fP: will do the same as the latter function but will include the mac address of the
+client to get client specific data.
+.sp
+\fI\%check_wlc_address()\fP: will check if the given address is a valid IP address or a resolvable hostname. If so it
+will add it to the context under the name of the option.
+.sp
+\fI\%check_client_address()\fP: will check if the given address is a valid IP or MAC address. If so it will add
+it to the context under the name of the option.
+.sp
+\fI\%get_ap_name()\fP: will retrieve the name of the AP of a client. For details see the function itself. The name of
+the option is used as key.
+.sp
+\fI\%get_ping()\fP: will try to ping the client. For details see the function itself. The name of the option
+is used as key.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- current Context
+.IP \(bu 2
+\fBwlc_address\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBclient_address\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBsnmp_version\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBsnmp_community\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBsnmp_user\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBsnmp_password\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBsnmp_encryption\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBinterval\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBiterations\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBchannel\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBretries\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBap_name\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBrx_packets\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBtx_packets\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBping\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBrssi_off\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBsnr_off\fP \-\- click option (is not be used)
+.IP \(bu 2
+\fBdata_rate_off\fP \-\- click option (is not be used)
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.cli_parser.load_config(ctx, file_path)
+Will set the path to the config inside the class \fBConfigFileProcessor\fP\&. The actual loading is done
+in the function \fBread_config_file_flag()\fP in module \fBwesp.click_overloaded\fP over.
+.sp
+Note that the click options have to be inside the arguments of this command, since they are expected by
+click.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- current Context
+.IP \(bu 2
+\fBfile_path\fP \-\- click option (is not be used)
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS wesp.click_overloaded module
+.sp
+This module contains overloads of click classes to allow custom reactions.
+The class \fI\%CustomGroup\fP overloads the class \fBclick.core.Group\fP to allow custom parsing and
+rearranging of the options.
+.sp
+The class \fI\%OnlyRequiredIf\fP overloads the class \fBclick.core.Option\fP to allow an option to be
+required if a certain snmp version has been set.
+.sp
+The class \fI\%CommandAllowConfigFile\fP overloads the class \fBclick.core.Command\fP to allow a
+command to access the configfile.
+.INDENT 0.0
+.TP
+.B class wesp.click_overloaded.CommandAllowConfigFile(name, context_settings=None, callback=None, params=None, help=None, epilog=None, short_help=None, options_metavar=\(aq[OPTIONS]\(aq, add_help_option=True)
+Bases: \fBclick.core.Command\fP
+.sp
+Overloads the \fBCommand\fP class to allow a command
+to read the config file
+.INDENT 7.0
+.TP
+.B format_usage(ctx, formatter)
+Overloads the \fI\%format_usage()\fP of class \fBclick.core.Command\fP\&.
+This allows a custom usage string, looks like this:
+.sp
+PROGRAM_NAME [...] Command_Name [OPTIONS]
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- current Context
+.IP \(bu 2
+\fBformatter\fP \-\- Reference to class:\fIclick.formatting.HelpFormatter\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B parse_args(ctx, args)
+Overloads the function parse_args of \fBCommand\fP, which runs before the parsing of
+the parameter of the super class.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- current Context
+.IP \(bu 2
+\fBargs\fP \-\- arguments given by user
+.UNINDENT
+.TP
+.B Returns
+result of super function
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class wesp.click_overloaded.CustomGroup(name=None, commands=None, **attrs)
+Bases: \fBclick.core.Group\fP
+.sp
+This class overloads \fBGroup\fP
+It will ensure that the config file is loaded before any other parameter is evaluated and
+the required options do not suppress the help option.
+In addition the version parameter is moved to the front of the args list to enable the class
+OnlyRequiredIf to set an option (e.g. community) only to required if an version is set (e.g. 2c)
+.INDENT 7.0
+.TP
+.B format_options(ctx, formatter)
+.INDENT 7.0
+.INDENT 3.5
+Overloads the \fI\%format_options()\fP of class \fBclick.core.Group\fP\&.
+This allows to add a custom headline above the SNMP Options as well as
+the Other non SNMP Options. This makes the help text more clearly
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- current Context
+.IP \(bu 2
+\fBformatter\fP \-\- Reference to class:\fIclick.formatting.HelpFormatter\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B format_usage(ctx, formatter)
+Overloads the \fI\%format_usage()\fP of class \fBclick.core.Group\fP\&.
+This allows a custom usage string, which is defined in the \fBGlobalSettings\fP
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- current Context
+.IP \(bu 2
+\fBformatter\fP \-\- Reference to class:\fIclick.formatting.HelpFormatter\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B parse_args(ctx, args)
+Overloads the function parse_args of \fBGroup\fP, which runs before the parsing of
+the parameter of the super class
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- current Context object
+.IP \(bu 2
+\fBargs\fP \-\- list of given parameters
+.UNINDENT
+.TP
+.B Returns
+result of super function
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class wesp.click_overloaded.OnlyRequiredIf(*args, **kwargs)
+Bases: \fBclick.core.Option\fP
+.sp
+This class overloads \fBOption\fP
+It enables the use of the only_required_if_version attribute
+This will ensure that that the option with this attribute is only
+required if the given version is presented.
+If version and option does not match (e.g. version 3 and a community string)
+an error is raised.
+.INDENT 7.0
+.TP
+.B handle_parse_result(ctx, opts, args)
+Overloads the function parse_args of click.Option, which runs after the super class has parsed the arguments
+and handles the reaction to it.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP \-\- current Context
+.IP \(bu 2
+\fBopts\fP \-\- options given by user
+.IP \(bu 2
+\fBargs\fP \-\- arguments given by user
+.UNINDENT
+.TP
+.B Returns
+result of super function
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.click_overloaded.read_config_file_flag(self, ctx, args, idx)
+This function will read and check the flag of the command
+load_config. It will inform about an missing file path or
+load the given or default config file.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBself\fP \-\- Reference to CustomGroup
+.IP \(bu 2
+\fBctx\fP \-\- Reference to current Context
+.IP \(bu 2
+\fBargs\fP \-\- list of given args
+.IP \(bu 2
+\fBidx\fP \-\- index at which the load_config command has been found
+.UNINDENT
+.TP
+.B Raise
+BadParameter if argument for \-f option is missing
+.TP
+.B Returns
+Nothing, result will be saved in default map of context
+.UNINDENT
+.UNINDENT
+.SS wesp.command_line module
+.SS wesp.configfile module
+.sp
+This module is responsible for the configfile. It loads it and matches its content with the defined
+parameters in the module \fBwesp.cli_parser\fP\&.
+The schema of the configfile it described in the class \fI\%ConfigSectionSchema\fP, while the parsing
+is triggered and performed by \fBConfigFileReader\fP and its overload \fI\%ConfigFileProcessor\fP
+.sp
+This module uses the click extension click\-configfile (\fI\%https://github.com/click\-contrib/click\-configfile\fP).
+.INDENT 0.0
+.TP
+.B class wesp.configfile.ConfigFileProcessor
+Bases: \fBclick_configfile.ConfigFileReader\fP
+.sp
+This class overloads the class \fBConfigFileReader\fP from click\-configfile.
+It allows to set the schemas of the sections.
+It also holds the path to the configfile (config_files) but this field is set
+by the command \fBload_config()\fP in \fBwesp.cli_parser\fP\&. This is triggered by \fBCustomGroup\fP\&.
+.INDENT 7.0
+.TP
+.B classmethod process_config_section(config_section, storage)
+This function overrides the process_config_section function
+of the \fBConfigFileReader\fP\&.
+It inverts all boolean values of the section DEFAULT_OFF to make all
+parameters in this section to Off switches, since these describe the default behaviour.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class wesp.configfile.ConfigSectionSchema
+Bases: \fI\%object\fP
+.sp
+This class contains a description of each configfile section.
+Each section then contains the parameter which can be configured through the configfile.
+.sp
+To add a new section just create a new class and a \fI@matches_section\fP decorator to it.
+Ensure that the Name of the section is written in capital letters and does not contains any brackets.
+In the created class add the exact name of the parameter as defined in the \fBwesp.cli_parser\fP and set it to a Param.
+More information about the Param Types can be found here: \fI\%http://click.pocoo.org/5/parameters/#parameter\-types\fP
+The last step is to add the Schema to the parsing list in the class ConfigFileProcessor below.
+.INDENT 7.0
+.TP
+.B class Database
+Bases: \fBclick_configfile.SectionSchema\fP
+.UNINDENT
+.INDENT 7.0
+.TP
+.B class Default
+Bases: \fBclick_configfile.SectionSchema\fP
+.UNINDENT
+.INDENT 7.0
+.TP
+.B class General
+Bases: \fBclick_configfile.SectionSchema\fP
+.UNINDENT
+.INDENT 7.0
+.TP
+.B class Options
+Bases: \fBclick_configfile.SectionSchema\fP
+.UNINDENT
+.INDENT 7.0
+.TP
+.B class SNMP
+Bases: \fBclick_configfile.SectionSchema\fP
+.UNINDENT
+.UNINDENT
+.SS wesp.database module
+.INDENT 0.0
+.TP
+.B class wesp.database.Database
+Contains all functions related to the database. To ensure that only one DB connection is used, everything
+in this class ist static.
+.sp
+The different raw statements are completed in the
+\fI\%init_database()\fP using the data inside of \fBwesp.definitions.AllParameter\fP\&.
+.sp
+The function \fI\%create_database_and_table_if_not_existing()\fP will check if the database and the table exist,
+otherwise it will create it using the databaseCreateStatement.
+.sp
+Data can be inserted using the function \fI\%insert_data_set()\fP\&. This function expects the data to be in the
+format of CLIENT_DATA inside the \fBcli_parser\fP module.
+.INDENT 7.0
+.TP
+.B static create_database_and_table_if_not_existing()
+Will check the existence of the database and the table with the names specified in the \fI\%init_database()\fP
+function. If they do not exist they will be created.
+Therefore a connection to the DB Information_Schema is performed.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBconfig\fP – config for database connection, can be generated by \fBwesp.helper.generate_db_conf_from_context()\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B databaseCreateStatement = \(aqCREATE DATABASE IF NOT EXISTS %%DATABASE%%;\(aq
+This statement will be used to create the database. It will only trigger if the database does 
+not exists. Note the name of the database will be inserted in the \fI\%init_database()\fP function
+.UNINDENT
+.INDENT 7.0
+.TP
+.B static init_database(config, parameter_create, parameter_insert)
+Will initialize the database and complete the SQL Statements with the given names and sub\-statements
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBctx\fP – current Context
+.IP \(bu 2
+\fBconfig\fP – config for database connection, can be generated by \fBwesp.helper.generate_db_conf_from_context()\fP
+.IP \(bu 2
+\fBparameter_create\fP – parameter part of create statement, can be generated by \fBwesp.helper.generate_parameter_create_statement()\fP
+.IP \(bu 2
+\fBparameter_insert\fP – parameter part of insert statement, can be generated by \fBwesp.helper.generate_parameter_insert_statement()\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B insertStatement = \(aqINSERT INTO %%TABLE%% %%PARAMETER%%;\(aq
+This statement is used to insert data, the name and list of parameters as well its value names are
+inserted in the function \fI\%init_database()\fP\&. The generation of that data is done in 
+\fBwesp.helper.generate_parameter_insert_statement()\fP function but has to be ran by the caller of 
+the \fI\%init_database()\fP function
+.UNINDENT
+.INDENT 7.0
+.TP
+.B static insert_data_set(ctx, time)
+Will inserted the given data into the database based on the config
+and statement form the \fI\%init_database()\fP function
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdata_set\fP – data_set to be inserted, must contain the same fields name as defined in the \fIinsertStatement\fP
+.IP \(bu 2
+\fBctx\fP – current Context
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B static is_ready()
+Will check, if this class is ready, which means that the config has been set and the raw
+statements have been initialized.
+.INDENT 7.0
+.TP
+.B Returns
+True if database has been initialized, otherwise False
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B tableCreateStatement = \(aqCREATE TABLE IF NOT EXISTS %%DATABASE%%.%%TABLE%% (\en    \(gaid\(ga int(11) unsigned NOT NULL AUTO_INCREMENT,\en      \(gaTimestamp\(ga timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\en      %%PARAMETER%%\en      PRIMARY KEY (\(gaid\(ga),\en      KEY \(gaipIndex\(ga (\(ga%%IP_INDEX%%\(ga),\en      KEY \(gamacIndex\(ga (\(ga%%MAC_INDEX%%\(ga)\en    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;\(aq
+This statement creates the table. It will only trigger if the database does 
+not exists. Note the name of the database and table, as well as all other fields (based on 
+registered Parameter in \fBwesp.definitions.AllParameter\fP) will be inserted in the \fI\%init_database()\fP 
+function. The generation of that data is done in 
+\fBwesp.helper.generate_parameter_create_statement()\fP function but has to be ran by the caller of 
+the \fI\%init_database()\fP function
+.UNINDENT
+.UNINDENT
+.SS wesp.definitions module
+.sp
+This module contains everything which can be changed by a user. It holds the OIDs for the Parameters,
+as well as their name and database type. For more information see \fI\%Parameter\fP
+.sp
+In addition the class \fI\%GlobalSettings\fP defines basic options like the help flags, the usage text
+or the welcome string
+.sp
+NOTE: Changes to name or db_data_type will only be reflected in the database, if the table is dropped
+and recreated by this program
+.INDENT 0.0
+.TP
+.B class wesp.definitions.AllParameter
+Class that contains all Parameters, which can be requested by the user or
+are necessary for the program
+Ensure that the name of the attribute (e.g. channel) is the same as the name
+of the click option specified in the cli_parser. Note Lower and Uppercase
+.INDENT 7.0
+.TP
+.B static get_all_parameter()
+Returns all parameters listed in this class
+.INDENT 7.0
+.TP
+.B Return type
+\fI\%list\fP
+.TP
+.B Returns
+a list of all parameters, which are defined in this class
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B static get_parameter_by_oid()
+Returns the parameter with the given oid or nothing if no existing
+.INDENT 7.0
+.TP
+.B Return type
+Parameter or None
+.TP
+.B Returns
+parameter with the given oid or None if no existing
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class wesp.definitions.GlobalSettings
+This class holds global settings, which are not viable for the program flow.
+For Example one is able to change the Welcome text or the Usage String.
+.INDENT 7.0
+.TP
+.B HELP_PARAMETERS = [\(aq\-h\(aq, \(aq\-\-help\(aq]
+Name of help flags, will be set in the \fBwesp.click_overloaded.CustomGroup.parse_args()\fP 
+or \fBwesp.click_overloaded.CommandAllowConfigFile.parse_args()\fP
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PROGRAM_NAME = \(aqwesp\(aq
+Name of the program, which appears as part of the Usage String.
+Will be set in the \fBwesp.click_overloaded.CustomGroup.format_usage()\fP
+.UNINDENT
+.INDENT 7.0
+.TP
+.B USAGE = \(aq\-W wlc_ip|wlc_fqdn \-C client_ip|client_mac  [SNMP OPTIONS] [OTHER OPTIONS] load_config [Options] print_to_db [Options]\(aq
+Usage String to help user understand the structure of the program. This string also
+appears at every error message.
+.sp
+Additional help on the usage is defined in the help text of the \fBwesp.click_overloaded.CustomGroup\fP
+.sp
+Will be set in the \fBwesp.click_overloaded.CustomGroup.format_usage()\fP
+.UNINDENT
+.INDENT 7.0
+.TP
+.B WELCOME_STRING = \(aqWelcome to the wesp tool \- Wireless Endpoint Statistics Program \enFor help run wesp \-h\(aq
+String which greets the user, if no parameters are given.
+Will be set in the \fBwesp.click_overloaded.CustomGroup.parse_args()\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class wesp.definitions.Parameter(name, oid, db_data_type)
+Represents a basic Parameter with fundamental information about it.
+More information on the fields can be found below
+.INDENT 7.0
+.TP
+.B db_data_type = \(aq\(aq
+DB Data Type which should be used for this parameter.
+For string use varchar(255) with the length of the string in the brackets
+For real numbers use int(11) with a fixed maximum of 2147483647. Length in brackets is only for display 
+and will not effect this program
+For real non negative numbers use int(11) unsigned ot have a maximum of 4294967295
+For rational numbers use double, no length needed. Be aware of the rounding problems in comparision
+e.g. \fI\%https://stackoverflow.com/questions/2567434/mysql\-floating\-point\-comparison\-issues\fP
+Keep in mind, that the wrong length can result in partial loss of the data
+.sp
+NOTE: Changes here will only be reflected in the database, if the table is dropped and recreated by this program
+.UNINDENT
+.INDENT 7.0
+.TP
+.B name = \(aq\(aq
+human readable name, which will be used for the CLI output and the row name in the DB
+.UNINDENT
+.INDENT 7.0
+.TP
+.B oid = \(aq\(aq
+OID at which parameter can be found, in case this parameter needs the mac address to work
+don’t enter it here. The mac address will be added in the parser, based on which callback
+is used for this parameter
+.UNINDENT
+.UNINDENT
+.SS wesp.helper module
+.sp
+This module contains helper function for this program.
+For further details look at the description of the corresponding functions.
+.INDENT 0.0
+.TP
+.B wesp.helper.check_ip_address(address)
+This functions ensure that the given address is a valid IP Address.
+It will also complete addresses, e.g. 192.168.1 will become 192.168.1.0
+.INDENT 7.0
+.TP
+.B Parameters
+\fBaddress\fP – IP address to compare
+.TP
+.B Return type
+\fI\%bool\fP
+.TP
+.B Returns
+True if IP is correct, False if not
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.check_mac_address(address)
+This function will check if the given address is a valid hex mac address (e.g. aa:bb:cc:dd:ee:ff)
+.INDENT 7.0
+.TP
+.B Parameters
+\fBaddress\fP – mac address to check
+.TP
+.B Return type
+\fI\%bool\fP
+.TP
+.B Returns
+True if address is a correct, False if not.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.compare_ips(ip_a, ip_b)
+This function will compare if two IPs are the same or not
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBip_a\fP – IP Address A to compare
+.IP \(bu 2
+\fBip_b\fP – IP Address B to compare
+.UNINDENT
+.TP
+.B Return type
+\fI\%bool\fP
+.TP
+.B Returns
+True if IPs are the same, false if not
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.decompress_nested_dict(nested_dict)
+This function will decompress all sub dict in the given nested dict
+and return only single non nested dict
+.INDENT 7.0
+.TP
+.B Param
+nested_dict:
+.TP
+.B Return type
+\fI\%dict\fP
+.TP
+.B Returns
+non nested dict based on the given nested dict
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.extract_mac_from_oid(oid)
+This function will extract the Mac Address from the given OID and return it in Hex Format
+.INDENT 7.0
+.TP
+.B Param
+oid: OID which contains the decimal mac address
+.TP
+.B Return type
+\fI\%str\fP
+.TP
+.B Returns
+Hex mac address of device which was represented in given OID
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.generate_cli_output(client_data, ctx, time)
+will generate the CLI output based on the given client_data. It also includes the current time
+and the mac address of the client. It always has the following form:
+.sp
+YYYY\-mm\-dd HH:MM:SS [aa:bb:cc:dd:ee:ff] [[No] Reply from 192.168.123.123 (XX ms)] {other parameter}
+.INDENT 7.0
+.TP
+.B Param
+client_data: dict of requested client data
+.TP
+.B Param
+ctx:
+.TP
+.B Return type
+\fI\%str\fP
+.TP
+.B Returns
+string representation of all requested data
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.generate_db_conf_from_context(ctx)
+This function will create the config dict for the database
+from the context object
+.INDENT 7.0
+.TP
+.B Param
+ctx: current Context object
+.TP
+.B Return type
+\fI\%dict\fP
+.TP
+.B Returns
+database config as dict based on the current context
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.generate_parameter_create_statement()
+This function will create the table create statement based on the represented parameters in AllParameter.
+The statement will have the following form:
+\fIRetries\fP int(11) DEFAULT NULL,\(gaRSSI\(ga double DEFAULT NULL,\(gaChannel\(ga int(11) DEFAULT NULL,
+Note that id, timestamp and front and end part of the statement will be add by the database init function
+.INDENT 7.0
+.TP
+.B Return type
+\fI\%str\fP
+.TP
+.B Returns
+SQL create statement for known parameters
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.generate_parameter_insert_statement(client_data)
+This function will create the insert statement based on the represented parameters in client_data.
+The statement will have the following form:
+INSERT INTO TableName (\fIRetries\fP, \fIChannel\fP ) VALUES (%(retries)s, %(channel)s );
+The front part (up to the TableName) and the final semicolon will be add by the database init function
+.INDENT 7.0
+.TP
+.B Param
+client_data: dict of requested client data
+.TP
+.B Return type
+\fI\%str\fP
+.TP
+.B Returns
+SQL insert statement for known parameters
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.get_option_with_name(self, ctx, name)
+will search all click options and return the option with the given name
+or none if non was found
+.INDENT 7.0
+.TP
+.B Param
+self: reference to Click Group or Command
+.TP
+.B Param
+ctx: current context object
+.TP
+.B Param
+name: name of the option
+.TP
+.B Return type
+click.Option
+.TP
+.B Returns
+option with the name or None if no match exists
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.mac_dec_to_hex(mac_address)
+This function will convert decimal mac address into a hex mac address
+.INDENT 7.0
+.TP
+.B Param
+mac_address: Mac address in decimal format (e.g. 170.187.204.221.238.255)
+.TP
+.B Return type
+\fI\%str\fP
+.TP
+.B Returns
+Mac address in hex format
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.mac_hex_to_dec(mac_address, separator)
+This function will convert hex mac address into a decimal mac address
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBmac_address\fP – Mac address in hex format (e.g. aa:bb:cc:dd:ee:ff)
+.IP \(bu 2
+\fBseparator\fP – the character which is used for the split
+.UNINDENT
+.TP
+.B Return type
+\fI\%str\fP
+.TP
+.B Returns
+Mac address in decimal format
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.ping_to_str(client_data, ctx)
+This function checks if a ping has been made and will create a string
+based on the result.
+It will look like this “Reply from 192.0.2.1 (12 ms)” or “No Reply from 192.0.2.1”
+.INDENT 7.0
+.TP
+.B Return type
+\fI\%str\fP
+.TP
+.B Param
+client_data: dict of requested client data
+.TP
+.B Returns
+string representation of the ping result
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.print_session_info(session)
+Will print the info’s of the current snmp session to Std out
+.INDENT 7.0
+.TP
+.B Param
+session: current snmp session
+.TP
+.B Returns
+Nothing, Output will go directly to the CLI
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.replace_last_occurrence(str, old, new)
+will replace the last occurrence of old with new in the given string str
+.INDENT 7.0
+.TP
+.B Param
+str: string to work on
+.TP
+.B Param
+old: character to replace
+.TP
+.B Param
+new: character to replace with
+.TP
+.B Return type
+\fI\%str\fP
+.TP
+.B Returns
+the given string with the last occurrence of old replaced by new
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wesp.helper.validate_snmp_type(response, oid)
+This function will validate that the response from the WLC is valid.
+If not it will raise an exception.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBresponse\fP – snmp variable
+.TP
+.B Raises
+EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError
+.TP
+.B Returns
+True, if everything is fine
+.UNINDENT
+.UNINDENT
+.SS wesp.snmp module
+.sp
+This module contains everything related to the SNMP protocol. Every communication with the WLC will run through
+the \fI\%Snmp\fP class. For more information see \fI\%Snmp\fP
+.INDENT 0.0
+.TP
+.B class wesp.snmp.Snmp(ctx)
+This class handles all interactions via SNMP with the WLC. It provided the basics function to get,
+walk or trap with SNMP.
+The SNMP session will be initialized in the init function.
+All functions have been made static to allow easy use without a reference to specific session.
+.INDENT 7.0
+.TP
+.B static get()
+will get the information stored at the given OID
+.INDENT 7.0
+.TP
+.B Parameters
+\fBoid\fP \-\- OID to get from
+.TP
+.B Return type
+SNMPVariable
+.TP
+.B Raises
+click.UsageError
+.TP
+.B Returns
+an SNMPVariable object containing the value that was retrieved
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B static get_by_mac_address(mac_address, separator=\(aq:\(aq)
+will return in the information which is stored at the given OID and
+is specific by the given Mac Address.
+It will append the Mac Address in decimal format to the given OID and
+get this.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBoid\fP \-\- Base OID to get for
+.IP \(bu 2
+\fBmac_address\fP \-\- Mac Address of client
+.IP \(bu 2
+\fBseparator\fP \-\- optional separator to split the mac address. Default \(aq:\(aq
+.UNINDENT
+.TP
+.B Returns
+value stored at this OID. Type depends on value.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B static get_mac_from_ip()
+Will search for the associated Mac address to the given IP
+.INDENT 7.0
+.TP
+.B Parameters
+\fBip\fP \-\- IP address to get Mac address for
+.TP
+.B Return type
+\fI\%str\fP or None
+.TP
+.B Returns
+Mac address of client or None if no match was found
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B static get_session()
+.INDENT 7.0
+.TP
+.B Returns
+reference to current snmp session
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B static is_ready()
+.INDENT 7.0
+.TP
+.B Return type
+\fI\%bool\fP
+.TP
+.B Returns
+True if session is ready, False if not
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B static print_walk()
+.INDENT 7.0
+.TP
+.B Parameters
+\fBoid\fP \-\- OID to walk
+.TP
+.B Returns
+Nothing, result will be outputted directly to the CLI
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B static walk()
+will walk the given OID
+.INDENT 7.0
+.TP
+.B Parameters
+\fBoid\fP \-\- OID to walk
+.TP
+.B Return type
+list of SNMPVariable or None
+.TP
+.B Raises
+SNMP Timeout Error
+.TP
+.B Returns
+a list of SNMPVariable objects containing the values that were retrieved via SNMP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Module contents
+.INDENT 0.0
+.IP \(bu 2
+genindex
+.IP \(bu 2
+modindex
+.IP \(bu 2
+search
+.UNINDENT
+.SH AUTHOR
+Marcel Rummens and Maximilian Tichter
+.SH COPYRIGHT
+2018, Marcel Rummens and Maximilian Tichter
+.\" Generated by docutils manpage writer.
+.

@@ -145,24 +145,24 @@
   <h1>Source code for wesp.cli_parser</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module&#39;s main task is the parsing of the CLI parameters. This is done using the extension</span>
-<span class="sd">click (http://click.pocoo.org/5/). Click separates three different parameters: commands, options and arguments.</span>
+<span class="sd">Click (http://click.pocoo.org/5/). Click separates three different parameters: commands, options and arguments.</span>
 
-<span class="sd">This module is made up of one Group (:meth:`cli_parser`), which has two sub commands: :meth:`load_config`</span>
+<span class="sd">This module is consists of one Group (:meth:`cli_parser`), which has two sub commands: :meth:`load_config`</span>
 <span class="sd">and :meth:`print_to_db`</span>
 
-<span class="sd">:meth:`cli_parser` contains all options to set up the main program (e.g. Client address and SNMP options),</span>
-<span class="sd">as well as optional parameters to turn on or off (e.g. RSSI, SNR, Ping).</span>
+<span class="sd">:meth:`cli_parser` contains all options to set up the main program (e.g. client address and SNMP options),</span>
+<span class="sd">as well as optional parameters to turn on or off certain features (e.g. RSSI, SNR, Ping).</span>
 
 <span class="sd">The command :meth:`load_config` triggers the loading of a config file for easier use. It has only one option</span>
-<span class="sd">to load a different file than the default one. Note the priority of input:\n</span>
+<span class="sd">to load a different file than the default one. Note the priority of inputs (1 has the highest priority):\n</span>
 <span class="sd">1. CLI \n</span>
 <span class="sd">2. Configfile\n</span>
 <span class="sd">3. Default values\n</span>
-<span class="sd">This means that although you defined an option in the configfile you can overwrite it by setting a flag on the CLI.</span>
+<span class="sd">This means that an option set in the configfile can be overwritten by setting a flag on the CLI.</span>
 
 <span class="sd">The command :meth:`print_to_db` triggers the output to the database. Through its options one is able to set</span>
 <span class="sd">the basic connection settings as well as database and table names. For detailed usage run `print_to_db -h`.</span>
-<span class="sd">Database and table are created, if they don&#39;t exist. The create statement is built automatically based on the</span>
+<span class="sd">Database and table are created if they don&#39;t exist. The create statement is built automatically based on the</span>
 <span class="sd">parameters defined in the module :mod:`wesp.definitions`.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -175,16 +175,17 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">tzlocal</span>
 
-<span class="c1"># TODO Check Error Messages at wrong config file input, e.g. v2 instead of 2c</span>
 <span class="c1"># TODO populate</span>
 
-<span class="c1"># Order at which the Data is outputted, make sure to always add a None to each tuple!</span>
 <span class="n">order</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;retries&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;snr_off&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ap_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;rssi_off&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
-
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This attribute sets the order in which the data is outputted. Make sure to always add a *None* to each tuple!</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This dict will hold the requested information about the client</span>
-<span class="sd">If you want the entries to be sorted, like they are inputted or worked on</span>
+<span class="sd">This dict will hold the requested information about the client.</span>
+<span class="sd">The order at which the data is outputted can be changed by editing the order attribute in this module. </span>
+<span class="sd">If you want the entries to be sorted, in the order they are inputted or worked on</span>
 <span class="sd">(Default values will be last) then just remove the order argument from this statement:</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="n">CLIENT_DATA</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
@@ -192,12 +193,11 @@
 
 <div class="viewcode-block" id="add_value_to_context"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.add_value_to_context">[docs]</a><span class="k">def</span> <span class="nf">add_value_to_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will just add the given value in the context object under the param&#39;s name</span>
+<span class="sd">    This function will just add the given value to the context object under the param&#39;s name</span>
 
-<span class="sd">    :param ctx:</span>
-<span class="sd">    :param param:</span>
-<span class="sd">    :param value:</span>
-<span class="sd">    :return: Nothing, value will be stored in context object</span>
+<span class="sd">    :param ctx: current context object</span>
+<span class="sd">    :param param: calling parameter</span>
+<span class="sd">    :param value: value of parameter</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
@@ -206,10 +206,9 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function will request and save an attribute based on the corresponding OID and Mac Address</span>
 
-<span class="sd">    :param ctx:</span>
-<span class="sd">    :param param:</span>
-<span class="sd">    :param flag_set:</span>
-<span class="sd">    :return: Nothing, value will be stored in context object</span>
+<span class="sd">    :param ctx: current context object</span>
+<span class="sd">    :param param: calling parameter</span>
+<span class="sd">    :param flag_set: True if flag is set, false if not</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># ensure flag is set</span>
     <span class="k">if</span> <span class="n">flag_set</span><span class="p">:</span>
@@ -220,18 +219,15 @@
         <span class="c1"># load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary</span>
         <span class="n">CLIENT_DATA</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">AllParameter</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">oid</span><span class="p">)</span></div>
 
-        <span class="c1"># TODO Remove</span>
-        <span class="c1"># print(param.name)</span>
-
 
 <div class="viewcode-block" id="get_snmp_value_with_mac"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.get_snmp_value_with_mac">[docs]</a><span class="k">def</span> <span class="nf">get_snmp_value_with_mac</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">flag_set</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will request and save an attribute based on the corresponding OID and Mac Address</span>
+<span class="sd">    This function will request and save an attribute based on the corresponding OID and MAC address. The OID</span>
+<span class="sd">    is retrieved from the class :class:`wesp.definitions.AllParameter` using the name of the parameter.</span>
 
-<span class="sd">    :param ctx:</span>
-<span class="sd">    :param param:</span>
-<span class="sd">    :param flag_set:</span>
-<span class="sd">    :return: Nothing, value will be stored in context object</span>
+<span class="sd">    :param ctx: current context object</span>
+<span class="sd">    :param param: calling parameter</span>
+<span class="sd">    :param flag_set: True if flag is set, false if not</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># ensure flag is set</span>
     <span class="k">if</span> <span class="n">flag_set</span><span class="p">:</span>
@@ -242,18 +238,15 @@
         <span class="c1"># load data via get request and save it a the corresponding slot in the CLIENT_DATA dictionary</span>
         <span class="n">CLIENT_DATA</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Snmp</span><span class="o">.</span><span class="n">get_by_mac_address</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">AllParameter</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">oid</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_mac&#39;</span><span class="p">])</span></div>
 
-        <span class="c1"># TODO Remove</span>
-        <span class="c1"># print(&#39;with mac&#39;, param.name)</span>
-
 
 <div class="viewcode-block" id="check_wlc_address"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.check_wlc_address">[docs]</a><span class="k">def</span> <span class="nf">check_wlc_address</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will check if the WLC Address is a valid IP or FQDN</span>
-<span class="sd">    If so it will set to the context, otherwise it will raise an error</span>
+<span class="sd">    This function will check if the WLC address is a valid IP or resolvable FQDN address.</span>
+<span class="sd">    If so it will add it to the context, otherwise it will raise an error.</span>
 
-<span class="sd">    :param ctx:</span>
-<span class="sd">    :param param:</span>
-<span class="sd">    :param value:</span>
+<span class="sd">    :param ctx: current context object</span>
+<span class="sd">    :param param: calling parameter</span>
+<span class="sd">    :param value: value of parameter</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">check_ip_address</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
@@ -275,12 +268,11 @@
 
 <div class="viewcode-block" id="check_client_address"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.check_client_address">[docs]</a><span class="k">def</span> <span class="nf">check_client_address</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will validate the given Client Address and add it to the Context</span>
+<span class="sd">    This function will validate the given client address and add it to the context.</span>
 
-<span class="sd">    :param ctx:</span>
-<span class="sd">    :param param:</span>
-<span class="sd">    :param value:</span>
-<span class="sd">    :return: Nothing, value will be stored in context object</span>
+<span class="sd">    :param ctx: current context object</span>
+<span class="sd">    :param param: calling parameter</span>
+<span class="sd">    :param value: value of parameter</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># ensure that Client Address is either a valid IP or Mac Address</span>
     <span class="c1"># If so add it to the Context Object for further use</span>
@@ -300,12 +292,13 @@
 
 <div class="viewcode-block" id="get_ap_name"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.get_ap_name">[docs]</a><span class="k">def</span> <span class="nf">get_ap_name</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">flag_set</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function requests the Name of the associated AP of the Client.</span>
-<span class="sd">    Therefore it will first request the MAC address of the AP from the cldcClientTable</span>
-<span class="sd">    and then using the address to find its name in the clDLApBootTable</span>
-<span class="sd">    :param ctx: Context of ...</span>
-<span class="sd">    :param param:</span>
-<span class="sd">    :param flag_set: True if flag is set, otherwise false</span>
+<span class="sd">    This function requests the name of the associated AP of the client.</span>
+<span class="sd">    Therefore it will first request the MAC address of the AP from the *cldcClientTable*</span>
+<span class="sd">    and then using the address to find its name in the *clDLApBootTable*.</span>
+
+<span class="sd">    :param ctx: current context object</span>
+<span class="sd">    :param param: calling parameter</span>
+<span class="sd">    :param flag_set: True if flag is set, false if not</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># ensure flag is set</span>
     <span class="k">if</span> <span class="n">flag_set</span><span class="p">:</span>
@@ -322,11 +315,11 @@
 
 <div class="viewcode-block" id="get_ping"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.get_ping">[docs]</a><span class="k">def</span> <span class="nf">get_ping</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">flag_set</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will ping the client from the device, which runs this script.</span>
-<span class="sd">    :param ctx:</span>
-<span class="sd">    :param param:</span>
-<span class="sd">    :param flag_set:</span>
-<span class="sd">    :return: Nothing, value will be stored in context object</span>
+<span class="sd">    This function will ping the client from the device which runs this script.</span>
+
+<span class="sd">    :param ctx: current context object</span>
+<span class="sd">    :param param: calling parameter</span>
+<span class="sd">    :param flag_set: True if flag is set, false if not</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># ensure flag is set</span>
     <span class="k">if</span> <span class="n">flag_set</span><span class="p">:</span>
@@ -369,6 +362,7 @@
                   <span class="s2">&quot;to a database. All parameters can be inputted via a configfile. </span><span class="se">\n\n</span><span class="s2">&quot;</span>
                   <span class="s2">&quot;An example usage can be found above, while details on the options can be found below:&quot;</span><span class="p">)</span>
 <span class="c1">#</span>
+<span class="c1"># make sure group has access to context</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
 <span class="c1">#</span>
 <span class="c1"># Address Options</span>
@@ -379,7 +373,6 @@
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--CLI&#39;</span><span class="p">,</span> <span class="s1">&#39;-C&#39;</span><span class="p">,</span> <span class="s1">&#39;client_address&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_eager</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">check_client_address</span><span class="p">,</span>
               <span class="n">help</span><span class="o">=</span><span class="s1">&#39;IP or MAC address of Client&#39;</span><span class="p">)</span>
 <span class="c1">#</span>
-<span class="c1"># TODO is eager ensures parsing before everything else</span>
 <span class="c1"># SNMP Options</span>
 <span class="c1">#</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--version&#39;</span><span class="p">,</span> <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;snmp_version&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">add_value_to_context</span><span class="p">,</span>
@@ -462,12 +455,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    This function represents the main command and contains all options ranging from WLC/client information,</span>
-<span class="sd">    SNMP options to all options, which enable or disable the output of certain parameter. A list of the</span>
-<span class="sd">    associated options can be found below. Since this is a click group all other commands (e.g. for</span>
-<span class="sd">    config file and db) are sub commands of this command. The name of this group is *cli_parser*.</span>
+<span class="sd">    SNMP options to all options which enable or disable the output of certain parameters. A list of the</span>
+<span class="sd">    associated options can be found below. Since this is a *Click Group* all other commands (e.g. for</span>
+<span class="sd">    configfile and database) are sub commands of this command. The name of this group is *cli_parser*.</span>
 
 <span class="sd">    Note, that this group command does not contain any logic, handling of the options is done in the</span>
-<span class="sd">    specified callback. Click expects the click options to be inside the arguments of this command, although</span>
+<span class="sd">    specified callbacks. Click expects the click options to be inside the arguments of this command, although</span>
 <span class="sd">    they are not used.</span>
 
 <span class="sd">    Fore more information about click options and it&#39;s attributes see: http://click.pocoo.org/5/options/,</span>
@@ -477,20 +470,20 @@
 
 <span class="sd">    The following callbacks are implemented and may be used for future options:</span>
 
-<span class="sd">    :meth:`add_value_to_context`: sets the value of the option to the context, without any modification. The name of the</span>
+<span class="sd">    :meth:`add_value_to_context`: adds the value of the option to the context, without any modification. The name of the</span>
 <span class="sd">    option is used as key.</span>
 
 <span class="sd">    :meth:`get_snmp_value`: will search in :class:`wesp.definitions.AllParameter` for a matching OID and requests the</span>
-<span class="sd">    data via GET from the WLC. The result is added to the context, under the name of the option.</span>
+<span class="sd">    data via GET from the WLC. The result is added to the context, using the name of the option.</span>
 
-<span class="sd">    :meth:`get_snmp_value_with_mac`: will do the same as the latter function but will include the mac address of the</span>
+<span class="sd">    :meth:`get_snmp_value_with_mac`: will do the same as the latter function but will include the MAC address of the</span>
 <span class="sd">    client to get client specific data.</span>
 
 <span class="sd">    :meth:`check_wlc_address`: will check if the given address is a valid IP address or a resolvable hostname. If so it</span>
-<span class="sd">    will add it to the context under the name of the option.</span>
+<span class="sd">    will add it to the context using the name of the option.</span>
 
 <span class="sd">    :meth:`check_client_address`: will check if the given address is a valid IP or MAC address. If so it will add</span>
-<span class="sd">    it to the context under the name of the option.</span>
+<span class="sd">    it to the context using the name of the option.</span>
 
 <span class="sd">    :meth:`get_ap_name`: will retrieve the name of the AP of a client. For details see the function itself. The name of</span>
 <span class="sd">    the option is used as key.</span>
@@ -500,24 +493,24 @@
 
 
 <span class="sd">    :param ctx: current Context</span>
-<span class="sd">    :param wlc_address: click option (is not be used)</span>
-<span class="sd">    :param client_address: click option (is not be used)</span>
-<span class="sd">    :param snmp_version: click option (is not be used)</span>
-<span class="sd">    :param snmp_community: click option (is not be used)</span>
-<span class="sd">    :param snmp_user: click option (is not be used)</span>
-<span class="sd">    :param snmp_password: click option (is not be used)</span>
-<span class="sd">    :param snmp_encryption: click option (is not be used)</span>
-<span class="sd">    :param interval: click option (is not be used)</span>
-<span class="sd">    :param iterations: click option (is not be used)</span>
-<span class="sd">    :param channel: click option (is not be used)</span>
-<span class="sd">    :param retries: click option (is not be used)</span>
-<span class="sd">    :param ap_name: click option (is not be used)</span>
-<span class="sd">    :param rx_packages: click option (is not be used)</span>
-<span class="sd">    :param tx_packages: click option (is not be used)</span>
-<span class="sd">    :param ping: click option (is not be used)</span>
-<span class="sd">    :param rssi_off: click option (is not be used)</span>
-<span class="sd">    :param snr_off: click option (is not be used)</span>
-<span class="sd">    :param data_rate_off: click option (is not be used)</span>
+<span class="sd">    :param wlc_address: click option (is not being used)</span>
+<span class="sd">    :param client_address: click option (is not being used)</span>
+<span class="sd">    :param snmp_version: click option (is not being used)</span>
+<span class="sd">    :param snmp_community: click option (is not being used)</span>
+<span class="sd">    :param snmp_user: click option (is not being used)</span>
+<span class="sd">    :param snmp_password: click option (is not being used)</span>
+<span class="sd">    :param snmp_encryption: click option (is not being used)</span>
+<span class="sd">    :param interval: click option (is not being used)</span>
+<span class="sd">    :param iterations: click option (is not being used)</span>
+<span class="sd">    :param channel: click option (is not being used)</span>
+<span class="sd">    :param retries: click option (is not being used)</span>
+<span class="sd">    :param ap_name: click option (is not being used)</span>
+<span class="sd">    :param rx_packets: click option (is not being used)</span>
+<span class="sd">    :param tx_packets: click option (is not being used)</span>
+<span class="sd">    :param ping: click option (is not being used)</span>
+<span class="sd">    :param rssi_off: click option (is not being used)</span>
+<span class="sd">    :param snr_off: click option (is not being used)</span>
+<span class="sd">    :param data_rate_off: click option (is not being used)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -569,22 +562,22 @@
 <span class="k">def</span> <span class="nf">print_to_db</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">db_name</span><span class="p">,</span> <span class="n">db_table</span><span class="p">,</span> <span class="n">db_address</span><span class="p">,</span> <span class="n">db_port</span><span class="p">,</span> <span class="n">db_user</span><span class="p">,</span> <span class="n">db_pass</span><span class="p">,</span> <span class="n">silent</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="sd">    This function represents the command print_to_db, it takes the options and uses them</span>
-<span class="sd">    to create a connection to the database. It also generates the Statements for the creation of</span>
-<span class="sd">    the table and for the insertion of data into this table.</span>
+<span class="sd">    This function represents the command *print_to_db*, it takes the options and uses them</span>
+<span class="sd">    to create a connection to the database. It also generates the statements for the creation of</span>
+<span class="sd">    the table and the insertion of data into this table.</span>
 
-<span class="sd">    Note that the click options have to be inside the arguments of this command, since they are expected by</span>
+<span class="sd">    Note that the Click options have to be inside the arguments of this command, since they are expected by</span>
 <span class="sd">    click. The actual handling of them is done in the corresponding callback.</span>
 
 
 <span class="sd">    :param ctx: current Context</span>
-<span class="sd">    :param db_name: click option (is not be used)</span>
-<span class="sd">    :param db_table: click option (is not be used)</span>
-<span class="sd">    :param db_address: click option (is not be used)</span>
-<span class="sd">    :param db_port: click option (is not be used)</span>
-<span class="sd">    :param db_user: click option (is not be used)</span>
-<span class="sd">    :param db_pass: click option (is not be used)</span>
-<span class="sd">    :param silent: click option (is not be used)</span>
+<span class="sd">    :param db_name: click option (is not being used)</span>
+<span class="sd">    :param db_table: click option (is not being used)</span>
+<span class="sd">    :param db_address: click option (is not being used)</span>
+<span class="sd">    :param db_port: click option (is not being used)</span>
+<span class="sd">    :param db_user: click option (is not being used)</span>
+<span class="sd">    :param db_pass: click option (is not being used)</span>
+<span class="sd">    :param silent: click option (is not being used)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -616,14 +609,14 @@
 <span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
 <span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Will set the path to the config inside the class :class:`.ConfigFileProcessor`. The actual loading is done</span>
-<span class="sd">    in the function :meth:`read_config_file_flag` in module :mod:`wesp.click_overloaded` over.</span>
+<span class="sd">    Will set the path of the configfile inside the class :class:`.ConfigFileProcessor`. The actual loading is done</span>
+<span class="sd">    in the function :meth:`read_config_file_flag` in the module :mod:`wesp.click_overloaded`.</span>
 
-<span class="sd">    Note that the click options have to be inside the arguments of this command, since they are expected by</span>
-<span class="sd">    click.</span>
+<span class="sd">    Note that the Click options have to be inside the arguments of this command, since they are expected by</span>
+<span class="sd">    Click.</span>
 
 <span class="sd">    :param ctx: current Context</span>
-<span class="sd">    :param file_path: click option (is not be used)</span>
+<span class="sd">    :param file_path: click option (is not being used)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -635,14 +628,11 @@
 <span class="k">def</span> <span class="nf">process_result</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function will run after all parameters have been parsed.</span>
-<span class="sd">    It will make the CLI Output and depending on the settings the</span>
-<span class="sd">    Insert to the DB.</span>
+<span class="sd">    It will make the CLI output and depending on the settings the</span>
+<span class="sd">    insert to the database.</span>
 <span class="sd">    It also repeats the process until the user kills the program or</span>
-<span class="sd">    an end end condition is met</span>
+<span class="sd">    an end condition is met</span>
 
-<span class="sd">    :param result:</span>
-<span class="sd">    :param kwargs:</span>
-<span class="sd">    :return: Nothing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># get reference of context</span>
@@ -697,16 +687,15 @@
                     <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; ... Entry lost. Trying to reconnect ...&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># output error</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot; Client not available ... Retrying next time ...&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+            <span class="c1"># output other error</span>
+            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;Client not available ... Retrying next time ... (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="update_client_data"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.update_client_data">[docs]</a><span class="k">def</span> <span class="nf">update_client_data</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will update the values by re-retrieving the values from the WLC</span>
+<span class="sd">    This function will update the values by re-retrieving the values from the WLC.</span>
 
 <span class="sd">    :param ctx: current Context</span>
-<span class="sd">    :return: Nothing, results are saved in Context</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -722,7 +711,7 @@
                 <span class="c1"># run callback function for this option again</span>
                 <span class="n">option</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">return</span> <span class="n">ex</span>
 
     <span class="k">return</span> <span class="kc">False</span></div>
 

@@ -1,23 +1,23 @@
 """
 This module's main task is the parsing of the CLI parameters. This is done using the extension
-click (http://click.pocoo.org/5/). Click separates three different parameters: commands, options and arguments.
+Click (http://click.pocoo.org/5/). Click separates three different parameters: commands, options and arguments.
 
-This module is made up of one Group (:meth:`cli_parser`), which has two sub commands: :meth:`load_config`
+This module is consists of one Group (:meth:`cli_parser`), which has two sub commands: :meth:`load_config`
 and :meth:`print_to_db`
 
-:meth:`cli_parser` contains all options to set up the main program (e.g. Client address and SNMP options),
-as well as optional parameters to turn on or off (e.g. RSSI, SNR, Ping).
+:meth:`cli_parser` contains all options to set up the main program (e.g. client address and SNMP options),
+as well as optional parameters to turn on or off certain features (e.g. RSSI, SNR, Ping).
 
 The command :meth:`load_config` triggers the loading of a config file for easier use. It has only one option
-to load a different file than the default one. Note the priority of input:\n
+to load a different file than the default one. Note the priority of inputs (1 has the highest priority):\n
 1. CLI \n
 2. Configfile\n
 3. Default values\n
-This means that although you defined an option in the configfile you can overwrite it by setting a flag on the CLI.
+This means that an option set in the configfile can be overwritten by setting a flag on the CLI.
 
 The command :meth:`print_to_db` triggers the output to the database. Through its options one is able to set
 the basic connection settings as well as database and table names. For detailed usage run `print_to_db -h`.
-Database and table are created, if they don't exist. The create statement is built automatically based on the
+Database and table are created if they don't exist. The create statement is built automatically based on the
 parameters defined in the module :mod:`wesp.definitions`.
 
 """
@@ -28,19 +28,19 @@ from wesp.helper import *
 from wesp.database import Database
 from wesp.snmp import Snmp
 from datetime import datetime
-from easysnmp import EasySNMPTimeoutError
 import tzlocal
 
-# TODO Check Error Messages at wrong config file input, e.g. v2 instead of 2c
 # TODO populate
 
-# Order at which the Data is outputted, make sure to always add a None to each tuple!
 order = [('channel', None), ('retries', None), ('snr_off', None), ('ap_name', None), ('rssi_off', None)]
-
+"""
+This attribute sets the order in which the data is outputted. Make sure to always add a *None* to each tuple!
+"""
 
 """
-This dict will hold the requested information about the client
-If you want the entries to be sorted, like they are inputted or worked on
+This dict will hold the requested information about the client.
+The order at which the data is outputted can be changed by editing the order attribute in this module. 
+If you want the entries to be sorted, in the order they are inputted or worked on
 (Default values will be last) then just remove the order argument from this statement:
 """
 CLIENT_DATA = collections.OrderedDict(order)
@@ -48,12 +48,11 @@ CLIENT_DATA = collections.OrderedDict(order)
 
 def add_value_to_context(ctx, param, value):
     """
-    This function will just add the given value in the context object under the param's name
+    This function will just add the given value to the context object under the param's name
 
-    :param ctx:
-    :param param:
-    :param value:
-    :return: Nothing, value will be stored in context object
+    :param ctx: current context object
+    :param param: calling parameter
+    :param value: value of parameter
     """
     ctx.obj[param.name] = value
 
@@ -62,10 +61,9 @@ def get_snmp_value(ctx, param, flag_set):
     """
     This function will request and save an attribute based on the corresponding OID and Mac Address
 
-    :param ctx:
-    :param param:
-    :param flag_set:
-    :return: Nothing, value will be stored in context object
+    :param ctx: current context object
+    :param param: calling parameter
+    :param flag_set: True if flag is set, false if not
     """
     # ensure flag is set
     if flag_set:
@@ -79,12 +77,12 @@ def get_snmp_value(ctx, param, flag_set):
 
 def get_snmp_value_with_mac(ctx, param, flag_set):
     """
-    This function will request and save an attribute based on the corresponding OID and Mac Address
+    This function will request and save an attribute based on the corresponding OID and MAC address. The OID
+    is retrieved from the class :class:`wesp.definitions.AllParameter` using the name of the parameter.
 
-    :param ctx:
-    :param param:
-    :param flag_set:
-    :return: Nothing, value will be stored in context object
+    :param ctx: current context object
+    :param param: calling parameter
+    :param flag_set: True if flag is set, false if not
     """
     # ensure flag is set
     if flag_set:
@@ -98,12 +96,12 @@ def get_snmp_value_with_mac(ctx, param, flag_set):
 
 def check_wlc_address(ctx, param, value):
     """
-    This function will check if the WLC Address is a valid IP or FQDN
-    If so it will set to the context, otherwise it will raise an error
+    This function will check if the WLC address is a valid IP or resolvable FQDN address.
+    If so it will add it to the context, otherwise it will raise an error.
 
-    :param ctx:
-    :param param:
-    :param value:
+    :param ctx: current context object
+    :param param: calling parameter
+    :param value: value of parameter
     """
     ip = check_ip_address(value)
 
@@ -125,12 +123,11 @@ def check_wlc_address(ctx, param, value):
 
 def check_client_address(ctx, param, value):
     """
-    This function will validate the given Client Address and add it to the Context
+    This function will validate the given client address and add it to the context.
 
-    :param ctx:
-    :param param:
-    :param value:
-    :return: Nothing, value will be stored in context object
+    :param ctx: current context object
+    :param param: calling parameter
+    :param value: value of parameter
     """
     # ensure that Client Address is either a valid IP or Mac Address
     # If so add it to the Context Object for further use
@@ -150,12 +147,13 @@ def check_client_address(ctx, param, value):
 
 def get_ap_name(ctx, param, flag_set):
     """
-    This function requests the Name of the associated AP of the Client.
-    Therefore it will first request the MAC address of the AP from the cldcClientTable
-    and then using the address to find its name in the clDLApBootTable
-    :param ctx: Context of ...
-    :param param:
-    :param flag_set: True if flag is set, otherwise false
+    This function requests the name of the associated AP of the client.
+    Therefore it will first request the MAC address of the AP from the *cldcClientTable*
+    and then using the address to find its name in the *clDLApBootTable*.
+
+    :param ctx: current context object
+    :param param: calling parameter
+    :param flag_set: True if flag is set, false if not
     """
     # ensure flag is set
     if flag_set:
@@ -172,11 +170,11 @@ def get_ap_name(ctx, param, flag_set):
 
 def get_ping(ctx, param, flag_set):
     """
-    This function will ping the client from the device, which runs this script.
-    :param ctx:
-    :param param:
-    :param flag_set:
-    :return: Nothing, value will be stored in context object
+    This function will ping the client from the device which runs this script.
+
+    :param ctx: current context object
+    :param param: calling parameter
+    :param flag_set: True if flag is set, false if not
     """
     # ensure flag is set
     if flag_set:
@@ -312,12 +310,12 @@ def cli_parser(ctx, wlc_address, client_address,
     """
 
     This function represents the main command and contains all options ranging from WLC/client information,
-    SNMP options to all options, which enable or disable the output of certain parameter. A list of the
-    associated options can be found below. Since this is a click group all other commands (e.g. for
-    config file and db) are sub commands of this command. The name of this group is *cli_parser*.
+    SNMP options to all options which enable or disable the output of certain parameters. A list of the
+    associated options can be found below. Since this is a *Click Group* all other commands (e.g. for
+    configfile and database) are sub commands of this command. The name of this group is *cli_parser*.
 
     Note, that this group command does not contain any logic, handling of the options is done in the
-    specified callback. Click expects the click options to be inside the arguments of this command, although
+    specified callbacks. Click expects the click options to be inside the arguments of this command, although
     they are not used.
 
     Fore more information about click options and it's attributes see: http://click.pocoo.org/5/options/,
@@ -327,20 +325,20 @@ def cli_parser(ctx, wlc_address, client_address,
 
     The following callbacks are implemented and may be used for future options:
 
-    :meth:`add_value_to_context`: sets the value of the option to the context, without any modification. The name of the
+    :meth:`add_value_to_context`: adds the value of the option to the context, without any modification. The name of the
     option is used as key.
 
     :meth:`get_snmp_value`: will search in :class:`wesp.definitions.AllParameter` for a matching OID and requests the
-    data via GET from the WLC. The result is added to the context, under the name of the option.
+    data via GET from the WLC. The result is added to the context, using the name of the option.
 
-    :meth:`get_snmp_value_with_mac`: will do the same as the latter function but will include the mac address of the
+    :meth:`get_snmp_value_with_mac`: will do the same as the latter function but will include the MAC address of the
     client to get client specific data.
 
     :meth:`check_wlc_address`: will check if the given address is a valid IP address or a resolvable hostname. If so it
-    will add it to the context under the name of the option.
+    will add it to the context using the name of the option.
 
     :meth:`check_client_address`: will check if the given address is a valid IP or MAC address. If so it will add
-    it to the context under the name of the option.
+    it to the context using the name of the option.
 
     :meth:`get_ap_name`: will retrieve the name of the AP of a client. For details see the function itself. The name of
     the option is used as key.
@@ -350,24 +348,24 @@ def cli_parser(ctx, wlc_address, client_address,
 
 
     :param ctx: current Context
-    :param wlc_address: click option (is not be used)
-    :param client_address: click option (is not be used)
-    :param snmp_version: click option (is not be used)
-    :param snmp_community: click option (is not be used)
-    :param snmp_user: click option (is not be used)
-    :param snmp_password: click option (is not be used)
-    :param snmp_encryption: click option (is not be used)
-    :param interval: click option (is not be used)
-    :param iterations: click option (is not be used)
-    :param channel: click option (is not be used)
-    :param retries: click option (is not be used)
-    :param ap_name: click option (is not be used)
-    :param rx_packets: click option (is not be used)
-    :param tx_packets: click option (is not be used)
-    :param ping: click option (is not be used)
-    :param rssi_off: click option (is not be used)
-    :param snr_off: click option (is not be used)
-    :param data_rate_off: click option (is not be used)
+    :param wlc_address: click option (is not being used)
+    :param client_address: click option (is not being used)
+    :param snmp_version: click option (is not being used)
+    :param snmp_community: click option (is not being used)
+    :param snmp_user: click option (is not being used)
+    :param snmp_password: click option (is not being used)
+    :param snmp_encryption: click option (is not being used)
+    :param interval: click option (is not being used)
+    :param iterations: click option (is not being used)
+    :param channel: click option (is not being used)
+    :param retries: click option (is not being used)
+    :param ap_name: click option (is not being used)
+    :param rx_packets: click option (is not being used)
+    :param tx_packets: click option (is not being used)
+    :param ping: click option (is not being used)
+    :param rssi_off: click option (is not being used)
+    :param snr_off: click option (is not being used)
+    :param data_rate_off: click option (is not being used)
 
     """
 
@@ -419,22 +417,22 @@ def cli_parser(ctx, wlc_address, client_address,
 def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, silent):
     """
 
-    This function represents the command print_to_db, it takes the options and uses them
-    to create a connection to the database. It also generates the Statements for the creation of
-    the table and for the insertion of data into this table.
+    This function represents the command *print_to_db*, it takes the options and uses them
+    to create a connection to the database. It also generates the statements for the creation of
+    the table and the insertion of data into this table.
 
-    Note that the click options have to be inside the arguments of this command, since they are expected by
+    Note that the Click options have to be inside the arguments of this command, since they are expected by
     click. The actual handling of them is done in the corresponding callback.
 
 
     :param ctx: current Context
-    :param db_name: click option (is not be used)
-    :param db_table: click option (is not be used)
-    :param db_address: click option (is not be used)
-    :param db_port: click option (is not be used)
-    :param db_user: click option (is not be used)
-    :param db_pass: click option (is not be used)
-    :param silent: click option (is not be used)
+    :param db_name: click option (is not being used)
+    :param db_table: click option (is not being used)
+    :param db_address: click option (is not being used)
+    :param db_port: click option (is not being used)
+    :param db_user: click option (is not being used)
+    :param db_pass: click option (is not being used)
+    :param silent: click option (is not being used)
 
     """
 
@@ -466,14 +464,14 @@ def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, s
 @click.pass_context
 def load_config(ctx, file_path):
     """
-    Will set the path to the config inside the class :class:`.ConfigFileProcessor`. The actual loading is done
-    in the function :meth:`read_config_file_flag` in module :mod:`wesp.click_overloaded` over.
+    Will set the path of the configfile inside the class :class:`.ConfigFileProcessor`. The actual loading is done
+    in the function :meth:`read_config_file_flag` in the module :mod:`wesp.click_overloaded`.
 
-    Note that the click options have to be inside the arguments of this command, since they are expected by
-    click.
+    Note that the Click options have to be inside the arguments of this command, since they are expected by
+    Click.
 
     :param ctx: current Context
-    :param file_path: click option (is not be used)
+    :param file_path: click option (is not being used)
 
     """
 
@@ -485,14 +483,11 @@ def load_config(ctx, file_path):
 def process_result(result, **kwargs):
     """
     This function will run after all parameters have been parsed.
-    It will make the CLI Output and depending on the settings the
-    Insert to the DB.
+    It will make the CLI output and depending on the settings the
+    insert to the database.
     It also repeats the process until the user kills the program or
-    an end end condition is met
+    an end condition is met
 
-    :param result:
-    :param kwargs:
-    :return: Nothing
     """
 
     # get reference of context
@@ -553,10 +548,9 @@ def process_result(result, **kwargs):
 
 def update_client_data(ctx):
     """
-    This function will update the values by re-retrieving the values from the WLC
+    This function will update the values by re-retrieving the values from the WLC.
 
     :param ctx: current Context
-    :return: Nothing, results are saved in Context
 
     """
 

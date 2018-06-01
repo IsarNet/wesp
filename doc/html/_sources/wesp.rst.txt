@@ -8,7 +8,6 @@ Submodules
 
    wesp.cli_parser
    wesp.click_overloaded
-   wesp.command_line
    wesp.configfile
    wesp.database
    wesp.definitions

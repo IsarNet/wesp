@@ -84,7 +84,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="wesp.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="wesp.cli_parser.html">wesp.cli_parser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.click_overloaded.html">wesp.click_overloaded module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="wesp.command_line.html">wesp.command_line module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.configfile.html">wesp.configfile module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.database.html">wesp.database module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.definitions.html">wesp.definitions module</a></li>
@@ -168,14 +167,14 @@ the <a class="reference internal" href="#wesp.snmp.Snmp" title="wesp.snmp.Snmp">
 <dl class="class">
 <dt id="wesp.snmp.Snmp">
 <em class="property">class </em><code class="descclassname">wesp.snmp.</code><code class="descname">Snmp</code><span class="sig-paren">(</span><em>ctx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class handles all interactions via SNMP with the WLC. It provided the basics function to get,
-walk or trap with SNMP.
+<dd><p>This class handles all interactions via SNMP with the WLC. It provides the basics functions to get or
+walk with SNMP.
 The SNMP session will be initialized in the init function.
-All functions have been made static to allow easy use without a reference to specific session.</p>
+All functions are static to allow easy use without a reference to specific sessions.</p>
 <dl class="staticmethod">
 <dt id="wesp.snmp.Snmp.get">
 <em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>will get the information stored at the given OID</p>
+<dd><p>will return the information stored at the given OID using GET.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -196,16 +195,16 @@ All functions have been made static to allow easy use without a reference to spe
 <dt id="wesp.snmp.Snmp.get_by_mac_address">
 <em class="property">static </em><code class="descname">get_by_mac_address</code><span class="sig-paren">(</span><em>mac_address</em>, <em>separator=':'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.get_by_mac_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.get_by_mac_address" title="Permalink to this definition">¶</a></dt>
 <dd><p>will return in the information which is stored at the given OID and
-is specific by the given Mac Address.
-It will append the Mac Address in decimal format to the given OID and
-get this.</p>
+is specific by the given MAC Address.
+It will append the MAC Address in decimal format to the given OID and
+GET this.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>oid</strong> – Base OID to get for</li>
-<li><strong>mac_address</strong> – Mac Address of client</li>
+<li><strong>oid</strong> – Base OID to GET for</li>
+<li><strong>mac_address</strong> – MAC Address of client</li>
 <li><strong>separator</strong> – optional separator to split the mac address. Default ‘:’</li>
 </ul>
 </td>
@@ -220,16 +219,16 @@ get this.</p>
 <dl class="staticmethod">
 <dt id="wesp.snmp.Snmp.get_mac_from_ip">
 <em class="property">static </em><code class="descname">get_mac_from_ip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.get_mac_from_ip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.get_mac_from_ip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Will search for the associated Mac address to the given IP</p>
+<dd><p>Will search for the associated MAC address to the given IP</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ip</strong> – IP address to get Mac address for</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ip</strong> – IP address to get MAC address for</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a> or None</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mac address of client or None if no match was found</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">MAC address of client or None if no match was found</td>
 </tr>
 </tbody>
 </table>
@@ -242,7 +241,7 @@ get this.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">reference to current snmp session</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">reference to current SNMP session</td>
 </tr>
 </tbody>
 </table>
@@ -257,7 +256,7 @@ get this.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)">bool</a></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if session is ready, False if not</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if session is ready / initialized, False if not</td>
 </tr>
 </tbody>
 </table>
@@ -266,7 +265,8 @@ get this.</p>
 <dl class="staticmethod">
 <dt id="wesp.snmp.Snmp.print_walk">
 <em class="property">static </em><code class="descname">print_walk</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.print_walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.print_walk" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>Will WALK the OID and print the results to the CLI.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -281,18 +281,18 @@ get this.</p>
 <dl class="staticmethod">
 <dt id="wesp.snmp.Snmp.walk">
 <em class="property">static </em><code class="descname">walk</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.walk" title="Permalink to this definition">¶</a></dt>
-<dd><p>will walk the given OID</p>
+<dd><p>Will WALK the given OID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>oid</strong> – OID to walk</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>oid</strong> – OID to WALK</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of SNMPVariable or None</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">SNMP Timeout Error</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a list of SNMPVariable objects containing the values that were retrieved via SNMP</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a list of <em>SNMPVariable</em> objects containing the values that were retrieved via SNMP</td>
 </tr>
 </tbody>
 </table>

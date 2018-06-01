@@ -85,7 +85,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="wesp.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="wesp.cli_parser.html">wesp.cli_parser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.click_overloaded.html">wesp.click_overloaded module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="wesp.command_line.html">wesp.command_line module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.configfile.html">wesp.configfile module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">wesp.database module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wesp.definitions.html">wesp.definitions module</a></li>
@@ -167,20 +166,20 @@
 <dl class="class">
 <dt id="wesp.database.Database">
 <em class="property">class </em><code class="descclassname">wesp.database.</code><code class="descname">Database</code><a class="reference internal" href="_modules/wesp/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.database.Database" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains all functions related to the database. To ensure that only one DB connection is used, everything
-in this class ist static.</p>
+<dd><p>Contains all functions related to the database. To ensure that only one database connection is used, everything
+in this class is static.</p>
 <p>The different raw statements are completed in the
 <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> using the data inside of <a class="reference internal" href="wesp.definitions.html#wesp.definitions.AllParameter" title="wesp.definitions.AllParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.definitions.AllParameter</span></code></a>.</p>
 <p>The function <a class="reference internal" href="#wesp.database.Database.create_database_and_table_if_not_existing" title="wesp.database.Database.create_database_and_table_if_not_existing"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create_database_and_table_if_not_existing()</span></code></a> will check if the database and the table exist,
-otherwise it will create it using the databaseCreateStatement.</p>
+otherwise it will create it using the <em>databaseCreateStatement</em>.</p>
 <p>Data can be inserted using the function <a class="reference internal" href="#wesp.database.Database.insert_data_set" title="wesp.database.Database.insert_data_set"><code class="xref py py-meth docutils literal notranslate"><span class="pre">insert_data_set()</span></code></a>. This function expects the data to be in the
-format of CLIENT_DATA inside the <code class="xref py py-mod docutils literal notranslate"><span class="pre">cli_parser</span></code> module.</p>
+format of the dict <em>CLIENT_DATA</em> inside the <code class="xref py py-mod docutils literal notranslate"><span class="pre">cli_parser</span></code> module.</p>
 <dl class="staticmethod">
 <dt id="wesp.database.Database.create_database_and_table_if_not_existing">
 <em class="property">static </em><code class="descname">create_database_and_table_if_not_existing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/database.html#Database.create_database_and_table_if_not_existing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.database.Database.create_database_and_table_if_not_existing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Will check the existence of the database and the table with the names specified in the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a>
+<dd><p>Will check the existence of the database and table with the names specified in the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a>
 function. If they do not exist they will be created.
-Therefore a connection to the DB Information_Schema is performed.</p>
+Therefore a connection to the database <em>Information_Schema</em> is performed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -195,7 +194,7 @@ Therefore a connection to the DB Information_Schema is performed.</p>
 <dt id="wesp.database.Database.databaseCreateStatement">
 <code class="descname">databaseCreateStatement</code><em class="property"> = 'CREATE DATABASE IF NOT EXISTS %%DATABASE%%;'</em><a class="headerlink" href="#wesp.database.Database.databaseCreateStatement" title="Permalink to this definition">¶</a></dt>
 <dd><p>This statement will be used to create the database. It will only trigger if the database does 
-not exists. Note the name of the database will be inserted in the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> function</p>
+not exists. Note the name of the database will be inserted in the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> function.</p>
 </dd></dl>
 
 <dl class="staticmethod">
@@ -208,9 +207,9 @@ not exists. Note the name of the database will be inserted in the <a class="refe
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>ctx</strong> – current Context</li>
-<li><strong>config</strong> – config for database connection, can be generated by <a class="reference internal" href="wesp.helper.html#wesp.helper.generate_db_conf_from_context" title="wesp.helper.generate_db_conf_from_context"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wesp.helper.generate_db_conf_from_context()</span></code></a></li>
-<li><strong>parameter_create</strong> – parameter part of create statement, can be generated by <a class="reference internal" href="wesp.helper.html#wesp.helper.generate_parameter_create_statement" title="wesp.helper.generate_parameter_create_statement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wesp.helper.generate_parameter_create_statement()</span></code></a></li>
-<li><strong>parameter_insert</strong> – parameter part of insert statement, can be generated by <a class="reference internal" href="wesp.helper.html#wesp.helper.generate_parameter_insert_statement" title="wesp.helper.generate_parameter_insert_statement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wesp.helper.generate_parameter_insert_statement()</span></code></a></li>
+<li><strong>config</strong> – config for database connection, can be generated using <a class="reference internal" href="wesp.helper.html#wesp.helper.generate_db_conf_from_context" title="wesp.helper.generate_db_conf_from_context"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wesp.helper.generate_db_conf_from_context()</span></code></a></li>
+<li><strong>parameter_create</strong> – parameter part of create statement, can be generated using <a class="reference internal" href="wesp.helper.html#wesp.helper.generate_parameter_create_statement" title="wesp.helper.generate_parameter_create_statement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wesp.helper.generate_parameter_create_statement()</span></code></a></li>
+<li><strong>parameter_insert</strong> – parameter part of insert statement, can be generated using <a class="reference internal" href="wesp.helper.html#wesp.helper.generate_parameter_insert_statement" title="wesp.helper.generate_parameter_insert_statement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wesp.helper.generate_parameter_insert_statement()</span></code></a></li>
 </ul>
 </td>
 </tr>
@@ -221,24 +220,26 @@ not exists. Note the name of the database will be inserted in the <a class="refe
 <dl class="attribute">
 <dt id="wesp.database.Database.insertStatement">
 <code class="descname">insertStatement</code><em class="property"> = 'INSERT INTO %%TABLE%% %%PARAMETER%%;'</em><a class="headerlink" href="#wesp.database.Database.insertStatement" title="Permalink to this definition">¶</a></dt>
-<dd><p>This statement is used to insert data, the name and list of parameters as well its value names are
-inserted in the function <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a>. The generation of that data is done in 
+<dd><p>This statement is used to insert data. The names and a list of parameters are
+inserted in the function <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a>. The corresponding values are inserted 
+in the <a class="reference internal" href="#wesp.database.Database.insert_data_set" title="wesp.database.Database.insert_data_set"><code class="xref py py-meth docutils literal notranslate"><span class="pre">insert_data_set()</span></code></a> function.
+The generation of that substring is done in the 
 <a class="reference internal" href="wesp.helper.html#wesp.helper.generate_parameter_insert_statement" title="wesp.helper.generate_parameter_insert_statement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wesp.helper.generate_parameter_insert_statement()</span></code></a> function but has to be ran by the caller of 
-the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> function</p>
+the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> function.</p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="wesp.database.Database.insert_data_set">
 <em class="property">static </em><code class="descname">insert_data_set</code><span class="sig-paren">(</span><em>ctx</em>, <em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/database.html#Database.insert_data_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.database.Database.insert_data_set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Will inserted the given data into the database based on the config
-and statement form the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> function</p>
+<dd><p>Will insert the given data into the database based on the config
+and statement from the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data_set</strong> – data_set to be inserted, must contain the same fields name as defined in the <em>insertStatement</em></li>
-<li><strong>ctx</strong> – current Context</li>
+<li><strong>data_set</strong> – data set to be inserted, must contain the same fields names as defined in the <em>insertStatement</em></li>
+<li><strong>ctx</strong> – current context</li>
 </ul>
 </td>
 </tr>
@@ -249,7 +250,7 @@ and statement form the <a class="reference internal" href="#wesp.database.Databa
 <dl class="staticmethod">
 <dt id="wesp.database.Database.is_ready">
 <em class="property">static </em><code class="descname">is_ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/database.html#Database.is_ready"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.database.Database.is_ready" title="Permalink to this definition">¶</a></dt>
-<dd><p>Will check, if this class is ready, which means that the config has been set and the raw
+<dd><p>Will check, if the database connection is ready, which means that the config has been set and the raw
 statements have been initialized.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -266,10 +267,10 @@ statements have been initialized.</p>
 <code class="descname">tableCreateStatement</code><em class="property"> = 'CREATE TABLE IF NOT EXISTS %%DATABASE%%.%%TABLE%% (\n    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n      `Timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n      %%PARAMETER%%\n      PRIMARY KEY (`id`),\n      KEY `ipIndex` (`%%IP_INDEX%%`),\n      KEY `macIndex` (`%%MAC_INDEX%%`)\n    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;'</em><a class="headerlink" href="#wesp.database.Database.tableCreateStatement" title="Permalink to this definition">¶</a></dt>
 <dd><p>This statement creates the table. It will only trigger if the database does 
 not exists. Note the name of the database and table, as well as all other fields (based on 
-registered Parameter in <a class="reference internal" href="wesp.definitions.html#wesp.definitions.AllParameter" title="wesp.definitions.AllParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.definitions.AllParameter</span></code></a>) will be inserted in the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> 
-function. The generation of that data is done in 
+registered parameters in <a class="reference internal" href="wesp.definitions.html#wesp.definitions.AllParameter" title="wesp.definitions.AllParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.definitions.AllParameter</span></code></a>) will be inserted in the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> 
+function. The generation of that data is done in the
 <a class="reference internal" href="wesp.helper.html#wesp.helper.generate_parameter_create_statement" title="wesp.helper.generate_parameter_create_statement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wesp.helper.generate_parameter_create_statement()</span></code></a> function but has to be ran by the caller of 
-the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> function</p>
+the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> function.</p>
 </dd></dl>
 
 </dd></dl>
