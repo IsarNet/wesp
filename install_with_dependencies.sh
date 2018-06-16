@@ -1,9 +1,30 @@
 #!/bin/bash
+#retrieve general plattform (Mac or Linux)
+os=$(uname)
 
-os=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
+# If OS is not Mac (Darwin) search for Linux Distrubution
+if [[ "$os" != *"Darwin"* ]]
+then
+    os=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
+fi
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo "Found OS $os, starting directory : $DIR"
+
+if [[ "$os" == *"Darwin"* ]]
+then
+    echo "Will install for macOS..."
+   
+    #run python installer (installer needs to be run from inside the src folder)
+    cd $DIR/src
+    
+    sudo python setup.py install
+    sudo click-man wesp --target /usr/share/man/man1/
+
+    echo "Installation completed. Check for errors!"
+
+fi
 
 if [[ "$os" == *"Ubuntu"* ]]
 then

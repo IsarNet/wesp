@@ -25,6 +25,9 @@ brew install git
 
 If your OS doesn’t ship with Net-SNMP 5.7.x, please follow instructions provided on the [Net-SNMP install page](%28http://www.net-snmp.org/docs/INSTALL.html) to build and install Net-SNMP 5.7.x on your system.
 
+<br />
+<br />
+
 ### Installing
 Clone repository:
 ```
@@ -41,6 +44,7 @@ Run bash script to install dependencies and WESP (root required).
 ```
 sudo bash install_with_dependencies.sh
 ```
+<br />
 
 #### Manuel Installation
 ##### Install dependencies
@@ -57,7 +61,7 @@ sudo yum install net-snmp-devel gcc python-devel python-setuptools
 
 On Mac:
 ```
-TODO
+Are already shipped with base OS.
 ```
 
 ##### Install WESP
@@ -70,6 +74,24 @@ Run python installer
 ```
 sudo python setup.py install
 ```
+
+<br />
+<br />
+
+### Uninstalling
+
+To remove wesp, first get the path to the dependencies:
+```
+python setup.py install --record files.txt
+```
+
+Then remove those files (Note the entries to the modules will remain in the Python path):
+```
+sudo rm $(cat files.txt)
+```
+
+<br />
+<br />
 
 ## Troubleshoot
 ### Installation
@@ -98,7 +120,7 @@ Exit root shell:
 exit
 ```
 
-<br>
+<br />
 
 #### Debian cannot find module *snmp-mibs-installer*:
 ```
@@ -119,8 +141,14 @@ sudo apt-get upgrade
 
 Rerun bash script.
 
+<br />
+<br />
+
 ## Install Instructions for PyCharm
 Can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/PyCharm_Integeration)
+
+<br />
+<br />
 
 ## Documentation
 The Sphinx doc as html can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/html). To update the documentation run ```make html``` in the base folder of this project.
@@ -129,6 +157,8 @@ The Sphinx doc as man file can be found [here](https://github.com/IsarNet/wesp/t
 
 Activity diagrams can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/Activity_Diagrams).
 
+<br />
+<br />
 
 ## Authors
 
@@ -138,9 +168,15 @@ Activity diagrams can be found [here](https://github.com/IsarNet/wesp/tree/maste
 
 See also the list of [contributors](https://github.com/IsarNet/wesp/contributors) who participated in this project.
 
+<br />
+<br />
+
 ## License
 
 This project is licensed under the GPL-3.0 License - see the [LICENSE.txt](LICENSE.txt) file for details
+
+<br />
+<br />
 
 ## Acknowledgments
 
