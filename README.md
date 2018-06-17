@@ -1,7 +1,9 @@
 
 # WESP (WORK IN PROGRESS)
 
-This program will automatically monitor a WiFi device for defined parameters using the MAC or IPv4 address. In addition a ping can check if the client is reachable. Will work with Cisco WLC TODO
+This program will automatically monitor a WiFi device for defined parameters using the MAC or IPv4 address. In addition a ping can check if the client is reachable. 
+
+The project has been developed and tested using a Cisco 2500er series WLC (SW version 8.3.130.0) and Cisco Aironet 802 11n Draft 2.0 Dual Band APs.
 ## Getting Started
 
 
@@ -156,6 +158,8 @@ The Sphinx doc as html can be found [here](https://github.com/IsarNet/wesp/tree/
 The Sphinx doc as man file can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/man). To update the documentation run ```make man``` in the base folder of this project.
 
 Activity diagrams can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/Activity_Diagrams).
+
+A class diagram can be found [here](https://github.com/IsarNet/wesp/blob/master/doc/wesp_class_diagram.png).
 
 <br />
 <br />

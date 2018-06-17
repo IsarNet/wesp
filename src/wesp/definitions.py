@@ -196,7 +196,7 @@ class GlobalSettings:
     or :meth:`wesp.click_overloaded.CommandAllowConfigFile.parse_args`
     """
 
-    WELCOME_STRING = "Welcome to the wesp tool - Wireless Endpoint Statistics Program \n" \
+    WELCOME_STRING = "Welcome to the wesp tool - Wireless Endpoint Statistics Ping \n" \
                      "For help run wesp -h"
     """
     String which greets the user if no parameters are given.

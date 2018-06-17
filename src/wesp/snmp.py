@@ -1,6 +1,10 @@
 """
 This module contains everything related to the SNMP protocol. Every communication with the WLC will run through
 the :class:`.Snmp` class. For more information see :class:`.Snmp`
+
+The project has been developed and tested using a Cisco 2500er series WLC (SW version 8.3.130.0) and Cisco
+Aironet 802 11n Draft 2.0 Dual Band APs.
+
 """
 
 from easysnmp import Session, EasySNMPConnectionError, EasySNMPTimeoutError

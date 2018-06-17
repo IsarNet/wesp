@@ -20,6 +20,10 @@ the basic connection settings as well as database and table names. For detailed 
 Database and table are created if they don't exist. The create statement is built automatically based on the
 parameters defined in the module :mod:`wesp.definitions`.
 
+The project has been developed and tested using a Cisco 2500er series WLC (SW version 8.3.130.0) and
+Cisco Aironet 802 11n Draft 2.0 Dual Band APs.
+
+
 """
 import collections
 from multiping import *
