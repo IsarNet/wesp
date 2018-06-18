@@ -463,7 +463,7 @@ def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, s
                     help = "Will load configfile. If no path is given the default path will be used, "
                            "which can be found below.")
 #
-@click.option('-f', '--file', 'file_path', default="../../wesp_config.cfg", type=click.Path(exists=True),
+@click.option('-f', '--file', 'file_path', default="./wesp_config.cfg", type=click.Path(exists=True),
               help="Optional Path to Config File", show_default=True)
 @click.pass_context
 def load_config(ctx, file_path):
