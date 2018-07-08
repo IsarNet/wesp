@@ -1,7 +1,7 @@
 
-# WESP (WORK IN PROGRESS)
+# WESP
 
-This program will automatically monitor a WiFi device for defined parameters using the MAC or IPv4 address. In addition a ping can check if the client is reachable. 
+This program will automatically monitor a WiFi device for defined parameters using the MAC or IPv4 address. In addition, a ping can check if the client is reachable. 
 
 The project has been developed and tested using a Cisco 2500er series WLC (SW version 8.3.130.0) and Cisco Aironet 802 11n Draft 2.0 Dual Band APs.
 ## Getting Started
@@ -13,11 +13,11 @@ To clone this repository git is required:
 
 On RHEL / CentOS systems:
 ```
-sudo yum install git
+sudo yum update && yum install git
 ```
 On Debian / Ubuntu systems:
 ```
-sudo apt-get install git
+sudo apt-get update && apt-get install git
 ```
 On Mac:
 ```
@@ -48,7 +48,7 @@ sudo bash install_with_dependencies.sh
 ```
 <br />
 
-#### Manuel Installation
+#### Manual Installation
 ##### Install dependencies
 
 On Debian / Ubuntu systems:
@@ -187,3 +187,4 @@ This project is licensed under the GPL-3.0 License - see the [LICENSE.txt](LICEN
 TODO
 
  [Johannes Luther](https://github.com/netgab).
+
