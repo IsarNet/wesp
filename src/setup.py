@@ -18,7 +18,9 @@ setup(
         'multiping',
         'IPy',
         'mysql-connector',
-        'tzlocal'
+        'tzlocal',
+        'Sphinx',
+        'sphinxcontrib-websupport'
     ],
     entry_points={
         'console_scripts': ['wesp=wesp.cli_parser:cli_parser'],

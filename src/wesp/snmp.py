@@ -12,8 +12,6 @@ from wesp.helper import *
 import click
 
 
-# TODO Add Comments
-# TODO Add error handling if mac address is not avaliable
 class Snmp:
     """
     This class handles all interactions via SNMP with the WLC. It provides the basics functions to get or

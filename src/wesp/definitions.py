@@ -10,9 +10,6 @@ and recreated by this program.
 """
 
 
-# TODO add tested version of WLC
-
-
 class Parameter:
     """
     Represents a basic parameter with fundamental information about it.
@@ -219,4 +216,10 @@ class GlobalSettings:
     
     Will be set in the :meth:`wesp.click_overloaded.CustomGroup.format_usage`.
     
+    """
+
+    NAME_OF_CONFIG_FILE_COMMAND = "load_config"
+    """
+    Name of the command, which will load the configfile. Per default it is *load_config*.
+        If the name of this command has been changed, also change this variable. 
     """

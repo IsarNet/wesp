@@ -34,8 +34,6 @@ from wesp.snmp import Snmp
 from datetime import datetime
 import tzlocal
 
-# TODO populate
-
 order = [('channel', None), ('retries', None), ('snr_off', None), ('ap_name', None), ('rssi_off', None)]
 """
 This attribute sets the order in which the data is outputted. Make sure to always add a *None* to each tuple!
@@ -277,11 +275,11 @@ def get_ping(ctx, param, flag_set):
               is_flag=True,
               help='Name of Access Point the client is associated with')
 #
-@click.option('--rx_packets', '-re', 'rx_packets', required=False, callback=get_snmp_value_with_mac,
+@click.option('--rx_packets', '-rx', 'rx_packets', required=False, callback=get_snmp_value_with_mac,
               is_flag=True,
               help='Number of client received packets')
 #
-@click.option('--tx_packets', '-re', 'tx_packets', required=False, callback=get_snmp_value_with_mac,
+@click.option('--tx_packets', '-tx', 'tx_packets', required=False, callback=get_snmp_value_with_mac,
               is_flag=True,
               help='Number of client transmitted packets')
 #
@@ -453,8 +451,6 @@ def print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, s
 """________ CONFIGFILE COMMAND _____________"""
 
 
-# TODO add real Default Path
-# TODO Add real Help Text
 #
 # Config File Command Definition
 #

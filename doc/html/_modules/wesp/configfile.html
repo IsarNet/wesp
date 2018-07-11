@@ -24,8 +24,7 @@
 
   
 
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -198,7 +197,8 @@
         <span class="n">ap_name</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
         <span class="n">rx_packets</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
         <span class="n">tx_packets</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-        <span class="n">ping</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span></div>
+        <span class="n">ping</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">retries_support</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span></div>
 
     <span class="c1"># parse data for section DEFAULT_OFF (default options)</span>
 <div class="viewcode-block" id="ConfigSectionSchema.Default"><a class="viewcode-back" href="../../wesp.configfile.html#wesp.configfile.ConfigSectionSchema.Default">[docs]</a>    <span class="nd">@matches_section</span><span class="p">(</span><span class="s2">&quot;DEFAULT_OFF&quot;</span><span class="p">)</span>
@@ -315,16 +315,11 @@
 
   
 
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script> 
 

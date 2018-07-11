@@ -12,6 +12,7 @@ command to access the configfile.
 
 import click
 import sys
+import os.path
 from wesp.configfile import ConfigFileProcessor
 from wesp.helper import decompress_nested_dict, get_option_with_name
 from wesp.definitions import GlobalSettings
@@ -38,16 +39,20 @@ def read_config_file_flag(self, ctx, args, idx):
         # check if argument file path is given
         # Existence requires at least index + 2 arguments
         if len(args) <= idx + 2:
-            # TODO Change Usage Output
             raise click.BadParameter(
                 "Bad Parameter: Missing argument for -f/--file")
 
+        # check if file exists
+        if not os.path.isfile(args[idx + 2]):
+            raise click.BadParameter(
+                'Bad Parameter: Invalid value for "-f" / "--file": Path "%s" does not exist.' % args[idx + 2])
+
         # Invoke load_config with given file
-        ctx.invoke(self.get_command(ctx, "load_config"), file_path=args[idx + 2])
+        ctx.invoke(self.get_command(ctx, GlobalSettings.NAME_OF_CONFIG_FILE_COMMAND), file_path=args[idx + 2])
 
     # If not load default file
     else:
-        ctx.invoke(self.get_command(ctx, "load_config"))
+        ctx.invoke(self.get_command(ctx, GlobalSettings.NAME_OF_CONFIG_FILE_COMMAND))
 
     # load config file and ensure that default map consists of a non nested dict
     ctx.default_map = decompress_nested_dict(ConfigFileProcessor.read_config())
@@ -180,7 +185,7 @@ class CustomGroup(click.Group):
             # check if load_config command is used
             # if so check if -f or --file flag is set
             # Then load config, has to be done before call to super
-            if arg == "load_config":
+            if arg == GlobalSettings.NAME_OF_CONFIG_FILE_COMMAND:
                 config_command_index = idx
 
         # Ensure help flag has priority
