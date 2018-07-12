@@ -61,7 +61,9 @@ def add_value_to_context(ctx, param, value):
 
 def get_snmp_value(ctx, param, flag_set):
     """
-    This function will request and save an attribute based on the corresponding OID and Mac Address
+    This function will request and save an attribute based on the corresponding OID. The OID
+    is retrieved from the class :class:`wesp.definitions.AllParameter` using the name of the parameter.
+
 
     :param ctx: current context object
     :param param: calling parameter
@@ -80,7 +82,8 @@ def get_snmp_value(ctx, param, flag_set):
 def get_snmp_value_with_mac(ctx, param, flag_set):
     """
     This function will request and save an attribute based on the corresponding OID and MAC address. The OID
-    is retrieved from the class :class:`wesp.definitions.AllParameter` using the name of the parameter.
+    is retrieved from the class :class:`wesp.definitions.AllParameter` using the name of the parameter. The MAC
+    address is converted into the decimal format and appended to the OID.
 
     :param ctx: current context object
     :param param: calling parameter
@@ -98,7 +101,7 @@ def get_snmp_value_with_mac(ctx, param, flag_set):
 
 def check_wlc_address(ctx, param, value):
     """
-    This function will check if the WLC address is a valid IP or resolvable FQDN address.
+    This function will check if the WLC address is a valid IP or a resolvable FQDN address.
     If so it will add it to the context, otherwise it will raise an error.
 
     :param ctx: current context object
@@ -151,7 +154,7 @@ def get_ap_name(ctx, param, flag_set):
     """
     This function requests the name of the associated AP of the client.
     Therefore it will first request the MAC address of the AP from the *cldcClientTable*
-    and then using the address to find its name in the *clDLApBootTable*.
+    and then use the address to find its name in the *clDLApBootTable*.
 
     :param ctx: current context object
     :param param: calling parameter

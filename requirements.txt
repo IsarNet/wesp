@@ -7,3 +7,5 @@ multiping
 IPy
 mysql-connector
 tzlocal
+Sphinx
+sphinxcontrib-websupport
