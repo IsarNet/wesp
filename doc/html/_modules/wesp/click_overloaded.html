@@ -172,7 +172,7 @@
 <span class="sd">    :param ctx: Reference to current context</span>
 <span class="sd">    :param args: list of given args</span>
 <span class="sd">    :param idx: index at which the *load_config* command has been found</span>
-<span class="sd">    :raise: *BadParameter* if argument for option -f is missing</span>
+<span class="sd">    :raise: *BadParameter* if argument for option *-f* is missing</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -207,7 +207,7 @@
 <span class="sd">    This class overloads the class :class:`click.core.Group`.</span>
 <span class="sd">    It will ensure that the config file is loaded before any other parameter is evaluated and</span>
 <span class="sd">    the required options do not suppress the help option.</span>
-<span class="sd">    In addition the version parameter is moved to the front of the args list to enable the class</span>
+<span class="sd">    In addition the parameter *SNMP version* is moved to the front of the args list to enable the class</span>
 <span class="sd">    :class:`OnlyRequiredIf` to set an option (e.g. community) only to required if the corresponding version is set</span>
 <span class="sd">    (e.g. 2c).</span>
 
@@ -272,7 +272,7 @@
 <span class="sd">        Overloads the function parse_args of :class:`click.core.Group`.</span>
 <span class="sd">        It will ensure that the config file is loaded before any other parameter is evaluated and</span>
 <span class="sd">        the required options do not suppress the help option.</span>
-<span class="sd">        In addition the version parameter is moved to the front of the args list to enable the class</span>
+<span class="sd">        In addition the parameter *SNMP version* is moved to the front of the args list to enable the class</span>
 <span class="sd">        :class:`OnlyRequiredIf` to set an option (e.g. community) only to required if the corresponding version is set</span>
 <span class="sd">    (   e.g. 2c).</span>
 

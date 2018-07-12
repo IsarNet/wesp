@@ -220,7 +220,7 @@ def get_option_with_name(self, ctx, name):
     :param: ctx: current context
     :param: name: name of the option
     :rtype: click.core.Option
-    :return: option with the name or None if no match exist
+    :return: option with the name or None if no match exists
 
     """
 
