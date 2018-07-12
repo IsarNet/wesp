@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "WESP" "1" "Jun 16, 2018" "" "wesp"
+.TH "WESP" "1" "Jul 11, 2018" "" "wesp"
 .SH NAME
 wesp \- wesp Documentation
 .
@@ -36,7 +36,7 @@ The project has been developed and tested using a Cisco 2500er series WLC (SW ve
 .SS Submodules
 .SS wesp.cli_parser module
 .sp
-This module’s main task is the parsing of the CLI parameters. This is done using the extension
+This module\(aqs main task is the parsing of the CLI parameters. This is done using the extension
 Click (\fI\%http://click.pocoo.org/5/\fP). Click separates three different parameters: commands, options and arguments.
 .sp
 This module is consists of one Group (\fI\%cli_parser()\fP), which has two sub commands: \fI\%load_config()\fP
@@ -60,7 +60,7 @@ This means that an option set in the configfile can be overwritten by setting a 
 .sp
 The command \fI\%print_to_db()\fP triggers the output to the database. Through its options one is able to set
 the basic connection settings as well as database and table names. For detailed usage run \fIprint_to_db \-h\fP\&.
-Database and table are created if they don’t exist. The create statement is built automatically based on the
+Database and table are created if they don\(aqt exist. The create statement is built automatically based on the
 parameters defined in the module \fBwesp.definitions\fP\&.
 .sp
 The project has been developed and tested using a Cisco 2500er series WLC (SW version 8.3.130.0) and
@@ -68,17 +68,17 @@ Cisco Aironet 802 11n Draft 2.0 Dual Band APs.
 .INDENT 0.0
 .TP
 .B wesp.cli_parser.add_value_to_context(ctx, param, value)
-This function will just add the given value to the context object under the param’s name
+This function will just add the given value to the context object under the param\(aqs name
 .INDENT 7.0
 .TP
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current context object
+\fBctx\fP \-\- current context object
 .IP \(bu 2
-\fBparam\fP – calling parameter
+\fBparam\fP \-\- calling parameter
 .IP \(bu 2
-\fBvalue\fP – value of parameter
+\fBvalue\fP \-\- value of parameter
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -91,11 +91,11 @@ This function will validate the given client address and add it to the context.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current context object
+\fBctx\fP \-\- current context object
 .IP \(bu 2
-\fBparam\fP – calling parameter
+\fBparam\fP \-\- calling parameter
 .IP \(bu 2
-\fBvalue\fP – value of parameter
+\fBvalue\fP \-\- value of parameter
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -109,11 +109,11 @@ If so it will add it to the context, otherwise it will raise an error.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current context object
+\fBctx\fP \-\- current context object
 .IP \(bu 2
-\fBparam\fP – calling parameter
+\fBparam\fP \-\- calling parameter
 .IP \(bu 2
-\fBvalue\fP – value of parameter
+\fBvalue\fP \-\- value of parameter
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -128,11 +128,11 @@ and then using the address to find its name in the \fIclDLApBootTable\fP\&.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current context object
+\fBctx\fP \-\- current context object
 .IP \(bu 2
-\fBparam\fP – calling parameter
+\fBparam\fP \-\- calling parameter
 .IP \(bu 2
-\fBflag_set\fP – True if flag is set, false if not
+\fBflag_set\fP \-\- True if flag is set, false if not
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -145,11 +145,11 @@ This function will ping the client from the device which runs this script.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current context object
+\fBctx\fP \-\- current context object
 .IP \(bu 2
-\fBparam\fP – calling parameter
+\fBparam\fP \-\- calling parameter
 .IP \(bu 2
-\fBflag_set\fP – True if flag is set, false if not
+\fBflag_set\fP \-\- True if flag is set, false if not
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -162,11 +162,11 @@ This function will request and save an attribute based on the corresponding OID 
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current context object
+\fBctx\fP \-\- current context object
 .IP \(bu 2
-\fBparam\fP – calling parameter
+\fBparam\fP \-\- calling parameter
 .IP \(bu 2
-\fBflag_set\fP – True if flag is set, false if not
+\fBflag_set\fP \-\- True if flag is set, false if not
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -180,11 +180,11 @@ is retrieved from the class \fBwesp.definitions.AllParameter\fP using the name o
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current context object
+\fBctx\fP \-\- current context object
 .IP \(bu 2
-\fBparam\fP – calling parameter
+\fBparam\fP \-\- calling parameter
 .IP \(bu 2
-\fBflag_set\fP – True if flag is set, false if not
+\fBflag_set\fP \-\- True if flag is set, false if not
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -209,7 +209,7 @@ This function will update the values by re\-retrieving the values from the WLC.
 .INDENT 7.0
 .TP
 .B Parameters
-\fBctx\fP – current Context
+\fBctx\fP \-\- current Context
 .UNINDENT
 .UNINDENT
 .sp
@@ -228,21 +228,21 @@ click. The actual handling of them is done in the corresponding callback.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current Context
+\fBctx\fP \-\- current Context
 .IP \(bu 2
-\fBdb_name\fP – click option (is not being used)
+\fBdb_name\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBdb_table\fP – click option (is not being used)
+\fBdb_table\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBdb_address\fP – click option (is not being used)
+\fBdb_address\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBdb_port\fP – click option (is not being used)
+\fBdb_port\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBdb_user\fP – click option (is not being used)
+\fBdb_user\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBdb_pass\fP – click option (is not being used)
+\fBdb_pass\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBsilent\fP – click option (is not being used)
+\fBsilent\fP \-\- click option (is not being used)
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -258,7 +258,7 @@ Note, that this group command does not contain any logic, handling of the option
 specified callbacks. Click expects the click options to be inside the arguments of this command, although
 they are not used.
 .sp
-Fore more information about click options and it’s attributes see: \fI\%http://click.pocoo.org/5/options/\fP,
+Fore more information about click options and it\(aqs attributes see: \fI\%http://click.pocoo.org/5/options/\fP,
 \fI\%http://click.pocoo.org/5/parameters/#differences\fP and \fI\%http://click.pocoo.org/5/commands/\fP
 .sp
 The following callbacks are implemented and may be used for future options:
@@ -288,43 +288,43 @@ is used as key.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current Context
+\fBctx\fP \-\- current Context
 .IP \(bu 2
-\fBwlc_address\fP – click option (is not being used)
+\fBwlc_address\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBclient_address\fP – click option (is not being used)
+\fBclient_address\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBsnmp_version\fP – click option (is not being used)
+\fBsnmp_version\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBsnmp_community\fP – click option (is not being used)
+\fBsnmp_community\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBsnmp_user\fP – click option (is not being used)
+\fBsnmp_user\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBsnmp_password\fP – click option (is not being used)
+\fBsnmp_password\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBsnmp_encryption\fP – click option (is not being used)
+\fBsnmp_encryption\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBinterval\fP – click option (is not being used)
+\fBinterval\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBiterations\fP – click option (is not being used)
+\fBiterations\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBchannel\fP – click option (is not being used)
+\fBchannel\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBretries\fP – click option (is not being used)
+\fBretries\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBap_name\fP – click option (is not being used)
+\fBap_name\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBrx_packets\fP – click option (is not being used)
+\fBrx_packets\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBtx_packets\fP – click option (is not being used)
+\fBtx_packets\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBping\fP – click option (is not being used)
+\fBping\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBrssi_off\fP – click option (is not being used)
+\fBrssi_off\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBsnr_off\fP – click option (is not being used)
+\fBsnr_off\fP \-\- click option (is not being used)
 .IP \(bu 2
-\fBdata_rate_off\fP – click option (is not being used)
+\fBdata_rate_off\fP \-\- click option (is not being used)
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -341,9 +341,9 @@ Click.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current Context
+\fBctx\fP \-\- current Context
 .IP \(bu 2
-\fBfile_path\fP – click option (is not being used)
+\fBfile_path\fP \-\- click option (is not being used)
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -371,15 +371,15 @@ to read the config file
 Overloads the \fI\%format_usage()\fP of the class \fBclick.core.Command\fP\&.
 This allows a custom usage string, which looks like this:
 .sp
-PROGRAM_NAME […] Command_Name [OPTIONS]
+PROGRAM_NAME [...] Command_Name [OPTIONS]
 .INDENT 7.0
 .TP
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current Context
+\fBctx\fP \-\- current Context
 .IP \(bu 2
-\fBformatter\fP – Reference to class:\fIclick.formatting.HelpFormatter\fP
+\fBformatter\fP \-\- Reference to class:\fIclick.formatting.HelpFormatter\fP
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -393,13 +393,13 @@ the parameter of the super class.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current context
+\fBctx\fP \-\- current context
 .IP \(bu 2
-\fBargs\fP – arguments given by user
+\fBargs\fP \-\- arguments given by user
 .UNINDENT
 .TP
 .B Returns
-result of the function’s super
+result of the function\(aqs super
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -429,9 +429,9 @@ the other non SNMP Options. This makes the help text more lucid.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current context
+\fBctx\fP \-\- current context
 .IP \(bu 2
-\fBformatter\fP – Reference to class:\fIclick.formatting.HelpFormatter\fP
+\fBformatter\fP \-\- Reference to class:\fIclick.formatting.HelpFormatter\fP
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -445,9 +445,9 @@ This allows a custom usage string, which is defined in the \fBGlobalSettings\fP\
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current context
+\fBctx\fP \-\- current context
 .IP \(bu 2
-\fBformatter\fP – Reference to class:\fIclick.formatting.HelpFormatter\fP
+\fBformatter\fP \-\- Reference to class:\fIclick.formatting.HelpFormatter\fP
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -476,7 +476,7 @@ current context
 list of given parameters
 .TP
 .B return
-result of function’s super
+result of function\(aqs super
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -503,11 +503,11 @@ and handles the reaction to it.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current Context
+\fBctx\fP \-\- current Context
 .IP \(bu 2
-\fBopts\fP – options given by user
+\fBopts\fP \-\- options given by user
 .IP \(bu 2
-\fBargs\fP – arguments given by user
+\fBargs\fP \-\- arguments given by user
 .UNINDENT
 .TP
 .B Returns
@@ -526,13 +526,13 @@ load the given or default configfile.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBself\fP – Reference to CustomGroup
+\fBself\fP \-\- Reference to CustomGroup
 .IP \(bu 2
-\fBctx\fP – Reference to current context
+\fBctx\fP \-\- Reference to current context
 .IP \(bu 2
-\fBargs\fP – list of given args
+\fBargs\fP \-\- list of given args
 .IP \(bu 2
-\fBidx\fP – index at which the \fIload_config\fP command has been found
+\fBidx\fP \-\- index at which the \fIload_config\fP command has been found
 .UNINDENT
 .TP
 .B Raise
@@ -633,7 +633,7 @@ Therefore a connection to the database \fIInformation_Schema\fP is performed.
 .INDENT 7.0
 .TP
 .B Parameters
-\fBconfig\fP – config for database connection, can be generated by \fBwesp.helper.generate_db_conf_from_context()\fP
+\fBconfig\fP \-\- config for database connection, can be generated by \fBwesp.helper.generate_db_conf_from_context()\fP
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -651,13 +651,13 @@ Will initialize the database and complete the SQL Statements with the given name
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBctx\fP – current Context
+\fBctx\fP \-\- current Context
 .IP \(bu 2
-\fBconfig\fP – config for database connection, can be generated using \fBwesp.helper.generate_db_conf_from_context()\fP
+\fBconfig\fP \-\- config for database connection, can be generated using \fBwesp.helper.generate_db_conf_from_context()\fP
 .IP \(bu 2
-\fBparameter_create\fP – parameter part of create statement, can be generated using \fBwesp.helper.generate_parameter_create_statement()\fP
+\fBparameter_create\fP \-\- parameter part of create statement, can be generated using \fBwesp.helper.generate_parameter_create_statement()\fP
 .IP \(bu 2
-\fBparameter_insert\fP – parameter part of insert statement, can be generated using \fBwesp.helper.generate_parameter_insert_statement()\fP
+\fBparameter_insert\fP \-\- parameter part of insert statement, can be generated using \fBwesp.helper.generate_parameter_insert_statement()\fP
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -681,9 +681,9 @@ and statement from the \fI\%init_database()\fP function.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBdata_set\fP – data set to be inserted, must contain the same fields names as defined in the \fIinsertStatement\fP
+\fBdata_set\fP \-\- data set to be inserted, must contain the same fields names as defined in the \fIinsertStatement\fP
 .IP \(bu 2
-\fBctx\fP – current context
+\fBctx\fP \-\- current context
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -768,6 +768,15 @@ or \fBwesp.click_overloaded.CommandAllowConfigFile.parse_args()\fP
 .UNINDENT
 .INDENT 7.0
 .TP
+.B NAME_OF_CONFIG_FILE_COMMAND = \(aqload_config\(aq
+.INDENT 7.0
+.TP
+.B Name of the command, which will load the configfile. Per default it is \fIload_config\fP\&.
+If the name of this command has been changed, also change this variable.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B PROGRAM_NAME = \(aqwesp\(aq
 Name of the program which appears as part of the usage string.
 Will be set in the function \fBwesp.click_overloaded.CustomGroup.format_usage()\fP
@@ -784,7 +793,7 @@ Will be set in the \fBwesp.click_overloaded.CustomGroup.format_usage()\fP\&.
 .UNINDENT
 .INDENT 7.0
 .TP
-.B WELCOME_STRING = \(aqWelcome to the wesp tool \- Wireless Endpoint Statistics Program \enFor help run wesp \-h\(aq
+.B WELCOME_STRING = \(aqWelcome to the wesp tool \- Wireless Endpoint Statistics Ping \enFor help run wesp \-h\(aq
 String which greets the user if no parameters are given.
 Will be set in the function \fBwesp.click_overloaded.CustomGroup.parse_args()\fP
 .UNINDENT
@@ -822,7 +831,7 @@ human readable name that will be used for the CLI output and the column name in 
 .TP
 .B oid = \(aq\(aq
 OID at which the parameter can be found, in case this parameter needs the MAC address to work
-don’t enter it here. The MAC address will be added in the parser, based on which callback
+don\(aqt enter it here. The MAC address will be added in the parser, based on which callback
 is used for this parameter.
 .UNINDENT
 .UNINDENT
@@ -838,7 +847,7 @@ It will also complete addresses, e.g. 192.168.1 will become 192.168.1.0
 .INDENT 7.0
 .TP
 .B Parameters
-\fBaddress\fP – IP address to check
+\fBaddress\fP \-\- IP address to check
 .TP
 .B Return type
 \fI\%bool\fP
@@ -854,7 +863,7 @@ This function will check if the given address is a valid hex MAC address (e.g. a
 .INDENT 7.0
 .TP
 .B Parameters
-\fBaddress\fP – MAC address to check
+\fBaddress\fP \-\- MAC address to check
 .TP
 .B Return type
 \fI\%bool\fP
@@ -872,9 +881,9 @@ This function will compare if two IPs are the same or not.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBip_a\fP – IP address A to compare
+\fBip_a\fP \-\- IP address A to compare
 .IP \(bu 2
-\fBip_b\fP – IP address B to compare
+\fBip_b\fP \-\- IP address B to compare
 .UNINDENT
 .TP
 .B Return type
@@ -892,7 +901,7 @@ and return only a single non nested dict.
 .INDENT 7.0
 .TP
 .B Parameters
-\fBnested_dict\fP – nested dict to decompress
+\fBnested_dict\fP \-\- nested dict to decompress
 .TP
 .B Return type
 \fI\%dict\fP
@@ -908,7 +917,7 @@ This function will extract the MAC Address from the given OID and return it in H
 .INDENT 7.0
 .TP
 .B Parameters
-\fBoid\fP – OID which contains the decimal MAC address
+\fBoid\fP \-\- OID which contains the decimal MAC address
 .TP
 .B Return type
 \fI\%str\fP
@@ -962,7 +971,7 @@ database config as dict based on the current context
 This function will create the table create statement based on the represented parameters in \fBAllParameter\fP\&.
 The statement will have the following form:
 .sp
-\fI\(gaRetries\(ga int(11) DEFAULT NULL,\(gaRSSI\(ga double DEFAULT NULL,\(gaChannel\(ga int(11) DEFAULT NULL, […]\fP
+\fI\(gaRetries\(ga int(11) DEFAULT NULL,\(gaRSSI\(ga double DEFAULT NULL,\(gaChannel\(ga int(11) DEFAULT NULL, [...]\fP
 .sp
 Note that id, timestamp, front and end part of the statement will be added by the database init function.
 .INDENT 7.0
@@ -986,7 +995,7 @@ The front part (up to \fITableName\fP) and the final semicolon will be added by 
 .INDENT 7.0
 .TP
 .B Parameters
-\fBclient_data\fP – dict of requested client data
+\fBclient_data\fP \-\- dict of requested client data
 .TP
 .B Return type
 \fI\%str\fP
@@ -1025,7 +1034,7 @@ This function will convert a decimal MAC address into a hex MAC address
 .INDENT 7.0
 .TP
 .B Parameters
-\fBmac_address\fP – MAC address in decimal format (e.g. 170.187.204.221.238.255)
+\fBmac_address\fP \-\- MAC address in decimal format (e.g. 170.187.204.221.238.255)
 .TP
 .B Return type
 \fI\%str\fP
@@ -1043,9 +1052,9 @@ This function will convert a hex MAC address into a decimal MAC address
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBmac_address\fP – MAC address in hex format (e.g. aa:bb:cc:dd:ee:ff)
+\fBmac_address\fP \-\- MAC address in hex format (e.g. aa:bb:cc:dd:ee:ff)
 .IP \(bu 2
-\fBseparator\fP – the character which is used for the split
+\fBseparator\fP \-\- the character which is used for the split
 .UNINDENT
 .TP
 .B Return type
@@ -1060,7 +1069,7 @@ MAC address in decimal format
 .B wesp.helper.ping_to_str(client_data, ctx)
 This function checks if a ping has been made and will create a string
 based on the result.
-It will look like this \fI“Reply from 192.0.2.1 (12 ms)”\fP or \fI“No Reply from 192.0.2.1”\fP
+It will look like this \fI"Reply from 192.0.2.1 (12 ms)"\fP or \fI"No Reply from 192.0.2.1"\fP
 .INDENT 7.0
 .TP
 .B Return type
@@ -1076,7 +1085,7 @@ string representation of the ping result
 .INDENT 0.0
 .TP
 .B wesp.helper.print_session_info(session)
-Will print the info’s of the current SNMP session to the CLI
+Will print the info\(aqs of the current SNMP session to the CLI
 .INDENT 7.0
 .TP
 .B Param
@@ -1116,7 +1125,7 @@ If not it will raise an exception.
 .INDENT 7.0
 .TP
 .B Parameters
-\fBresponse\fP – SNMP variable
+\fBresponse\fP \-\- SNMP variable
 .TP
 .B Raises
 EasySNMPNoSuchInstanceError, EasySNMPNoSuchObjectError
@@ -1146,7 +1155,7 @@ will return the information stored at the given OID using GET.
 .INDENT 7.0
 .TP
 .B Parameters
-\fBoid\fP – OID to get from
+\fBoid\fP \-\- OID to get from
 .TP
 .B Return type
 SNMPVariable
@@ -1170,11 +1179,11 @@ GET this.
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBoid\fP – Base OID to GET for
+\fBoid\fP \-\- Base OID to GET for
 .IP \(bu 2
-\fBmac_address\fP – MAC Address of client
+\fBmac_address\fP \-\- MAC Address of client
 .IP \(bu 2
-\fBseparator\fP – optional separator to split the mac address. Default ‘:’
+\fBseparator\fP \-\- optional separator to split the mac address. Default \(aq:\(aq
 .UNINDENT
 .TP
 .B Returns
@@ -1188,7 +1197,7 @@ Will search for the associated MAC address to the given IP
 .INDENT 7.0
 .TP
 .B Parameters
-\fBip\fP – IP address to get MAC address for
+\fBip\fP \-\- IP address to get MAC address for
 .TP
 .B Return type
 \fI\%str\fP or None
@@ -1225,7 +1234,7 @@ Will WALK the OID and print the results to the CLI.
 .INDENT 7.0
 .TP
 .B Parameters
-\fBoid\fP – OID to walk
+\fBoid\fP \-\- OID to walk
 .TP
 .B Returns
 Nothing, result will be outputted directly to the CLI
@@ -1238,7 +1247,7 @@ Will WALK the given OID
 .INDENT 7.0
 .TP
 .B Parameters
-\fBoid\fP – OID to WALK
+\fBoid\fP \-\- OID to WALK
 .TP
 .B Return type
 list of SNMPVariable or None

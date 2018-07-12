@@ -493,6 +493,11 @@ def process_result(result, **kwargs):
     # get reference of context
     ctx = click.get_current_context()
 
+    # check if at least one parameter has been turned on
+    if 'client_ip' not in ctx.obj or 'client_mac' not in ctx.obj:
+        raise click.UsageError(
+            "Parameter Error: All parameters have been turned off'")
+
     # get current time with timezone
     current_time = datetime.now(tzlocal.get_localzone())
 

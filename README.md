@@ -152,6 +152,13 @@ Can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/PyCharm_Inte
 <br />
 <br />
 
+
+## WESP Web
+A graphical web based user interface can be found [here](https://github.com/IsarNet/wesp_web)
+
+<br />
+<br />
+
 ## Documentation
 The Sphinx doc as html can be found [here](https://github.com/IsarNet/wesp/tree/master/doc/html). To update the documentation run ```make html``` in the base folder of this project.
 
@@ -182,9 +189,4 @@ This project is licensed under the GPL-3.0 License - see the [LICENSE.txt](LICEN
 <br />
 <br />
 
-## Acknowledgments
-
-TODO
-
- [Johannes Luther](https://github.com/netgab).
 
