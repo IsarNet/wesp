@@ -13,11 +13,11 @@ To clone this repository git is required:
 
 On RHEL / CentOS systems:
 ```
-sudo yum update && yum install git
+sudo yum update; sudo yum install git
 ```
 On Debian / Ubuntu systems:
 ```
-sudo apt-get update && apt-get install git
+sudo apt-get update; sudo apt-get install git
 ```
 On Mac:
 ```
