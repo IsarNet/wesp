@@ -27,6 +27,8 @@ brew install git
 
 If your OS doesn’t ship with Net-SNMP 5.7.x, please follow instructions provided on the [Net-SNMP install page](%28http://www.net-snmp.org/docs/INSTALL.html) to build and install Net-SNMP 5.7.x on your system.
 
+Please note: To use the database function of this program, install a mySQL instance and make sure the machine 
+your using WESP on and the database share the same Timezone. 
 <br />
 <br />
 

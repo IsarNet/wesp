@@ -178,8 +178,6 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">tzlocal</span>
 
-<span class="c1"># TODO populate</span>
-
 <span class="n">order</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;retries&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;snr_off&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ap_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;rssi_off&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This attribute sets the order in which the data is outputted. Make sure to always add a *None* to each tuple!</span>
@@ -421,21 +419,18 @@
               <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of Access Point the client is associated with&#39;</span><span class="p">)</span>
 <span class="c1">#</span>
-<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--rx_packets&#39;</span><span class="p">,</span> <span class="s1">&#39;-re&#39;</span><span class="p">,</span> <span class="s1">&#39;rx_packets&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--rx_packets&#39;</span><span class="p">,</span> <span class="s1">&#39;-rx&#39;</span><span class="p">,</span> <span class="s1">&#39;rx_packets&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
               <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of client received packets&#39;</span><span class="p">)</span>
 <span class="c1">#</span>
-<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--tx_packets&#39;</span><span class="p">,</span> <span class="s1">&#39;-re&#39;</span><span class="p">,</span> <span class="s1">&#39;tx_packets&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--tx_packets&#39;</span><span class="p">,</span> <span class="s1">&#39;-tx&#39;</span><span class="p">,</span> <span class="s1">&#39;tx_packets&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
               <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of client transmitted packets&#39;</span><span class="p">)</span>
 <span class="c1">#</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--ping&#39;</span><span class="p">,</span> <span class="s1">&#39;-pi&#39;</span><span class="p">,</span> <span class="s1">&#39;ping&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_ping</span><span class="p">,</span>
               <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">help</span><span class="o">=</span><span class="s1">&#39;ICMP Ping to client from this device in ms. NOTE: root privileges required&#39;</span><span class="p">)</span>
-<span class="c1">#</span>
-<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--retries-support&#39;</span><span class="p">,</span> <span class="s1">&#39;-rs&#39;</span><span class="p">,</span> <span class="s1">&#39;retries_support&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">get_snmp_value_with_mac</span><span class="p">,</span>
-              <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of Support Retries by Client&#39;</span><span class="p">)</span>
+
 <span class="c1">#</span>
 <span class="c1"># Default Options off</span>
 <span class="c1">#</span>
@@ -457,7 +452,7 @@
 <span class="k">def</span> <span class="nf">cli_parser</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">wlc_address</span><span class="p">,</span> <span class="n">client_address</span><span class="p">,</span>
                <span class="n">snmp_version</span><span class="p">,</span> <span class="n">snmp_community</span><span class="p">,</span> <span class="n">snmp_user</span><span class="p">,</span> <span class="n">snmp_password</span><span class="p">,</span> <span class="n">snmp_encryption</span><span class="p">,</span>
                <span class="n">interval</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">retries</span><span class="p">,</span> <span class="n">ap_name</span><span class="p">,</span> <span class="n">rx_packets</span><span class="p">,</span> <span class="n">tx_packets</span><span class="p">,</span> <span class="n">ping</span><span class="p">,</span>
-               <span class="n">rssi_off</span><span class="p">,</span> <span class="n">snr_off</span><span class="p">,</span> <span class="n">data_rate_off</span><span class="p">,</span> <span class="n">retries_support</span><span class="p">):</span>
+               <span class="n">rssi_off</span><span class="p">,</span> <span class="n">snr_off</span><span class="p">,</span> <span class="n">data_rate_off</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    This function represents the main command and contains all options ranging from WLC/client information,</span>
@@ -600,8 +595,6 @@
 <span class="sd">&quot;&quot;&quot;________ CONFIGFILE COMMAND _____________&quot;&quot;&quot;</span>
 
 
-<span class="c1"># TODO add real Default Path</span>
-<span class="c1"># TODO Add real Help Text</span>
 <span class="c1">#</span>
 <span class="c1"># Config File Command Definition</span>
 <span class="c1">#</span>
@@ -643,6 +636,11 @@
 
     <span class="c1"># get reference of context</span>
     <span class="n">ctx</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">get_current_context</span><span class="p">()</span>
+
+    <span class="c1"># check if at least one parameter has been turned on</span>
+    <span class="k">if</span> <span class="s1">&#39;client_ip&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="ow">or</span> <span class="s1">&#39;client_mac&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span><span class="p">(</span>
+            <span class="s2">&quot;Parameter Error: All parameters have been turned off&#39;&quot;</span><span class="p">)</span>
 
     <span class="c1"># get current time with timezone</span>
     <span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tzlocal</span><span class="o">.</span><span class="n">get_localzone</span><span class="p">())</span>

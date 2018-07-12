@@ -191,6 +191,28 @@
 <span class="sd">    :meth:`wesp.helper.generate_parameter_insert_statement` function but has to be ran by the caller of </span>
 <span class="sd">    the :meth:`init_database` function.&quot;&quot;&quot;</span>
 
+    <span class="n">column_total_check</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA like &#39;</span><span class="si">%%</span><span class="s2">DATABASE</span><span class="si">%%</span><span class="s2">&#39; </span>
+<span class="s2">    AND TABLE_NAME like &#39;</span><span class="si">%%</span><span class="s2">TABLE</span><span class="si">%%</span><span class="s2">&#39; AND COLUMN_NAME like &#39;</span><span class="si">%%</span><span class="s2">COLUMN</span><span class="si">%%</span><span class="s2">&#39; AND COLUMN_TYPE like &#39;</span><span class="si">%%</span><span class="s2">DATA_TYPE</span><span class="si">%%</span><span class="s2">&#39;&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This statement is used to check if a column exists. Here the name and the data type is checked. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">column_only_name_check</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA like &#39;</span><span class="si">%%</span><span class="s2">DATABASE</span><span class="si">%%</span><span class="s2">&#39; </span>
+<span class="s2">        AND TABLE_NAME like &#39;</span><span class="si">%%</span><span class="s2">TABLE</span><span class="si">%%</span><span class="s2">&#39; AND COLUMN_NAME like &#39;</span><span class="si">%%</span><span class="s2">COLUMN</span><span class="si">%%</span><span class="s2">&#39;&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This statement is used to check if a column exists. Here only the name is checked. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">create_new_column</span> <span class="o">=</span> <span class="s2">&quot;ALTER TABLE </span><span class="si">%%</span><span class="s2">DATABASE</span><span class="si">%%</span><span class="s2">.</span><span class="si">%%</span><span class="s2">TABLE</span><span class="si">%%</span><span class="s2"> ADD COLUMN `</span><span class="si">%%</span><span class="s2">COLUMN</span><span class="si">%%</span><span class="s2">` </span><span class="si">%%</span><span class="s2">DATA_TYPE</span><span class="si">%%</span><span class="s2">; &quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This statement will created a new column in a existing table</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">modify_column</span> <span class="o">=</span> <span class="s2">&quot;ALTER TABLE </span><span class="si">%%</span><span class="s2">DATABASE</span><span class="si">%%</span><span class="s2">.</span><span class="si">%%</span><span class="s2">TABLE</span><span class="si">%%</span><span class="s2"> MODIFY COLUMN `</span><span class="si">%%</span><span class="s2">COLUMN</span><span class="si">%%</span><span class="s2">` </span><span class="si">%%</span><span class="s2">DATA_TYPE</span><span class="si">%%</span><span class="s2">; &quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This statement will modify the data type of an column to match the one registered in this program</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">table_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">db_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">global_config</span> <span class="o">=</span> <span class="kc">None</span>
@@ -234,12 +256,12 @@
         <span class="c1"># add the database config to the class</span>
         <span class="n">Database</span><span class="o">.</span><span class="n">global_config</span> <span class="o">=</span> <span class="n">config</span>
 
-        <span class="n">Database</span><span class="o">.</span><span class="n">create_database_and_table_if_not_existing</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">_create_database_and_table_if_not_existing</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">Database</span><span class="o">.</span><span class="n">ready</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Database.create_database_and_table_if_not_existing"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database.create_database_and_table_if_not_existing">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_database_and_table_if_not_existing</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_create_database_and_table_if_not_existing</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Will check the existence of the database and table with the names specified in the :meth:`init_database`</span>
@@ -270,17 +292,60 @@
                     <span class="s2">&quot;Unknown MySQL Error at initial connection: `</span><span class="si">%s</span><span class="s2">`&quot;</span> <span class="o">%</span> <span class="p">(</span>
                         <span class="n">err</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">cur</span> <span class="o">=</span> <span class="n">cnx</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">cnx</span><span class="o">.</span><span class="n">cursor</span><span class="p">(</span><span class="n">buffered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="c1"># Create database, if not existing</span>
             <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">Database</span><span class="o">.</span><span class="n">databaseCreateStatement</span><span class="p">)</span>
 
             <span class="c1"># Create table if not existing</span>
             <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">Database</span><span class="o">.</span><span class="n">tableCreateStatement</span><span class="p">)</span>
+
+            <span class="c1"># Make sure all columns exist and have the right data type</span>
+            <span class="n">Database</span><span class="o">.</span><span class="n">_check_if_columns_exist</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span>
+
+            <span class="c1"># Make sure data is committed to the database</span>
+            <span class="n">cnx</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">cur</span><span class="p">:</span>
                 <span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">cnx</span><span class="p">:</span>
-                <span class="n">cnx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+                <span class="n">cnx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_check_if_columns_exist</span><span class="p">(</span><span class="n">cur</span><span class="p">):</span>
+
+        <span class="c1"># add database and table name to SQL statements</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">column_only_name_check</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">column_only_name_check</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">DATABASE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">TABLE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">column_total_check</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">column_total_check</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">DATABASE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">TABLE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">create_new_column</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">create_new_column</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">DATABASE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">TABLE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
+        <span class="n">Database</span><span class="o">.</span><span class="n">modify_column</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">modify_column</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">DATABASE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">TABLE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
+
+        <span class="c1"># for all parameter which have a data type check if the corresponding column exist</span>
+        <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">AllParameter</span><span class="o">.</span><span class="n">get_all_parameter</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">db_data_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="c1"># check if column with right name and data type exists</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">column_total_check</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">COLUMN</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">DATA_TYPE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">db_data_type</span><span class="p">)</span>
+                <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+                <span class="c1"># rowcount of zero means no columns with this name and data type exists</span>
+                <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">rowcount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+                    <span class="c1"># check if column only with right name exists, if so modify data type</span>
+                    <span class="n">query</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">column_only_name_check</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">COLUMN</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+                    <span class="c1"># rowcount of zero means no columns with this name exists</span>
+                    <span class="c1"># above zero means that a column has been found with the name</span>
+                    <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">rowcount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+                        <span class="c1"># column has to be created</span>
+                        <span class="n">query</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">create_new_column</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">COLUMN</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">DATA_TYPE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">db_data_type</span><span class="p">)</span>
+                        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># column has to be modified</span>
+                        <span class="n">query</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">modify_column</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">COLUMN</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">DATA_TYPE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">db_data_type</span><span class="p">)</span>
+                        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Database.insert_data_set"><a class="viewcode-back" href="../../wesp.database.html#wesp.database.Database.insert_data_set">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">insert_data_set</span><span class="p">(</span><span class="n">data_set</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
@@ -295,11 +360,11 @@
 
         <span class="c1"># Temporary add client_ip, client_mac and timestamp(which should not be represented in client_data</span>
         <span class="c1"># to prevent output to CLI)</span>
-        <span class="c1"># convert timestamp to ISO format to ensure that timezone is included and understand by DB</span>
+        <span class="c1"># convert timestamp to a format that is understood by the DB</span>
         <span class="n">data_set</span> <span class="o">=</span> <span class="n">data_set</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">data_set</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;client_ip&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_ip&#39;</span><span class="p">],</span>
                          <span class="s1">&#39;client_mac&#39;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;client_mac&#39;</span><span class="p">],</span>
-                         <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">isoformat</span><span class="p">())})</span>
+                         <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)})</span>
 
         <span class="n">cnx</span> <span class="o">=</span> <span class="n">cur</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
