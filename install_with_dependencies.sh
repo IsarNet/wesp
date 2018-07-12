@@ -51,6 +51,12 @@ fi
 if [[ "$os" == *"Debian"* ]]
 then
     echo "Will install for Debian..."
+    echo "Update Source list..."
+    echo "deb http://ftp.br.debian.org/debian/ wheezy main contrib non-free" | sudo tee -a /etc/apt/sources.list
+    echo "deb-src http://ftp.br.debian.org/debian/ wheezy main contrib non-free" | sudo tee -a /etc/apt/sources.list
+    sudo apt-get update
+    sudo apt-get upgrade
+
     # install dependencies and check if error happened
     if sudo apt-get install libsnmp-dev snmp-mibs-downloader gcc python-dev python-setuptools
     then
