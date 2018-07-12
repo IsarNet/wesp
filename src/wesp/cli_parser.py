@@ -496,6 +496,9 @@ def process_result(result, **kwargs):
     # get reference of context
     ctx = click.get_current_context()
 
+    ctx.obj['client_ip'] = "192.168.1.233"
+    CLIENT_DATA['channel'] = 42
+
     # check if at least one parameter has been turned on
     if 'client_ip' not in ctx.obj or 'client_mac' not in ctx.obj:
         raise click.UsageError(

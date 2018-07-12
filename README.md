@@ -103,7 +103,7 @@ sudo rm $(cat files.txt)
 ```
 sudo: Command not found
 ```
-
+<br />
 Change to root user (enter your password):
 ```
 su
@@ -130,7 +130,7 @@ exit
 ```
 Package 'snmp-mibs-installer' has no installation candidate
 ```
-
+<br />
 Add source of package to apt source list:
 ```
 echo "deb http://ftp.br.debian.org/debian/ wheezy main contrib non-free" | sudo tee -a /etc/apt/sources.list
@@ -144,6 +144,25 @@ sudo apt-get upgrade
 ```
 
 Rerun bash script.
+
+<br />
+
+#### Make command not installed:
+```
+make: Command not found
+```
+<br />
+On Debian / Ubuntu systems:
+
+```
+sudo apt-get install make
+```
+
+On RHEL / CentOS systems:
+
+```
+sudo yum install make
+```
 
 <br />
 <br />

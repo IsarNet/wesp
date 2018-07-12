@@ -20,7 +20,8 @@ setup(
         'mysql-connector',
         'tzlocal',
         'Sphinx',
-        'sphinxcontrib-websupport'
+        'sphinxcontrib-websupport',
+        'sphinx-rtd-theme'
     ],
     entry_points={
         'console_scripts': ['wesp=wesp.cli_parser:cli_parser'],
