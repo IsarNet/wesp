@@ -147,7 +147,7 @@ Rerun bash script.
 
 <br />
 
-#### Make command not installed:
+#### *Make* command not installed:
 ```
 make: Command not found
 ```
