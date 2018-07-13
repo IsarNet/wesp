@@ -131,7 +131,9 @@ exit
 Package 'snmp-mibs-installer' has no installation candidate
 ```
 <br />
+
 Add source of package to apt source list:
+
 ```
 echo "deb http://ftp.br.debian.org/debian/ wheezy main contrib non-free" | sudo tee -a /etc/apt/sources.list
 echo "deb-src http://ftp.br.debian.org/debian/ wheezy main contrib non-free" | sudo tee -a /etc/apt/sources.list
