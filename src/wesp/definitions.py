@@ -35,7 +35,7 @@ class Parameter:
     For strings use *varchar(255)* with the length of the string in the brackets.
     
     For real numbers use *int(11)* with a fixed maximum of 2147483647. Length in brackets is only for display 
-    and will not effect this program but are expected by SQL.
+    and will not affect this program but is expected by SQL.
     
     For real non negative numbers use *int(11) unsigned* which has a maximum of 4294967295.
     

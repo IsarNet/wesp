@@ -13,8 +13,10 @@ class Database:
     The different raw statements are completed in the
     :meth:`init_database` using the data inside of :class:`wesp.definitions.AllParameter`.
 
-    The function :meth:`create_database_and_table_if_not_existing` will check if the database and the table exist,
+    The function :meth:`_create_database_and_table_if_not_existing` will check if the database and the table exist,
     otherwise it will create it using the *databaseCreateStatement*.
+
+    The function :meth:`_check_if_columns_exist`  will check if all columns exists and have the right data type.
 
     Data can be inserted using the function :meth:`insert_data_set`. This function expects the data to be in the
     format of the dict *CLIENT_DATA* inside the :mod:`cli_parser` module.
@@ -168,6 +170,15 @@ class Database:
 
     @staticmethod
     def _check_if_columns_exist(cur):
+        """
+        Will check if all columns exists and have the right data type. This makes sure that the database always reflects
+        the definition of this program. A column is checked in two ways. First a name and a data type check is performed.
+        Should this fail, it is checked if a column with the same name exists, if so the data type will be modified. If
+        no column exists it will be created.
+
+        :param cur: cursor from current DB connection
+
+        """
 
         # add database and table name to SQL statements
         Database.column_only_name_check = Database.column_only_name_check.replace('%%DATABASE%%', Database.db_name).replace('%%TABLE%%', Database.table_name)

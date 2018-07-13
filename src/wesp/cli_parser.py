@@ -2,7 +2,7 @@
 This module's main task is the parsing of the CLI parameters. This is done using the extension
 Click (http://click.pocoo.org/5/). Click separates three different parameters: commands, options and arguments.
 
-This module is consists of one Group (:meth:`cli_parser`), which has two sub commands: :meth:`load_config`
+This module consists of one Group (:meth:`cli_parser`), which has two sub commands: :meth:`load_config`
 and :meth:`print_to_db`
 
 :meth:`cli_parser` contains all options to set up the main program (e.g. client address and SNMP options),
