@@ -9,3 +9,4 @@ mysql-connector
 tzlocal
 Sphinx
 sphinxcontrib-websupport
+sphinx-rtd-theme
