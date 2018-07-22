@@ -194,13 +194,13 @@ of the Click option specified in the cli_parser. Note Lower and Uppercase.</p>
 
 <dl class="staticmethod">
 <dt id="wesp.definitions.AllParameter.get_parameter_by_oid">
-<em class="property">static </em><code class="descname">get_parameter_by_oid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/definitions.html#AllParameter.get_parameter_by_oid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.definitions.AllParameter.get_parameter_by_oid" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_parameter_by_oid</code><span class="sig-paren">(</span><em>oid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/definitions.html#AllParameter.get_parameter_by_oid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.definitions.AllParameter.get_parameter_by_oid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the parameter with the given OID or None if the respective parameter does not exist.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#wesp.definitions.Parameter" title="wesp.definitions.Parameter">Parameter</a> or None</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#wesp.definitions.Parameter" title="wesp.definitions.Parameter">Parameter</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)">None</a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">parameter with the given OID or None.</td>
 </tr>
@@ -242,14 +242,14 @@ Will be set in the function <a class="reference internal" href="wesp.click_overl
 <dt id="wesp.definitions.GlobalSettings.USAGE">
 <code class="descname">USAGE</code><em class="property"> = '-W wlc_ip|wlc_fqdn -C client_ip|client_mac  [SNMP OPTIONS] [OTHER OPTIONS] load_config [Options] print_to_db [Options]'</em><a class="headerlink" href="#wesp.definitions.GlobalSettings.USAGE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Usage string to show the structure of this program. This string also
-appears at every error message. The program name is set separably.</p>
+appears at every error message. The program name is set separable.</p>
 <p>Additional help on the usage is defined in the help text of the class <a class="reference internal" href="wesp.click_overloaded.html#wesp.click_overloaded.CustomGroup" title="wesp.click_overloaded.CustomGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.click_overloaded.CustomGroup</span></code></a>.</p>
 <p>Will be set in the <a class="reference internal" href="wesp.click_overloaded.html#wesp.click_overloaded.CustomGroup.format_usage" title="wesp.click_overloaded.CustomGroup.format_usage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wesp.click_overloaded.CustomGroup.format_usage()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="wesp.definitions.GlobalSettings.WELCOME_STRING">
-<code class="descname">WELCOME_STRING</code><em class="property"> = 'Welcome to the wesp tool - Wireless Endpoint Statistics Ping \nFor help run wesp -h'</em><a class="headerlink" href="#wesp.definitions.GlobalSettings.WELCOME_STRING" title="Permalink to this definition">¶</a></dt>
+<code class="descname">WELCOME_STRING</code><em class="property"> = 'Welcome to the wesp tool - Wireless Endpoint Statistics Ping \n For help run wesp -h'</em><a class="headerlink" href="#wesp.definitions.GlobalSettings.WELCOME_STRING" title="Permalink to this definition">¶</a></dt>
 <dd><p>String which greets the user if no parameters are given.
 Will be set in the function <a class="reference internal" href="wesp.click_overloaded.html#wesp.click_overloaded.CustomGroup.parse_args" title="wesp.click_overloaded.CustomGroup.parse_args"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wesp.click_overloaded.CustomGroup.parse_args()</span></code></a></p>
 </dd></dl>
@@ -267,10 +267,10 @@ More information on the fields can be found below:</p>
 <dd><p>Database data type which should be used for this parameter.</p>
 <p>For strings use <em>varchar(255)</em> with the length of the string in the brackets.</p>
 <p>For real numbers use <em>int(11)</em> with a fixed maximum of 2147483647. Length in brackets is only for display 
-and will not effect this program but are expected by SQL.</p>
-<p>For real non negative numbers use <em>int(11) unsigned</em> which has a maximum of 4294967295.</p>
-<p>For rational numbers use <em>double</em>, no length needed. Be aware of the rounding problems in comparision
-e.g. <a class="reference external" href="https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues">https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues</a>.</p>
+and will not affect this program but is expected by SQL.</p>
+<p>For real non negative numbers use <em>int(11) unsigned</em>  which has a maximum of 4294967295.</p>
+<p>For rational numbers use <em>double</em>, no length needed. Be aware of the rounding problems in comparison 
+e.g. <a class="reference external" href="https://dev.mysql.com/doc/refman/8.0/en/problems-with-float.html">https://dev.mysql.com/doc/refman/8.0/en/problems-with-float.html</a>.</p>
 <p>Keep in mind, that the wrong length can result in partial loss of the data.</p>
 <p>NOTE: Changes here will only be reflected in the database, if the table is dropped and recreated by this program.</p>
 </dd></dl>

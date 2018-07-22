@@ -37,10 +37,10 @@ class Parameter:
     For real numbers use *int(11)* with a fixed maximum of 2147483647. Length in brackets is only for display 
     and will not affect this program but is expected by SQL.
     
-    For real non negative numbers use *int(11) unsigned* which has a maximum of 4294967295.
+    For real non negative numbers use *int(11) unsigned*  which has a maximum of 4294967295.
     
-    For rational numbers use *double*, no length needed. Be aware of the rounding problems in comparision
-    e.g. https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues.
+    For rational numbers use *double*, no length needed. Be aware of the rounding problems in comparison 
+    e.g. https://dev.mysql.com/doc/refman/8.0/en/problems-with-float.html.
     
     Keep in mind, that the wrong length can result in partial loss of the data.
     \n
@@ -193,7 +193,7 @@ class GlobalSettings:
     or :meth:`wesp.click_overloaded.CommandAllowConfigFile.parse_args`
     """
 
-    WELCOME_STRING = "Welcome to the wesp tool - Wireless Endpoint Statistics Ping \n" \
+    WELCOME_STRING = "Welcome to the wesp tool - Wireless Endpoint Statistics Ping \n " \
                      "For help run wesp -h"
     """
     String which greets the user if no parameters are given.
@@ -210,7 +210,7 @@ class GlobalSettings:
             "load_config [Options] print_to_db [Options]"
     """
     Usage string to show the structure of this program. This string also
-    appears at every error message. The program name is set separably.
+    appears at every error message. The program name is set separable.
     
     Additional help on the usage is defined in the help text of the class :class:`wesp.click_overloaded.CustomGroup`. 
     

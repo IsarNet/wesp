@@ -146,7 +146,7 @@
 <span class="sd">This module&#39;s main task is the parsing of the CLI parameters. This is done using the extension</span>
 <span class="sd">Click (http://click.pocoo.org/5/). Click separates three different parameters: commands, options and arguments.</span>
 
-<span class="sd">This module is consists of one Group (:meth:`cli_parser`), which has two sub commands: :meth:`load_config`</span>
+<span class="sd">This module consists of one Group (:meth:`cli_parser`), which has two sub commands: :meth:`load_config`</span>
 <span class="sd">and :meth:`print_to_db`</span>
 
 <span class="sd">:meth:`cli_parser` contains all options to set up the main program (e.g. client address and SNMP options),</span>
@@ -205,7 +205,9 @@
 
 <div class="viewcode-block" id="get_snmp_value"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.get_snmp_value">[docs]</a><span class="k">def</span> <span class="nf">get_snmp_value</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">flag_set</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will request and save an attribute based on the corresponding OID and Mac Address</span>
+<span class="sd">    This function will request and save an attribute based on the corresponding OID. The OID</span>
+<span class="sd">    is retrieved from the class :class:`wesp.definitions.AllParameter` using the name of the parameter.</span>
+
 
 <span class="sd">    :param ctx: current context object</span>
 <span class="sd">    :param param: calling parameter</span>
@@ -224,7 +226,8 @@
 <div class="viewcode-block" id="get_snmp_value_with_mac"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.get_snmp_value_with_mac">[docs]</a><span class="k">def</span> <span class="nf">get_snmp_value_with_mac</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">flag_set</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function will request and save an attribute based on the corresponding OID and MAC address. The OID</span>
-<span class="sd">    is retrieved from the class :class:`wesp.definitions.AllParameter` using the name of the parameter.</span>
+<span class="sd">    is retrieved from the class :class:`wesp.definitions.AllParameter` using the name of the parameter. The MAC</span>
+<span class="sd">    address is converted into the decimal format and appended to the OID.</span>
 
 <span class="sd">    :param ctx: current context object</span>
 <span class="sd">    :param param: calling parameter</span>
@@ -242,7 +245,7 @@
 
 <div class="viewcode-block" id="check_wlc_address"><a class="viewcode-back" href="../../wesp.cli_parser.html#wesp.cli_parser.check_wlc_address">[docs]</a><span class="k">def</span> <span class="nf">check_wlc_address</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function will check if the WLC address is a valid IP or resolvable FQDN address.</span>
+<span class="sd">    This function will check if the WLC address is a valid IP or a resolvable FQDN address.</span>
 <span class="sd">    If so it will add it to the context, otherwise it will raise an error.</span>
 
 <span class="sd">    :param ctx: current context object</span>
@@ -295,7 +298,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function requests the name of the associated AP of the client.</span>
 <span class="sd">    Therefore it will first request the MAC address of the AP from the *cldcClientTable*</span>
-<span class="sd">    and then using the address to find its name in the *clDLApBootTable*.</span>
+<span class="sd">    and then use the address to find its name in the *clDLApBootTable*.</span>
 
 <span class="sd">    :param ctx: current context object</span>
 <span class="sd">    :param param: calling parameter</span>

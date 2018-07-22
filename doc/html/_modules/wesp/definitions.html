@@ -179,12 +179,12 @@
 <span class="sd">    For strings use *varchar(255)* with the length of the string in the brackets.</span>
 <span class="sd">    </span>
 <span class="sd">    For real numbers use *int(11)* with a fixed maximum of 2147483647. Length in brackets is only for display </span>
-<span class="sd">    and will not effect this program but are expected by SQL.</span>
+<span class="sd">    and will not affect this program but is expected by SQL.</span>
 <span class="sd">    </span>
-<span class="sd">    For real non negative numbers use *int(11) unsigned* which has a maximum of 4294967295.</span>
+<span class="sd">    For real non negative numbers use *int(11) unsigned*  which has a maximum of 4294967295.</span>
 <span class="sd">    </span>
-<span class="sd">    For rational numbers use *double*, no length needed. Be aware of the rounding problems in comparision</span>
-<span class="sd">    e.g. https://stackoverflow.com/questions/2567434/mysql-floating-point-comparison-issues.</span>
+<span class="sd">    For rational numbers use *double*, no length needed. Be aware of the rounding problems in comparison </span>
+<span class="sd">    e.g. https://dev.mysql.com/doc/refman/8.0/en/problems-with-float.html.</span>
 <span class="sd">    </span>
 <span class="sd">    Keep in mind, that the wrong length can result in partial loss of the data.</span>
 <span class="sd">    \n</span>
@@ -337,7 +337,7 @@
 <span class="sd">    or :meth:`wesp.click_overloaded.CommandAllowConfigFile.parse_args`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">WELCOME_STRING</span> <span class="o">=</span> <span class="s2">&quot;Welcome to the wesp tool - Wireless Endpoint Statistics Ping </span><span class="se">\n</span><span class="s2">&quot;</span> \
+    <span class="n">WELCOME_STRING</span> <span class="o">=</span> <span class="s2">&quot;Welcome to the wesp tool - Wireless Endpoint Statistics Ping </span><span class="se">\n</span><span class="s2"> &quot;</span> \
                      <span class="s2">&quot;For help run wesp -h&quot;</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String which greets the user if no parameters are given.</span>
@@ -354,7 +354,7 @@
             <span class="s2">&quot;load_config [Options] print_to_db [Options]&quot;</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Usage string to show the structure of this program. This string also</span>
-<span class="sd">    appears at every error message. The program name is set separably.</span>
+<span class="sd">    appears at every error message. The program name is set separable.</span>
 <span class="sd">    </span>
 <span class="sd">    Additional help on the usage is defined in the help text of the class :class:`wesp.click_overloaded.CustomGroup`. </span>
 <span class="sd">    </span>

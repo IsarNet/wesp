@@ -5,8 +5,6 @@ wesp.cli\_parser module
     :members:
     :show-inheritance:
     
-    
-# functions with decorates have to be added manuelly:
 
 .. autofunction:: print_to_db(ctx, db_name, db_table, db_address, db_port, db_user, db_pass, silent)
 

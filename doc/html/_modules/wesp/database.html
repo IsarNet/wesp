@@ -157,8 +157,10 @@
 <span class="sd">    The different raw statements are completed in the</span>
 <span class="sd">    :meth:`init_database` using the data inside of :class:`wesp.definitions.AllParameter`.</span>
 
-<span class="sd">    The function :meth:`create_database_and_table_if_not_existing` will check if the database and the table exist,</span>
+<span class="sd">    The function :meth:`_create_database_and_table_if_not_existing` will check if the database and the table exist,</span>
 <span class="sd">    otherwise it will create it using the *databaseCreateStatement*.</span>
+
+<span class="sd">    The function :meth:`_check_if_columns_exist`  will check if all columns exists and have the right data type.</span>
 
 <span class="sd">    Data can be inserted using the function :meth:`insert_data_set`. This function expects the data to be in the</span>
 <span class="sd">    format of the dict *CLIENT_DATA* inside the :mod:`cli_parser` module.</span>
@@ -312,6 +314,15 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_check_if_columns_exist</span><span class="p">(</span><span class="n">cur</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Will check if all columns exists and have the right data type. This makes sure that the database always reflects</span>
+<span class="sd">        the definition of this program. A column is checked in two ways. First a name and a data type check is performed.</span>
+<span class="sd">        Should this fail, it is checked if a column with the same name exists, if so the data type will be modified. If</span>
+<span class="sd">        no column exists it will be created.</span>
+
+<span class="sd">        :param cur: cursor from current DB connection</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># add database and table name to SQL statements</span>
         <span class="n">Database</span><span class="o">.</span><span class="n">column_only_name_check</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">column_only_name_check</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">DATABASE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">TABLE</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Database</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>

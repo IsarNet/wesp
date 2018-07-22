@@ -174,7 +174,7 @@ The SNMP session will be initialized in the init function.
 All functions are static to allow easy use without a reference to specific sessions.</p>
 <dl class="staticmethod">
 <dt id="wesp.snmp.Snmp.get">
-<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.get" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><em>oid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>will return the information stored at the given OID using GET.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -194,7 +194,7 @@ All functions are static to allow easy use without a reference to specific sessi
 
 <dl class="staticmethod">
 <dt id="wesp.snmp.Snmp.get_by_mac_address">
-<em class="property">static </em><code class="descname">get_by_mac_address</code><span class="sig-paren">(</span><em>mac_address</em>, <em>separator=':'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.get_by_mac_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.get_by_mac_address" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_by_mac_address</code><span class="sig-paren">(</span><em>oid</em>, <em>mac_address</em>, <em>separator=':'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.get_by_mac_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.get_by_mac_address" title="Permalink to this definition">¶</a></dt>
 <dd><p>will return in the information which is stored at the given OID and
 is specific by the given MAC Address.
 It will append the MAC Address in decimal format to the given OID and
@@ -219,7 +219,7 @@ GET this.</p>
 
 <dl class="staticmethod">
 <dt id="wesp.snmp.Snmp.get_mac_from_ip">
-<em class="property">static </em><code class="descname">get_mac_from_ip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.get_mac_from_ip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.get_mac_from_ip" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_mac_from_ip</code><span class="sig-paren">(</span><em>ip</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.get_mac_from_ip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.get_mac_from_ip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Will search for the associated MAC address to the given IP</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -227,7 +227,7 @@ GET this.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ip</strong> – IP address to get MAC address for</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a> or None</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)">None</a></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">MAC address of client or None if no match was found</td>
 </tr>
@@ -265,7 +265,7 @@ GET this.</p>
 
 <dl class="staticmethod">
 <dt id="wesp.snmp.Snmp.print_walk">
-<em class="property">static </em><code class="descname">print_walk</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.print_walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.print_walk" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">print_walk</code><span class="sig-paren">(</span><em>oid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.print_walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.print_walk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Will WALK the OID and print the results to the CLI.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -281,7 +281,7 @@ GET this.</p>
 
 <dl class="staticmethod">
 <dt id="wesp.snmp.Snmp.walk">
-<em class="property">static </em><code class="descname">walk</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.walk" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">walk</code><span class="sig-paren">(</span><em>oid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/snmp.html#Snmp.walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.snmp.Snmp.walk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Will WALK the given OID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -289,7 +289,7 @@ GET this.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>oid</strong> – OID to WALK</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of SNMPVariable or None</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of SNMPVariable or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)">None</a></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">SNMP Timeout Error</td>
 </tr>

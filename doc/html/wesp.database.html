@@ -169,8 +169,9 @@
 in this class is static.</p>
 <p>The different raw statements are completed in the
 <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> using the data inside of <a class="reference internal" href="wesp.definitions.html#wesp.definitions.AllParameter" title="wesp.definitions.AllParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.definitions.AllParameter</span></code></a>.</p>
-<p>The function <code class="xref py py-meth docutils literal notranslate"><span class="pre">create_database_and_table_if_not_existing()</span></code> will check if the database and the table exist,
+<p>The function <code class="xref py py-meth docutils literal notranslate"><span class="pre">_create_database_and_table_if_not_existing()</span></code> will check if the database and the table exist,
 otherwise it will create it using the <em>databaseCreateStatement</em>.</p>
+<p>The function <code class="xref py py-meth docutils literal notranslate"><span class="pre">_check_if_columns_exist()</span></code>  will check if all columns exists and have the right data type.</p>
 <p>Data can be inserted using the function <a class="reference internal" href="#wesp.database.Database.insert_data_set" title="wesp.database.Database.insert_data_set"><code class="xref py py-meth docutils literal notranslate"><span class="pre">insert_data_set()</span></code></a>. This function expects the data to be in the
 format of the dict <em>CLIENT_DATA</em> inside the <code class="xref py py-mod docutils literal notranslate"><span class="pre">cli_parser</span></code> module.</p>
 <dl class="attribute">
@@ -200,7 +201,7 @@ not exists. Note the name of the database will be inserted in the <a class="refe
 
 <dl class="staticmethod">
 <dt id="wesp.database.Database.init_database">
-<em class="property">static </em><code class="descname">init_database</code><span class="sig-paren">(</span><em>config</em>, <em>parameter_create</em>, <em>parameter_insert</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/database.html#Database.init_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.database.Database.init_database" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">init_database</code><span class="sig-paren">(</span><em>ctx</em>, <em>config</em>, <em>parameter_create</em>, <em>parameter_insert</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/database.html#Database.init_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.database.Database.init_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Will initialize the database and complete the SQL Statements with the given names and sub-statements</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -231,7 +232,7 @@ the <a class="reference internal" href="#wesp.database.Database.init_database" t
 
 <dl class="staticmethod">
 <dt id="wesp.database.Database.insert_data_set">
-<em class="property">static </em><code class="descname">insert_data_set</code><span class="sig-paren">(</span><em>ctx</em>, <em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/database.html#Database.insert_data_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.database.Database.insert_data_set" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">insert_data_set</code><span class="sig-paren">(</span><em>data_set</em>, <em>ctx</em>, <em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/database.html#Database.insert_data_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.database.Database.insert_data_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Will insert the given data into the database based on the config
 and statement from the <a class="reference internal" href="#wesp.database.Database.init_database" title="wesp.database.Database.init_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_database()</span></code></a> function.</p>
 <table class="docutils field-list" frame="void" rules="none">

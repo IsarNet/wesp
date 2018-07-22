@@ -164,7 +164,7 @@
 <span id="wesp-cli-parser-module"></span><h1>wesp.cli_parser module<a class="headerlink" href="#module-wesp.cli_parser" title="Permalink to this headline">¶</a></h1>
 <p>This module’s main task is the parsing of the CLI parameters. This is done using the extension
 Click (<a class="reference external" href="http://click.pocoo.org/5/">http://click.pocoo.org/5/</a>). Click separates three different parameters: commands, options and arguments.</p>
-<p>This module is consists of one Group (<a class="reference internal" href="#wesp.cli_parser.cli_parser" title="wesp.cli_parser.cli_parser"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cli_parser()</span></code></a>), which has two sub commands: <a class="reference internal" href="#wesp.cli_parser.load_config" title="wesp.cli_parser.load_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_config()</span></code></a>
+<p>This module consists of one Group (<a class="reference internal" href="#wesp.cli_parser.cli_parser" title="wesp.cli_parser.cli_parser"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cli_parser()</span></code></a>), which has two sub commands: <a class="reference internal" href="#wesp.cli_parser.load_config" title="wesp.cli_parser.load_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_config()</span></code></a>
 and <a class="reference internal" href="#wesp.cli_parser.print_to_db" title="wesp.cli_parser.print_to_db"><code class="xref py py-meth docutils literal notranslate"><span class="pre">print_to_db()</span></code></a></p>
 <p><a class="reference internal" href="#wesp.cli_parser.cli_parser" title="wesp.cli_parser.cli_parser"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cli_parser()</span></code></a> contains all options to set up the main program (e.g. client address and SNMP options),
 as well as optional parameters to turn on or off certain features (e.g. RSSI, SNR, Ping).</p>
@@ -223,7 +223,7 @@ Cisco Aironet 802 11n Draft 2.0 Dual Band APs.</p>
 <dl class="function">
 <dt id="wesp.cli_parser.check_wlc_address">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">check_wlc_address</code><span class="sig-paren">(</span><em>ctx</em>, <em>param</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#check_wlc_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.check_wlc_address" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will check if the WLC address is a valid IP or resolvable FQDN address.
+<dd><p>This function will check if the WLC address is a valid IP or a resolvable FQDN address.
 If so it will add it to the context, otherwise it will raise an error.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -245,7 +245,7 @@ If so it will add it to the context, otherwise it will raise an error.</p>
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">get_ap_name</code><span class="sig-paren">(</span><em>ctx</em>, <em>param</em>, <em>flag_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#get_ap_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.get_ap_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function requests the name of the associated AP of the client.
 Therefore it will first request the MAC address of the AP from the <em>cldcClientTable</em>
-and then using the address to find its name in the <em>clDLApBootTable</em>.</p>
+and then use the address to find its name in the <em>clDLApBootTable</em>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -283,7 +283,8 @@ and then using the address to find its name in the <em>clDLApBootTable</em>.</p>
 <dl class="function">
 <dt id="wesp.cli_parser.get_snmp_value">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">get_snmp_value</code><span class="sig-paren">(</span><em>ctx</em>, <em>param</em>, <em>flag_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#get_snmp_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.get_snmp_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will request and save an attribute based on the corresponding OID and Mac Address</p>
+<dd><p>This function will request and save an attribute based on the corresponding OID. The OID
+is retrieved from the class <a class="reference internal" href="wesp.definitions.html#wesp.definitions.AllParameter" title="wesp.definitions.AllParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.definitions.AllParameter</span></code></a> using the name of the parameter.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -303,7 +304,8 @@ and then using the address to find its name in the <em>clDLApBootTable</em>.</p>
 <dt id="wesp.cli_parser.get_snmp_value_with_mac">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">get_snmp_value_with_mac</code><span class="sig-paren">(</span><em>ctx</em>, <em>param</em>, <em>flag_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wesp/cli_parser.html#get_snmp_value_with_mac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wesp.cli_parser.get_snmp_value_with_mac" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function will request and save an attribute based on the corresponding OID and MAC address. The OID
-is retrieved from the class <a class="reference internal" href="wesp.definitions.html#wesp.definitions.AllParameter" title="wesp.definitions.AllParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.definitions.AllParameter</span></code></a> using the name of the parameter.</p>
+is retrieved from the class <a class="reference internal" href="wesp.definitions.html#wesp.definitions.AllParameter" title="wesp.definitions.AllParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">wesp.definitions.AllParameter</span></code></a> using the name of the parameter. The MAC
+address is converted into the decimal format and appended to the OID.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -349,7 +351,6 @@ an end condition is met</p>
 </table>
 </dd></dl>
 
-<p># functions with decorates have to be added manuelly:</p>
 <dl class="function">
 <dt id="wesp.cli_parser.print_to_db">
 <code class="descclassname">wesp.cli_parser.</code><code class="descname">print_to_db</code><span class="sig-paren">(</span><em>ctx</em>, <em>db_name</em>, <em>db_table</em>, <em>db_address</em>, <em>db_port</em>, <em>db_user</em>, <em>db_pass</em>, <em>silent</em><span class="sig-paren">)</span><a class="headerlink" href="#wesp.cli_parser.print_to_db" title="Permalink to this definition">¶</a></dt>
