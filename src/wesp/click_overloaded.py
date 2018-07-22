@@ -64,7 +64,7 @@ class CustomGroup(click.Group):
     It will ensure that the config file is loaded before any other parameter is evaluated and
     the required options do not suppress the help option.
     In addition the parameter *SNMP version* is moved to the front of the args list to enable the class
-    :class:`OnlyRequiredIf` to set an option (e.g. community) only to required if the corresponding version is set
+    :class:`OnlyRequiredIf` to set an option (e.g. community) only to be required if the corresponding version is set
     (e.g. 2c).
 
     """
@@ -129,7 +129,7 @@ class CustomGroup(click.Group):
         It will ensure that the config file is loaded before any other parameter is evaluated and
         the required options do not suppress the help option.
         In addition the parameter *SNMP version* is moved to the front of the args list to enable the class
-        :class:`OnlyRequiredIf` to set an option (e.g. community) only to required if the corresponding version is set
+        :class:`OnlyRequiredIf` to set an option (e.g. community) only to be required if the corresponding version is set
     (   e.g. 2c).
 
         :param ctx: current context
