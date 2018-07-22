@@ -295,11 +295,11 @@ def get_ping(ctx, param, flag_set):
 #
 @click.option('--rssi_off', '-ro', 'rssi_off', required=False, callback=get_snmp_value_with_mac,
               is_flag=True, default=True, flag_value=False,
-              help='Will deactivate the Output of the RSSI (Received Signal Strength Indication) of the WLC')
+              help='Will deactivate the Output of the RSSI (Received Signal Strength Indication)')
 #
 @click.option('--snr_off', '-so', 'snr_off', required=False, callback=get_snmp_value_with_mac,
               is_flag=True, default=True, flag_value=False,
-              help='Will deactivate the Output of the SNR (Signal to Noise Ratio) of the WLC')
+              help='Will deactivate the Output of the SNR (Signal to Noise Ratio)')
 #
 @click.option('--data_rate_off', '-do', 'data_rate_off', required=False, callback=get_snmp_value_with_mac,
               is_flag=True, default=True, flag_value=False,
